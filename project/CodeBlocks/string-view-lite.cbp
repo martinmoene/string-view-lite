@@ -11,9 +11,12 @@
 				<Option compiler="gcc" />
 			</Target>
 		</Build>
+		<Unit filename="../../.gitattributes" />
 		<Unit filename="../../.gitignore" />
+		<Unit filename="../../.travis.yml" />
 		<Unit filename="../../CMakeLists.txt" />
 		<Unit filename="../../LICENSE" />
+		<Unit filename="../../appveyor.yml" />
 		<Unit filename="../../include/nonstd/string_view.hpp" />
 		<Unit filename="../../test/CMakeLists.txt" />
 		<Unit filename="../../test/lest_cpp03.hpp" />
