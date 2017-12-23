@@ -178,6 +178,7 @@ using std::hash;
 // Before C++17: use string_view lite:
 //
 
+#include <cassert>
 #include <limits>
 #include <string>   // std::char_traits<>
 
@@ -261,7 +262,7 @@ public:
 
     // Iterators:
 
-    nssv_constexpr const_iterator begin()  const nssv_noexcept { return data_; }
+    nssv_constexpr const_iterator begin()  const nssv_noexcept { return data_;         }
     nssv_constexpr const_iterator end()    const nssv_noexcept { return data_ + size_; }
 
     nssv_constexpr const_iterator cbegin() const nssv_noexcept { return begin(); }
@@ -275,12 +276,25 @@ public:
 
     // Element access:
 
-    nssv_constexpr const_reference operator[](size_type pos) const;
-    nssv_constexpr const_reference at(size_type pos) const;
-    nssv_constexpr const_reference front() const;
-    nssv_constexpr const_reference back() const;
+    nssv_constexpr const_reference operator[]( size_type pos ) const
+    {
+        return assert( pos < size() ),
+            data_[pos];
+    }
 
-    nssv_constexpr const_pointer data() const nssv_noexcept { return data_; }
+    nssv_constexpr const_reference at( size_type pos ) const
+    {
+        if ( pos < size() )
+        {
+            return data_[pos];
+        }
+        throw std::out_of_range( "nonst::string_view::at()" );
+    }
+
+    nssv_constexpr const_reference front() const { return assert( !empty() ), data_[0]; }
+    nssv_constexpr const_reference back()  const { return assert( !empty() ), data_[size() - 1]; }
+
+    nssv_constexpr const_pointer   data()  const nssv_noexcept { return data_; }
 
     // Capacity:
 

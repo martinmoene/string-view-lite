@@ -139,4 +139,48 @@ CASE( "string_view: Allows const reverse iteration" )
     }
 }
 
+CASE( "string_view: Allows to observe an element via array indexing" )
+{
+    char hello[] = "hello";
+    string_view sv( hello );
+
+    for ( unsigned int i = 0; i < sv.size(); ++i )
+    {
+        EXPECT( sv[i] == hello[i] );
+    }
+}
+
+CASE( "string_view: Allows to observe an element via at()" )
+{
+    char hello[] = "hello";
+    string_view sv( hello );
+
+    for ( unsigned int i = 0; i < sv.size(); ++i )
+    {
+        EXPECT( sv.at(i) == hello[i] );
+    }
+}
+
+CASE( "string_view: Allows to observe an element via data()" )
+{
+    char hello[] = "hello";
+    string_view sv( hello );
+
+    EXPECT( *sv.data() == *sv.begin() );
+
+    for ( unsigned int i = 0; i < sv.size(); ++i )
+    {
+        EXPECT( sv.data()[i] == hello[i] );
+    }
+}
+
+CASE( "string_view: . . .  and data() yields nullptr (or NULL) for an empty string_view" )
+{
+    string_view sv;
+
+    // use parenthesis with data() to prevent lest from using sv.data() as C-string:
+
+    EXPECT( (sv.data() == nssv_nullptr) );
+}
+
 } // anonymous namespace
