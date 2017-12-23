@@ -180,6 +180,7 @@ using std::hash;
 
 #include <cassert>
 #include <limits>
+#include <stdexcept>
 #include <string>   // std::char_traits<>
 
 namespace nonstd { namespace sv_lite {
@@ -250,12 +251,12 @@ public:
 	// Assignment:
 
 #if nssv_CPP11_OR_GREATER
-    nssv_constexpr14 basic_string_view & operator=( basic_string_view const & view ) nssv_noexcept = default;
+    nssv_constexpr14 basic_string_view & operator=( basic_string_view const & other ) nssv_noexcept = default;
 #else
-    nssv_constexpr14 basic_string_view & operator=( basic_string_view const & view ) nssv_noexcept
+    nssv_constexpr14 basic_string_view & operator=( basic_string_view const & other ) nssv_noexcept
     {
-        data_ = view.data_;
-        size_ = view.size_;
+        data_ = other.data_;
+        size_ = other.size_;
         return *this;
     }
 #endif
@@ -282,7 +283,7 @@ public:
             data_[pos];
     }
 
-    nssv_constexpr const_reference at( size_type pos ) const
+    nssv_constexpr14 const_reference at( size_type pos ) const
     {
         if ( pos < size() )
         {
@@ -302,16 +303,33 @@ public:
     nssv_constexpr size_type length()   const nssv_noexcept { return size_; }
     nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
 
-    nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept  // C++20
+    // since C++20
+    nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept
     {
         return 0 == size_;
     }
 
     // Modifiers:
 
-    nssv_constexpr14 void remove_prefix(size_type n);
-    nssv_constexpr14 void remove_suffix(size_type n);
-    nssv_constexpr14 void swap(basic_string_view& v) nssv_noexcept;
+    nssv_constexpr14 void remove_prefix( size_type n )
+    {
+        assert( n <= size() );
+        data_ += n;
+        size_ -= n;
+    }
+
+    nssv_constexpr14 void remove_suffix( size_type n )
+    {
+        assert( n <= size() );
+        size_ -= n;
+    }
+
+    nssv_constexpr14 void swap( basic_string_view & other ) nssv_noexcept
+    {
+        using std::swap;
+        swap( data_, other.data_ );
+        swap( size_, other.size_ );
+    }
 
     // Operations:
 

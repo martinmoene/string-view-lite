@@ -6,6 +6,7 @@
 //
 
 #include "string-view-lite.t.h"
+#include <algorithm>
 
 namespace {
 
@@ -211,9 +212,44 @@ CASE( "string_view: Allows to check for an empty string_view via empty()" )
     string_view sve;
     string_view svne("hello");
 
-    EXPECT(     sve.size() == 0u );
-    EXPECT(     sve.empty()      );
-    EXPECTNOT( svne.empty()      );
+    EXPECT(      sve.size() == 0u );
+    EXPECT(      sve.empty()      );
+    EXPECT_NOT( svne.empty()      );
 }
 
-} // anonymous namespace
+}CASE( "string_view: Allows to remove a prefix of n elements" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    sv.remove_prefix( 6 );
+
+    EXPECT( sv.size() == 5u );
+    EXPECT( std::equal( sv.begin(), sv.end(), hello + 6) );
+}
+
+CASE( "string_view: Allows to remove a suffix of n elements" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    sv.remove_suffix( 6 );
+
+    EXPECT( sv.size() == 5u );
+    EXPECT( std::equal( sv.begin(), sv.end(), hello ) );
+}
+
+CASE( "string_view: Allows to swap with other string_view" )
+{
+    char hello[]  = "hello";
+    char world[]  = "world";
+    string_view sv1( hello );
+    string_view sv2( world );
+
+    sv1.swap( sv2 );
+
+    EXPECT( std::equal( sv1.begin(), sv1.end(), world )  );
+    EXPECT( std::equal( sv2.begin(), sv2.end(), hello )  );
+}
+
+// anonymous namespace
