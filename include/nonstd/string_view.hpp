@@ -307,9 +307,9 @@ public:
 
     // Modifiers:
 
-    nssv_constexpr void remove_prefix(size_type n);
-    nssv_constexpr void remove_suffix(size_type n);
-    nssv_constexpr void swap(basic_string_view& v) nssv_noexcept;
+    nssv_constexpr14 void remove_prefix(size_type n);
+    nssv_constexpr14 void remove_suffix(size_type n);
+    nssv_constexpr14 void swap(basic_string_view& v) nssv_noexcept;
 
     // Operations:
 
