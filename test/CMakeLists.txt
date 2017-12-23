@@ -23,7 +23,7 @@ add_definitions( -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nons
 
 if( MSVC )
     add_compile_options( -W3 -EHsc )
-    add_definitions( -D_SCL_SECURE_NO_WARNINGS )
+    add_definitions( -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX )
 
 elseif( CMAKE_CXX_COMPILER_ID MATCHES GNU OR
         CMAKE_CXX_COMPILER_ID MATCHES Clang )
