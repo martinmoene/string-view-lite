@@ -261,14 +261,17 @@ public:
 
     // Iterators:
 
-    nssv_constexpr const_iterator begin() const nssv_noexcept;
-    nssv_constexpr const_iterator cbegin() const nssv_noexcept;
-    nssv_constexpr const_iterator end() const nssv_noexcept;
-    nssv_constexpr const_iterator cend() const nssv_noexcept;
-    nssv_constexpr const_reverse_iterator rbegin() const nssv_noexcept;
-    nssv_constexpr const_reverse_iterator crbegin() const nssv_noexcept;
-    nssv_constexpr const_reverse_iterator rend() const nssv_noexcept;
-    nssv_constexpr const_reverse_iterator crend() const nssv_noexcept;
+    nssv_constexpr const_iterator begin()  const nssv_noexcept { return data_; }
+    nssv_constexpr const_iterator end()    const nssv_noexcept { return data_ + size_; }
+
+    nssv_constexpr const_iterator cbegin() const nssv_noexcept { return begin(); }
+    nssv_constexpr const_iterator cend()   const nssv_noexcept { return end();   }
+
+    nssv_constexpr const_reverse_iterator rbegin()  const nssv_noexcept { return const_reverse_iterator( end() );   }
+    nssv_constexpr const_reverse_iterator rend()    const nssv_noexcept { return const_reverse_iterator( begin() ); }
+
+    nssv_constexpr const_reverse_iterator crbegin() const nssv_noexcept { return rbegin(); }
+    nssv_constexpr const_reverse_iterator crend()   const nssv_noexcept { return rend();   }
 
     // Element access:
 
@@ -277,33 +280,18 @@ public:
     nssv_constexpr const_reference front() const;
     nssv_constexpr const_reference back() const;
 
-    nssv_constexpr const_pointer data() const nssv_noexcept
-    {
-        return data_;
-    }
+    nssv_constexpr const_pointer data() const nssv_noexcept { return data_; }
 
     // Capacity:
 
-    nssv_constexpr size_type size() const nssv_noexcept
-    {
-        return size_;
-    }
-
-    nssv_constexpr size_type length() const nssv_noexcept
-    {
-        return size_;
-    }
-
-    nssv_constexpr size_type max_size() const nssv_noexcept
-    {
-        return std::numeric_limits< size_type >::max();
-    }
+    nssv_constexpr size_type size()     const nssv_noexcept { return size_; }
+    nssv_constexpr size_type length()   const nssv_noexcept { return size_; }
+    nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
 
     nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept  // C++20
     {
         return 0 == size_;
     }
-
 
     // Modifiers:
 
