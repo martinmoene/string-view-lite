@@ -39,14 +39,14 @@
 # define nssv_HAS_INCLUDE( arg )  0
 #endif
 
-#define nssv_HAVE_STD_SV  ( nssv_CPP17_OR_GREATER && nssv_HAS_INCLUDE(<string_view>) )
-#define nssv_USES_STD_SV  ( 0 )
+#define nssv_HAVE_STD_STRING_VIEW  ( nssv_CPP17_OR_GREATER && nssv_HAS_INCLUDE(<string_view>) )
+#define nssv_USES_STD_STRING_VIEW  ( 0 )
 
 //
 // Use C++17 std::string_view:
 //
 
-#if nssv_USES_STD_SV
+#if nssv_USES_STD_STRING_VIEW
 
 #include <string_view>
 
@@ -64,7 +64,7 @@ using std::hash;
 
 } // namespace nonstd
 
-#else // nssv_HAVE_STD_SV
+#else // nssv_HAVE_STD_STRING_VIEW
 
 #if defined(_MSC_VER) && !defined(__clang__)
 # define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 100 - 5 - (_MSC_VER < 1900))
@@ -84,6 +84,8 @@ using std::hash;
 # define nssv_HAVE_AUTO  1
 # define nssv_HAVE_NULLPTR  1
 # define nssv_HAVE_STATIC_ASSERT  1
+# define nssv_HAVE_WCHAR16_T  1
+# define nssv_HAVE_WCHAR32_T  1
 #endif
 
 #if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 12
@@ -120,6 +122,12 @@ using std::hash;
 //# undef  nssv_CPP11_OR_GREATER
 //# define nssv_CPP11_OR_GREATER  1
 //#endif
+
+// Presence of C++ library features:
+
+#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 12
+# define nssv_HAVE_STD_HASH  1
+#endif
 
 // C++ feature usage:
 
@@ -288,7 +296,7 @@ public:
 
     nssv_constexpr size_type max_size() const nssv_noexcept
     {
-        std::numeric_limits< size_type >::max();
+        return std::numeric_limits< size_type >::max();
     }
 
     nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept  // C++20
@@ -357,8 +365,10 @@ public:
 
 #if nssv_CPP17_OR_GREATER
     static nssv_constexpr size_type npos = size_type(-1);
-#else
+#elif nssv_CPP11_OR_GREATER
     enum : size_type { npos = size_type(-1) };
+#else
+    enum { npos = size_type(-1) };
 #endif
 
 private:
@@ -429,24 +439,28 @@ namespace nonstd { namespace sv_lite {
 
 typedef basic_string_view<char>      string_view;
 typedef basic_string_view<wchar_t>   wstring_view;
+#if nssv_HAVE_WCHAR16_T
 typedef basic_string_view<char16_t>  u16string_view;
 typedef basic_string_view<char32_t>  u32string_view;
+#endif
 
 }} // namespace nonstd::sv_lite
 
 namespace nonstd {
 
+using sv_lite::basic_string_view;
 using sv_lite::string_view;
 using sv_lite::wstring_view;
+#if nssv_HAVE_WCHAR16_T
 using sv_lite::u16string_view;
 using sv_lite::u32string_view;
-using sv_lite::basic_string_view;
+#endif
 
 // literal "sv"
 
 } // namespace nonstd
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 12
+#if nssv_HAVE_STD_HASH
 
 #include <functional>
 
@@ -482,6 +496,6 @@ public:
 
 } // namespace std
 
-#endif // C++11
-#endif // nssv_HAVE_STD_SV
+#endif // nssv_HAVE_STD_HASH
+#endif // nssv_HAVE_STD_STRING_VIEW
 #endif // NONSTD_SV_LITE_H_INCLUDED
