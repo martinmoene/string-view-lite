@@ -139,6 +139,29 @@ CASE( "string_view: Allows const reverse iteration" )
     }
 }
 
+CASE( "string_view: Allows to obtain the size of the view via size()" )
+{
+    char hello[] = "hello";
+    string_view sv( hello );
+
+    EXPECT( sv.size() == std::char_traits<char>::length(hello) );
+}
+
+CASE( "string_view: Allows to obtain the size of the view via length()" )
+{
+    char hello[] = "hello";
+    string_view sv( hello );
+
+    EXPECT( sv.length() == std::char_traits<char>::length(hello) );
+}
+
+CASE( "string_view: Allows to obtain the maximum size a view can be via max_size()" )
+{
+    string_view sv( "hello" );
+
+    EXPECT( sv.max_size() == std::numeric_limits< string_view::size_type >::max() );
+}
+
 CASE( "string_view: Allows to observe an element via array indexing" )
 {
     char hello[] = "hello";
@@ -161,7 +184,7 @@ CASE( "string_view: Allows to observe an element via at()" )
     }
 }
 
-CASE( "string_view: Allows to observe an element via data()" )
+CASE( "string_view: Allows to observe elements via data()" )
 {
     char hello[] = "hello";
     string_view sv( hello );
@@ -181,6 +204,16 @@ CASE( "string_view: . . .  and data() yields nullptr (or NULL) for an empty stri
     // use parenthesis with data() to prevent lest from using sv.data() as C-string:
 
     EXPECT( (sv.data() == nssv_nullptr) );
+}
+
+CASE( "string_view: Allows to check for an empty string_view via empty()" )
+{
+    string_view sve;
+    string_view svne("hello");
+
+    EXPECT(     sve.size() == 0u );
+    EXPECT(     sve.empty()      );
+    EXPECTNOT( svne.empty()      );
 }
 
 } // anonymous namespace
