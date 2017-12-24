@@ -407,8 +407,58 @@ CASE( "string_view: Allows to compare a sub string to a C-string prefix via comp
     EXPECT( string_view( hello ).compare( 6, 5, hello, 5 ) >  0 );
 }
 
+CASE( "string_view: Allows to check for a prefix string_view via starts_with(), (1)" )
+{
+    char hello[] = "hello world";
 
-CASE( "string_view: starts_with 3x" ) {}
+    EXPECT(     string_view( hello ).starts_with( string_view( hello ) ) );
+    EXPECT(     string_view( hello ).starts_with( string_view("hello") ) );
+    EXPECT_NOT( string_view( hello ).starts_with( string_view("world") ) );
+}
+
+CASE( "string_view: Allows to check for a prefix character via starts_with(), (2)" )
+{
+    char hello[] = "hello world";
+
+    EXPECT(     string_view( hello ).starts_with( 'h' ) );
+    EXPECT_NOT( string_view( hello ).starts_with( 'e' ) );
+}
+
+CASE( "string_view: Allows to check for a prefix C-string via starts_with(), (3)" )
+{
+    char hello[] = "hello world";
+
+    EXPECT(     string_view( hello ).starts_with( hello ) );
+    EXPECT(     string_view( hello ).starts_with("hello") );
+    EXPECT_NOT( string_view( hello ).starts_with("world") );
+}
+
+CASE( "string_view: Allows to check for a suffix string_view via ends_with(), (1)" )
+{
+    char hello[] = "hello world";
+
+    EXPECT(     string_view( hello ).ends_with( string_view( hello ) ) );
+    EXPECT(     string_view( hello ).ends_with( string_view("world") ) );
+    EXPECT_NOT( string_view( hello ).ends_with( string_view("hello") ) );
+}
+
+CASE( "string_view: Allows to check for a suffix character via ends_with(), (2)" )
+{
+    char hello[] = "hello world";
+
+    EXPECT(     string_view( hello ).ends_with( 'd' ) );
+    EXPECT_NOT( string_view( hello ).ends_with( 'l' ) );
+}
+
+CASE( "string_view: Allows to check for a suffix C-string via ends_with(), (3)" )
+{
+    char hello[] = "hello world";
+
+    EXPECT(     string_view( hello ).ends_with( hello ) );
+    EXPECT(     string_view( hello ).ends_with("world") );
+    EXPECT_NOT( string_view( hello ).ends_with("hello") );
+}
+
 CASE( "string_view: ends_with 3x" ) {}
 CASE( "string_view: find 4x" ) {}
 CASE( "string_view: rfind 4x" ) {}

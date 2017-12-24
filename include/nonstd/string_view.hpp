@@ -400,15 +400,37 @@ public:
 
     // starts_with(), 3x, since C++20:
 
-    nssv_constexpr bool starts_with( basic_string_view x ) const nssv_noexcept;  // (1)
-    nssv_constexpr bool starts_with( CharT x ) const nssv_noexcept;  // (2)
-    nssv_constexpr bool starts_with( CharT const * x ) const;  // (3)
+    nssv_constexpr bool starts_with( basic_string_view other ) const nssv_noexcept  // (1)
+    {
+        return size() >= other.size() && compare( 0, other.size(), other ) == 0;
+    }
+
+    nssv_constexpr bool starts_with( CharT ch ) const nssv_noexcept  // (2)
+    {
+        return starts_with( basic_string_view( &ch, 1 ) );
+    }
+
+    nssv_constexpr bool starts_with( CharT const * s ) const  // (3)
+    {
+        return starts_with( basic_string_view( s ) );
+    }
 
     // ends_with(), 3x, since C++20:
 
-    nssv_constexpr bool ends_with( basic_string_view x ) const nssv_noexcept;  // (1)
-    nssv_constexpr bool ends_with( CharT x ) const nssv_noexcept;  // (2)
-    nssv_constexpr bool ends_with( CharT const * x ) const;  // (3)
+    nssv_constexpr bool ends_with( basic_string_view other ) const nssv_noexcept  // (1)
+    {
+        return size() >= other.size() && compare( size() - other.size(), npos, other ) == 0;
+    }
+
+    nssv_constexpr bool ends_with( CharT ch ) const nssv_noexcept  // (2)
+    {
+        return ends_with( basic_string_view( &ch, 1 ) );
+    }
+
+    nssv_constexpr bool ends_with( CharT const * s ) const  // (3)
+    {
+        return ends_with( basic_string_view( s ) );
+    }
 
     // find(), 4x:
 
