@@ -18,22 +18,9 @@ using namespace nonstd;
 
 extern lest::tests & specification();
 
-namespace nonstd { namespace sv_lite {
-
-// use oparator<< instead of to_string() overload;
-// see  http://stackoverflow.com/a/10651752/437272
-
-template< typename CharT >
-inline std::ostream & operator<<( std::ostream & os, basic_string_view<CharT> const & sv )
-{
-    return os << "'" << (sv.data() ? "(content)" : "[empty]") << "'";
-}
-
-}} // namespace nonstd::optfun_lite
-
 namespace lest {
 
-using ::nonstd::sv_lite::operator<<;
+using ::nonstd::operator<<;
 
 } // namespace lest
 

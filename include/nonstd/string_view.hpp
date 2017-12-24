@@ -396,45 +396,98 @@ private:
     size_type     size_;
 };
 
-// Non-member functions
-// lexicographically compares two string views (function template)
+//
+// Non-member functions:
+//
+
+// lexicographically compare two string views (function template):
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator==(
+nssv_constexpr bool operator== (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) == 0 ; }
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator!=(
+nssv_constexpr bool operator!= (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) != 0 ; }
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator<(
+nssv_constexpr bool operator< (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) < 0 ; }
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator<=(
+nssv_constexpr bool operator<= (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) <= 0 ; }
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator>(
+nssv_constexpr bool operator> (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) > 0 ; }
 
 template< class CharT, class Traits >
-nssv_constexpr bool operator>=(
+nssv_constexpr bool operator>= (
     basic_string_view <CharT, Traits> lhs,
-    basic_string_view <CharT, Traits> rhs ) nssv_noexcept;
+    basic_string_view <CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) >= 0 ; }
 
-// Input/output
+// Inserters and extractors
+
+namespace detail {
+
+template< class Stream >
+void write_padding( Stream & os, std::streamsize n )
+{
+    for ( std::streamsize i = 0; i < n; ++i )
+        os.rdbuf()->sputc( os.fill() );
+}
+
+template< class Stream, class View >
+Stream & write_to_stream( Stream & os, View const & sv )
+{
+    typename Stream::sentry sentry( os );
+
+    if ( !os )
+        return os;
+
+    std::streamsize length = static_cast<std::streamsize>( sv.length() );
+
+    // Whether, and how, to pad:
+    bool      pad = ( length < os.width() );
+    bool left_pad = pad && ( os.flags() & std::ios_base::adjustfield ) == std::ios_base::left;
+
+    if ( left_pad )
+        write_padding( os, os.width() - length );
+
+    // Write span characters:
+    os.rdbuf()->sputn( sv.begin(), length );
+
+    if ( pad && !left_pad )
+        write_padding( os, os.width() - length );
+
+    // Reset output stream width:
+    os.width( 0 );
+
+    return os;
+}
+
+} // namespace detail
+
 template< class CharT, class Traits >
 std::basic_ostream<CharT, Traits> &
 operator<<(
     std::basic_ostream<CharT, Traits>& os,
-    basic_string_view <CharT, Traits> sv );
+    basic_string_view <CharT, Traits> sv )
+{
+    return detail::write_to_stream( os, sv );
+}
 
 // Literals - Defined in inline namespace std::literals::string_view_literals
 
@@ -478,7 +531,18 @@ using sv_lite::u32string_view;
 
 // literal "sv"
 
+using sv_lite::operator==;
+using sv_lite::operator!=;
+using sv_lite::operator<;
+using sv_lite::operator<=;
+using sv_lite::operator>;
+using sv_lite::operator>=;
+
+using sv_lite::operator<<;
+
 } // namespace nonstd
+
+// C++11 std::hash support:
 
 #if nssv_HAVE_STD_HASH
 

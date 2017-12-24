@@ -12,32 +12,36 @@ namespace {
 
 using namespace nonstd;
 
+typedef string_view::size_type size_type;
+
+// Constructors:
+
 CASE( "string_view: Allows to default construct an empty string_view" )
 {
     string_view sv;
 
     // use parenthesis with data() to prevent lest from using sv.data() as C-string:
 
-    EXPECT(  sv.size() == 0u );
-    EXPECT( (sv.data() == nssv_nullptr) );
+    EXPECT(  sv.size() == size_type( 0 ) );
+    EXPECT( (sv.data() == nssv_nullptr)  );
 }
 
 CASE( "string_view: Allows to construct from pointer and size" )
 {
     string_view sv( "hello world", 5 );
 
-    EXPECT(   sv.size()      == 5u  );
-    EXPECT( *(sv.data() + 0) == 'h' );
-    EXPECT( *(sv.data() + 4) == 'o' );
+    EXPECT(   sv.size() == size_type( 5 ) );
+    EXPECT( *(sv.data() + 0) == 'h'       );
+    EXPECT( *(sv.data() + 4) == 'o'       );
 }
 
 CASE( "string_view: Allows to construct from C-string" )
 {
     string_view sv( "hello world" );
 
-    EXPECT(   sv.size()       == 11u );
-    EXPECT( *(sv.data() +  0) == 'h' );
-    EXPECT( *(sv.data() + 10) == 'd' );
+    EXPECT(   sv.size() == size_type( 11 ) );
+    EXPECT( *(sv.data() +  0) == 'h'       );
+    EXPECT( *(sv.data() + 10) == 'd'       );
 }
 
 CASE( "string_view: Allows to copy-construct from empty string-view" )
@@ -48,8 +52,8 @@ CASE( "string_view: Allows to copy-construct from empty string-view" )
 
     // use parenthesis with data() to prevent lest from using sv.data() as C-string:
 
-    EXPECT(  sv2.size() == 0u );
-    EXPECT( (sv2.data() == nssv_nullptr) );
+    EXPECT(  sv2.size() == size_type( 0 ) );
+    EXPECT( (sv2.data() == nssv_nullptr)  );
 }
 
 CASE( "string_view: Allows to copy-construct from non-empty string-view" )
@@ -64,6 +68,8 @@ CASE( "string_view: Allows to copy-construct from non-empty string-view" )
     EXPECT( *(sv2.data() + 4) == 'o'         );
 }
 
+// Assignment:
+
 CASE( "string_view: Allows to copy-assign from empty string-view" )
 {
     string_view sv1;
@@ -73,7 +79,7 @@ CASE( "string_view: Allows to copy-assign from empty string-view" )
 
     // use parenthesis with data() to prevent lest from using sv.data() as C-string:
 
-    EXPECT(  sv2.size() == 0u );
+    EXPECT(  sv2.size() == size_type( 0 ) );
     EXPECT( (sv2.data() == nssv_nullptr) );
 }
 
@@ -91,6 +97,8 @@ CASE( "string_view: Allows to copy-assign from non-empty string-view" )
     EXPECT( *(sv2.data() + 0) == 'h'         );
     EXPECT( *(sv2.data() + 4) == 'o'         );
 }
+
+// Iteration:
 
 CASE( "string_view: Allows forward iteration" )
 {
@@ -140,6 +148,8 @@ CASE( "string_view: Allows const reverse iteration" )
     }
 }
 
+// Capacity:
+
 CASE( "string_view: Allows to obtain the size of the view via size()" )
 {
     char hello[] = "hello";
@@ -163,12 +173,14 @@ CASE( "string_view: Allows to obtain the maximum size a view can be via max_size
     EXPECT( sv.max_size() == std::numeric_limits< string_view::size_type >::max() );
 }
 
+// Element access:
+
 CASE( "string_view: Allows to observe an element via array indexing" )
 {
     char hello[] = "hello";
     string_view sv( hello );
 
-    for ( unsigned int i = 0; i < sv.size(); ++i )
+    for ( size_type i = 0; i < sv.size(); ++i )
     {
         EXPECT( sv[i] == hello[i] );
     }
@@ -179,7 +191,7 @@ CASE( "string_view: Allows to observe an element via at()" )
     char hello[] = "hello";
     string_view sv( hello );
 
-    for ( unsigned int i = 0; i < sv.size(); ++i )
+    for ( size_type i = 0; i < sv.size(); ++i )
     {
         EXPECT( sv.at(i) == hello[i] );
     }
@@ -192,7 +204,7 @@ CASE( "string_view: Allows to observe elements via data()" )
 
     EXPECT( *sv.data() == *sv.begin() );
 
-    for ( unsigned int i = 0; i < sv.size(); ++i )
+    for ( size_type i = 0; i < sv.size(); ++i )
     {
         EXPECT( sv.data()[i] == hello[i] );
     }
@@ -207,24 +219,26 @@ CASE( "string_view: . . .  and data() yields nullptr (or NULL) for an empty stri
     EXPECT( (sv.data() == nssv_nullptr) );
 }
 
+// Modifiers:
+
 CASE( "string_view: Allows to check for an empty string_view via empty()" )
 {
     string_view sve;
     string_view svne("hello");
 
-    EXPECT(      sve.size() == 0u );
-    EXPECT(      sve.empty()      );
-    EXPECT_NOT( svne.empty()      );
+    EXPECT(      sve.size() == size_type( 0 ) );
+    EXPECT(      sve.empty() );
+    EXPECT_NOT( svne.empty() );
 }
 
-}CASE( "string_view: Allows to remove a prefix of n elements" )
+CASE( "string_view: Allows to remove a prefix of n elements" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
 
     sv.remove_prefix( 6 );
 
-    EXPECT( sv.size() == 5u );
+    EXPECT( sv.size() == size_type( 5 ) );
     EXPECT( std::equal( sv.begin(), sv.end(), hello + 6) );
 }
 
@@ -235,7 +249,7 @@ CASE( "string_view: Allows to remove a suffix of n elements" )
 
     sv.remove_suffix( 6 );
 
-    EXPECT( sv.size() == 5u );
+    EXPECT( sv.size() == size_type( 5 ) );
     EXPECT( std::equal( sv.begin(), sv.end(), hello ) );
 }
 
@@ -252,4 +266,52 @@ CASE( "string_view: Allows to swap with other string_view" )
     EXPECT( std::equal( sv2.begin(), sv2.end(), hello )  );
 }
 
-// anonymous namespace
+// Comparison:
+
+#if 0
+CASE( "string_view: Allows to compare a string_view with another string_view" )
+{
+    char s[] = "hello";
+    char t[] = "world";
+    string_view sv( s );
+    string_view tv( t );
+
+    EXPECT( sv.length() == size_type( 5 ) );
+    EXPECT( tv.length() == size_type( 5 ) );
+
+    EXPECT( sv == sv );
+    EXPECT( sv != tv );
+    EXPECT( sv <= sv );
+    EXPECT( sv <= tv );
+    EXPECT( sv <  tv );
+    EXPECT( tv >= tv );
+    EXPECT( tv >= sv );
+    EXPECT( tv >  sv );
+}
+
+CASE( "string_view: Allows to compare empty string_view-s as equal" )
+{
+    string_view a, b;
+
+    EXPECT( a == b );
+}
+#endif // 0
+
+// Streaming:
+
+CASE ( "operator<<: Allows printing a string_view to an output stream" )
+{
+    std::ostringstream oss;
+    char s[] = "hello";
+    string_view sv( s );
+
+    oss << sv << '\n'
+        << std::left << std::setw(10) << sv << '\n'
+        << sv << '\n'
+        << std::setfill('.') << std::right << std::setw(10) << sv;
+
+    EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
+}
+
+
+} // anonymous namespace
