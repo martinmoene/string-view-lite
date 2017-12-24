@@ -363,7 +363,7 @@ public:
 
     // compare(), 6x:
 
-    nssv_constexpr int compare( basic_string_view other ) const nssv_noexcept // (1)
+    nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
         if ( const int result = Traits::compare( data(), other.data(), std::min( size(), other.size() ) ) )
             return result;
@@ -395,6 +395,8 @@ public:
     {
         return substr( pos1, n1 ).compare( basic_string_view( s, n2 ) );
     }
+
+    // 24.4.2.7 Searching:
 
     // starts_with(), 3x, since C++20:
 
