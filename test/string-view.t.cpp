@@ -7,6 +7,7 @@
 
 #include "string-view-lite.t.h"
 #include <algorithm>
+#include <vector>
 
 namespace {
 
@@ -44,7 +45,7 @@ CASE( "string_view: Allows to construct from C-string" )
     EXPECT( *(sv.data() + 10) == 'd'       );
 }
 
-CASE( "string_view: Allows to copy-construct from empty string-view" )
+CASE( "string_view: Allows to copy-construct from empty string_view" )
 {
     string_view sv1;
 
@@ -56,7 +57,7 @@ CASE( "string_view: Allows to copy-construct from empty string-view" )
     EXPECT( (sv2.data() == nssv_nullptr)  );
 }
 
-CASE( "string_view: Allows to copy-construct from non-empty string-view" )
+CASE( "string_view: Allows to copy-construct from non-empty string_view" )
 {
     string_view sv1( "hello world", 5 );
 
@@ -70,7 +71,7 @@ CASE( "string_view: Allows to copy-construct from non-empty string-view" )
 
 // Assignment:
 
-CASE( "string_view: Allows to copy-assign from empty string-view" )
+CASE( "string_view: Allows to copy-assign from empty string_view" )
 {
     string_view sv1;
     string_view sv2;
@@ -83,7 +84,7 @@ CASE( "string_view: Allows to copy-assign from empty string-view" )
     EXPECT( (sv2.data() == nssv_nullptr) );
 }
 
-CASE( "string_view: Allows to copy-assign from non-empty string-view" )
+CASE( "string_view: Allows to copy-assign from non-empty string_view" )
 {
     string_view sv1( "hello world", 5 );
     string_view sv2;
@@ -107,7 +108,9 @@ CASE( "string_view: Allows forward iteration" )
 
     for ( string_view::iterator pos = sv.begin(); pos != sv.end(); ++pos )
     {
-        int i = std::distance( sv.begin(), pos );
+        typedef std::iterator_traits< string_view::iterator >::difference_type difference_type;
+
+        difference_type i = std::distance( sv.begin(), pos );
         EXPECT( *pos == *(sv.data() + i) );
     }
 }
@@ -119,7 +122,9 @@ CASE( "string_view: Allows const forward iteration" )
 
     for ( string_view::const_iterator pos = sv.begin(); pos != sv.end(); ++pos )
     {
-        int i = std::distance( sv.cbegin(), pos );
+        typedef std::iterator_traits< string_view::const_iterator >::difference_type difference_type;
+
+        difference_type i = std::distance( sv.cbegin(), pos );
         EXPECT( *pos == *(sv.data() + i) );
     }
 }
@@ -131,7 +136,9 @@ CASE( "string_view: Allows reverse iteration" )
 
     for ( string_view::reverse_iterator pos = sv.rbegin(); pos != sv.rend(); ++pos )
     {
-        int dist = std::distance( sv.rbegin(), pos );
+        typedef std::iterator_traits< string_view::reverse_iterator >::difference_type difference_type;
+
+        difference_type dist = std::distance( sv.rbegin(), pos );
         EXPECT( *pos == *(sv.data() + sv.size() - 1 - dist) );
     }
 }
@@ -143,7 +150,9 @@ CASE( "string_view: Allows const reverse iteration" )
 
     for ( string_view::const_reverse_iterator pos = sv.crbegin(); pos != sv.crend(); ++pos )
     {
-        int dist = std::distance( sv.crbegin(), pos );
+        typedef std::iterator_traits< string_view::const_reverse_iterator >::difference_type difference_type;
+
+        difference_type  dist = std::distance( sv.crbegin(), pos );
         EXPECT( *pos == *(sv.data() + sv.size() - 1 - dist) );
     }
 }
@@ -197,6 +206,14 @@ CASE( "string_view: Allows to observe an element via at()" )
     }
 }
 
+CASE( "string_view: Throws at observing an element via at() that is outside the view" )
+{
+    string_view sv("hello");
+
+    EXPECT_THROWS(   sv.at( sv.size()     ) );
+    EXPECT_NO_THROW( sv.at( sv.size() - 1 ) );
+}
+
 CASE( "string_view: Allows to observe elements via data()" )
 {
     char hello[] = "hello";
@@ -210,7 +227,7 @@ CASE( "string_view: Allows to observe elements via data()" )
     }
 }
 
-CASE( "string_view: . . .  and data() yields nullptr (or NULL) for an empty string_view" )
+CASE( "string_view: Yields nullptr (or NULL) with data() for an empty string_view" )
 {
     string_view sv;
 
@@ -266,9 +283,142 @@ CASE( "string_view: Allows to swap with other string_view" )
     EXPECT( std::equal( sv2.begin(), sv2.end(), hello )  );
 }
 
+// Operations:
+
+CASE( "string_view: Allows to copy a substring of length n, starting at position pos (default: 0) via copy()" )
+{
+    char hello[]  = "hello world";
+    string_view sv( hello );
+
+    {
+        std::vector<string_view::value_type> vec( sv.size() );
+
+        sv.copy( vec.data(), vec.size() );
+
+        EXPECT( std::equal( vec.begin(), vec.end(), hello )  );
+    }{
+        int offset = 3; int length = 4;
+        std::vector<string_view::value_type> vec( length );
+
+        sv.copy( vec.data(), length, offset );
+
+        EXPECT( std::equal( vec.begin(), vec.end(), hello + offset )  );
+    }
+}
+
+CASE( "string_view: Throws if requested position of copy() exceeds string_view's size()" )
+{
+    string_view sv("hello world");
+    std::vector<string_view::value_type> vec( sv.size() );
+
+    EXPECT_THROWS(   sv.copy( vec.data(), sv.size() - 4, sv.size() + 1 ) );
+    EXPECT_NO_THROW( sv.copy( vec.data(), sv.size() - 4, sv.size() + 0 ) );
+}
+
+CASE( "string_view: Allow to obtain a sub string from position pos (default: 0) and of length n (default full), via substr()" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    {
+        EXPECT( std::equal( sv.begin(), sv.end(), sv.substr().begin() ) );
+    }{
+        string_view subv = sv.substr( 6 );
+
+        EXPECT( std::equal( subv.begin(), subv.end(), hello + 6 ) );
+    }{
+        string_view subv = sv.substr( 3, 4 );
+
+        EXPECT( std::equal( subv.begin(), subv.end(), hello + 3 ) );
+    }
+}
+
+CASE( "string_view: Throws if requested position of substr() exceeds string_view's size()" )
+{
+    string_view sv("hello world");
+
+    EXPECT_THROWS(   sv.substr( sv.size() + 1 ) );
+    EXPECT_NO_THROW( sv.substr( sv.size() + 0 ) );
+}
+
+CASE( "string_view: Allows to lexically compare to another string_view via compare(), (1)" )
+{
+    char hello[] = "hello";
+    char world[] = "world";
+
+    EXPECT( string_view( hello ).compare( string_view( hello ) ) == 0 );
+    EXPECT( string_view( hello ).compare( string_view( world ) ) <  0 );
+    EXPECT( string_view( world ).compare( string_view( hello ) ) >  0 );
+
+    char hello_sp[] = "hello ";
+
+    EXPECT( string_view( hello    ).compare( string_view( hello_sp ) ) < 0 );
+    EXPECT( string_view( hello_sp ).compare( string_view( hello    ) ) > 0 );
+}
+
+CASE( "string_view: Allows to compare a sub string to another string_view via compare(), (2)" )
+{
+    string_view sv1("hello world");
+    string_view sv2("world");
+
+    EXPECT( sv1.compare ( 0, sv1.length(), sv1 ) == 0 );
+    EXPECT( sv1.compare ( 6, 5, sv2 ) == 0 );
+    EXPECT( sv1.compare ( 0, 5, sv2 ) <  0 );
+    EXPECT( sv2.compare ( 0, 5, sv1 ) >  0 );
+}
+
+CASE( "string_view: Allows to compare a sub string to another string_view sub string via compare(), (3)" )
+{
+    string_view sv1("hello world");
+
+    EXPECT( sv1.compare ( 0, sv1.length(), sv1 ) == 0 );
+    EXPECT( sv1.compare ( 6, 5, sv1, 6, 5 ) ==  0 );
+    EXPECT( sv1.compare ( 0, 5, sv1, 6, 5 )  <  0 );
+    EXPECT( sv1.compare ( 6, 5, sv1, 0, 5 )  >  0 );
+}
+
+CASE( "string_view: Allows to compare to a C-string via compare(), (4)" )
+{
+    char hello[] = "hello";
+    char world[] = "world";
+
+    EXPECT( string_view( hello ).compare( hello ) == 0 );
+    EXPECT( string_view( hello ).compare( world ) <  0 );
+    EXPECT( string_view( world ).compare( hello ) >  0 );
+}
+
+CASE( "string_view: Allows to compare a sub string to a C-string via compare(), (5)" )
+{
+    char hello[] = "hello world";
+    char world[] = "world";
+
+    EXPECT( string_view( hello ).compare( 6, 5, world ) == 0 );
+    EXPECT( string_view( hello ).compare( world ) <  0 );
+    EXPECT( string_view( world ).compare( hello ) >  0 );
+}
+
+CASE( "string_view: Allows to compare a sub string to a C-string prefix via compare(), (6)" )
+{
+    char hello[] = "hello world";
+    char world[] = "world";
+
+    EXPECT( string_view( hello ).compare( 6, 5, world, 5 ) == 0 );
+    EXPECT( string_view( hello ).compare( 0, 5, world, 5 ) <  0 );
+    EXPECT( string_view( hello ).compare( 6, 5, hello, 5 ) >  0 );
+}
+
+
+CASE( "string_view: starts_with 3x" ) {}
+CASE( "string_view: ends_with 3x" ) {}
+CASE( "string_view: find 4x" ) {}
+CASE( "string_view: rfind 4x" ) {}
+CASE( "string_view: find_first_of 4x" ) {}
+CASE( "string_view: find_last_of 4x" ) {}
+CASE( "string_view: find_first_not_of 4x" ) {}
+CASE( "string_view: find_last_not_of 4x" ) {}
+
 // Comparison:
 
-#if 0
 CASE( "string_view: Allows to compare a string_view with another string_view" )
 {
     char s[] = "hello";
@@ -295,7 +445,6 @@ CASE( "string_view: Allows to compare empty string_view-s as equal" )
 
     EXPECT( a == b );
 }
-#endif // 0
 
 // Streaming:
 
@@ -312,6 +461,5 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
 
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
 }
-
 
 } // anonymous namespace

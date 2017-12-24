@@ -25,6 +25,12 @@
 // - force use of std::string_view
 // - force use of nonstd::string_view
 
+#ifndef nssv_CONFIG_SELECT_STD_STRING_VIEW
+#endif
+
+#ifndef nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+#endif
+
 // Compiler detection:
 
 #define nssv_CPP11_OR_GREATER  ( __cplusplus >= 201103L )
@@ -118,10 +124,10 @@ using std::hash;
 
 // For the rest, consider VC14 as C++11 for optional-lite:
 
-//#if      nssv_COMPILER_MSVC_VERSION >= 14
-//# undef  nssv_CPP11_OR_GREATER
-//# define nssv_CPP11_OR_GREATER  1
-//#endif
+#if      nssv_COMPILER_MSVC_VERSION >= 14
+# undef  nssv_CPP11_OR_GREATER
+# define nssv_CPP11_OR_GREATER  1
+#endif
 
 // Presence of C++ library features:
 
@@ -179,7 +185,9 @@ using std::hash;
 //
 
 #include <cassert>
+#include <iterator>
 #include <limits>
+#include <ostream>
 #include <stdexcept>
 #include <string>   // std::char_traits<>
 
@@ -209,9 +217,9 @@ public:
     typedef Traits traits_type;
     typedef CharT  value_type;
 
-    typedef CharT *       pointer;
+    typedef CharT       * pointer;
     typedef CharT const * const_pointer;
-    typedef CharT &       reference;
+    typedef CharT       & reference;
     typedef CharT const & const_reference;
 
     typedef const_pointer iterator;
@@ -222,7 +230,7 @@ public:
     typedef std::size_t     size_type;
     typedef std::ptrdiff_t  difference_type;
 
-    // Constructors:
+    // 24.4.2.1 Construction and assignment:
 
     nssv_constexpr basic_string_view() nssv_noexcept
         : data_( nssv_nullptr )
@@ -261,7 +269,7 @@ public:
     }
 #endif
 
-    // Iterators:
+    // 24.4.2.2 Iterator support:
 
     nssv_constexpr const_iterator begin()  const nssv_noexcept { return data_;         }
     nssv_constexpr const_iterator end()    const nssv_noexcept { return data_ + size_; }
@@ -275,7 +283,19 @@ public:
     nssv_constexpr const_reverse_iterator crbegin() const nssv_noexcept { return rbegin(); }
     nssv_constexpr const_reverse_iterator crend()   const nssv_noexcept { return rend();   }
 
-    // Element access:
+    // 24.4.2.3 Capacity:
+
+    nssv_constexpr size_type size()     const nssv_noexcept { return size_; }
+    nssv_constexpr size_type length()   const nssv_noexcept { return size_; }
+    nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
+
+    // since C++20
+    nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept
+    {
+        return 0 == size_;
+    }
+
+    // 24.4.2.4 Element access:
 
     nssv_constexpr const_reference operator[]( size_type pos ) const
     {
@@ -289,7 +309,7 @@ public:
         {
             return data_[pos];
         }
-        throw std::out_of_range( "nonst::string_view::at()" );
+        throw std::out_of_range("nonst::string_view::at()");
     }
 
     nssv_constexpr const_reference front() const { return assert( !empty() ), data_[0]; }
@@ -297,19 +317,7 @@ public:
 
     nssv_constexpr const_pointer   data()  const nssv_noexcept { return data_; }
 
-    // Capacity:
-
-    nssv_constexpr size_type size()     const nssv_noexcept { return size_; }
-    nssv_constexpr size_type length()   const nssv_noexcept { return size_; }
-    nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
-
-    // since C++20
-    nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept
-    {
-        return 0 == size_;
-    }
-
-    // Modifiers:
+    // 24.4.2.5 Modifiers:
 
     nssv_constexpr14 void remove_prefix( size_type n )
     {
@@ -331,55 +339,116 @@ public:
         swap( size_, other.size_ );
     }
 
-    // Operations:
+    // 24.4.2.6 String operations:
 
-    size_type copy( CharT * dest, size_type count, size_type pos = 0) const;
-    nssv_constexpr basic_string_view substr(size_type pos = 0, size_type count = npos ) const;
+    size_type copy( CharT * dest, size_type n, size_type pos = 0 ) const
+    {
+        if ( pos > size() )
+            throw std::out_of_range("nonst::string_view::copy()");
 
-    nssv_constexpr int compare(basic_string_view v) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr int compare(size_type pos1, size_type count1, basic_string_view v) const; // (2) (since C++17)
-    nssv_constexpr int compare(size_type pos1, size_type count1, basic_string_view v, size_type pos2, size_type count2) const; // (3) (since C++17)
-    nssv_constexpr int compare(const CharT* s) const; // (4) (since C++17)
-    nssv_constexpr int compare(size_type pos1, size_type count1, const CharT* s) const; // (5) (since C++17)
-    nssv_constexpr int compare(size_type pos1, size_type count1, const CharT* s, size_type count2) const; // (6)
+        const size_type rlen = std::min( n, size() - pos );
 
-    nssv_constexpr bool starts_with(basic_string_view x) const nssv_noexcept;  // (1) (since C++20)
-    nssv_constexpr bool starts_with(CharT x) const nssv_noexcept;  // (2) (since C++20)
-    nssv_constexpr bool starts_with(const CharT* x) const;  // (3) (since C++20)
+        (void) Traits::copy( dest, data() + pos, rlen );
 
-    nssv_constexpr bool ends_with(basic_string_view x) const nssv_noexcept; // (1)(since C++20)
-    nssv_constexpr bool ends_with(CharT x) const nssv_noexcept; // (2) (since C++20)
-    nssv_constexpr bool ends_with(const CharT* x) const;  // (3) (since C++20)
+        return rlen;
+    }
 
-    nssv_constexpr size_type find(basic_string_view v, size_type pos = 0) const nssv_noexcept; // (1) (since C++17)
-    nssv_constexpr size_type find(CharT ch, size_type pos = 0) const nssv_noexcept; // (2) (since C++17)
-    nssv_constexpr size_type find(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type find(const CharT* s, size_type pos = 0) const;  // (4) (since C++17)
+    nssv_constexpr14 basic_string_view substr( size_type pos = 0, size_type n = npos ) const
+    {
+        if ( pos > size() )
+            throw std::out_of_range("nonst::string_view::copy()");
 
-    nssv_constexpr size_type rfind(basic_string_view v, size_type pos = npos) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr size_type rfind(CharT c, size_type pos = npos) const nssv_noexcept;  // (2) (since C++17)
-    nssv_constexpr size_type rfind(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type rfind(const CharT* s, size_type pos = npos) const;  // (4) (since C++17)
+        return basic_string_view( data() + pos, std::min( n, size() - pos ) );
+    }
 
-    nssv_constexpr size_type find_first_of(basic_string_view v, size_type pos = 0) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr size_type find_first_of(CharT c, size_type pos = 0) const nssv_noexcept;  // (2) (since C++17)
-    nssv_constexpr size_type find_first_of(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type find_first_of(const CharT* s, size_type pos = 0) const;  // (4) (since C++17)
+    // compare(), 6x:
 
-    nssv_constexpr size_type find_last_of(basic_string_view v, size_type pos = npos) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr size_type find_last_of(CharT c, size_type pos = npos) const nssv_noexcept;  // (2) (since C++17)
-    nssv_constexpr size_type find_last_of(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type find_last_of(const CharT* s, size_type pos = npos) const;  // (4) (since C++17)
+    nssv_constexpr int compare( basic_string_view other ) const nssv_noexcept // (1)
+    {
+        if ( const int result = Traits::compare( data(), other.data(), std::min( size(), other.size() ) ) )
+            return result;
 
-    nssv_constexpr size_type find_first_not_of(basic_string_view v, size_type pos = 0) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr size_type find_first_not_of(CharT c, size_type pos = 0) const nssv_noexcept;  // (2) (since C++17)
-    nssv_constexpr size_type find_first_not_of(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type find_first_not_of(const CharT* s, size_type pos = 0) const;  // (4) (since C++17)
+        return size() == other.size() ? 0 : size() < other.size() ? -1 : 1;
+    }
 
-    nssv_constexpr size_type find_last_not_of(basic_string_view v, size_type pos = npos) const nssv_noexcept;  // (1) (since C++17)
-    nssv_constexpr size_type find_last_not_of(CharT c, size_type pos = npos) const nssv_noexcept;  // (2) (since C++17)
-    nssv_constexpr size_type find_last_not_of(const CharT* s, size_type pos, size_type count) const;  // (3) (since C++17)
-    nssv_constexpr size_type find_last_not_of(const CharT* s, size_type pos = npos) const;  // (4) (since C++17)
+    nssv_constexpr int compare( size_type pos1, size_type n1, basic_string_view other ) const // (2)
+    {
+        return substr( pos1, n1 ).compare( other );
+    }
+
+    nssv_constexpr int compare( size_type pos1, size_type n1, basic_string_view other, size_type pos2, size_type n2 ) const // (3)
+    {
+        return substr( pos1, n1 ).compare( other.substr( pos2, n2 ) );
+    }
+
+    nssv_constexpr int compare( CharT const * s ) const // (4)
+    {
+        return compare( basic_string_view( s ) );
+    }
+
+    nssv_constexpr int compare( size_type pos1, size_type n1, CharT const * s ) const // (5)
+    {
+        return substr( pos1, n1 ).compare( basic_string_view( s ) );
+    }
+
+    nssv_constexpr int compare( size_type pos1, size_type n1, CharT const * s, size_type n2 ) const // (6)
+    {
+        return substr( pos1, n1 ).compare( basic_string_view( s, n2 ) );
+    }
+
+    // starts_with(), 3x, since C++20:
+
+    nssv_constexpr bool starts_with( basic_string_view x ) const nssv_noexcept;  // (1)
+    nssv_constexpr bool starts_with( CharT x ) const nssv_noexcept;  // (2)
+    nssv_constexpr bool starts_with( CharT const * x ) const;  // (3)
+
+    // ends_with(), 3x, since C++20:
+
+    nssv_constexpr bool ends_with( basic_string_view x ) const nssv_noexcept;  // (1)
+    nssv_constexpr bool ends_with( CharT x ) const nssv_noexcept;  // (2)
+    nssv_constexpr bool ends_with( CharT const * x ) const;  // (3)
+
+    // find(), 4x:
+
+    nssv_constexpr size_type find( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type find( CharT ch, size_type pos = 0 ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type find( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type find( CharT const * s, size_type pos = 0 ) const;  // (4)
+
+    // rfind(), 4x:
+
+    nssv_constexpr size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type rfind( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type rfind( CharT const * s, size_type pos = npos ) const;  // (4)
+
+    // find_first_of(), 4x:
+
+    nssv_constexpr size_type find_first_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type find_first_of( CharT c, size_type pos = 0 ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type find_first_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type find_first_of(  CharT const * s, size_type pos = 0 ) const;  // (4)
+
+    // find_last_of(), 4x:
+
+    nssv_constexpr size_type find_last_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type find_last_of( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos = npos ) const;  // (4)
+
+    // find_first_not_of(), 4x:
+
+    nssv_constexpr size_type find_first_not_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type find_first_not_of( CharT c, size_type pos = 0 ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos = 0 ) const;  // (4)
+
+    // find_last_not_of(), 4x:
+
+    nssv_constexpr size_type find_last_not_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
+    nssv_constexpr size_type find_last_not_of( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
+    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
+    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos = npos ) const;  // (4)
 
     // Constants:
 
@@ -400,6 +469,7 @@ private:
 // Non-member functions:
 //
 
+// 24.4.3 Non-member comparison functions:
 // lexicographically compare two string views (function template):
 
 template< class CharT, class Traits >
@@ -438,7 +508,7 @@ nssv_constexpr bool operator>= (
     basic_string_view <CharT, Traits> rhs ) nssv_noexcept
 { return lhs.compare( rhs ) >= 0 ; }
 
-// Inserters and extractors
+// 24.4.4 Inserters and extractors:
 
 namespace detail {
 
@@ -489,26 +559,7 @@ operator<<(
     return detail::write_to_stream( os, sv );
 }
 
-// Literals - Defined in inline namespace std::literals::string_view_literals
-
-namespace string_view_literals {
-
-// msvc warning C4455: 'operator ""sv': literal suffix identifiers that do not start with an underscore are reserved
-
-//nssv_constexpr string_view operator "" sv(const char* str, size_t len) nssv_noexcept;  // (1) (since C++17)
-//nssv_constexpr u16string_view operator "" sv(const char16_t* str, size_t len) nssv_noexcept;  // (2) (since C++17)
-//nssv_constexpr u32string_view operator "" sv(const char32_t* str, size_t len) nssv_noexcept;  // (3) (since C++17)
-//nssv_constexpr wstring_view   operator "" sv(const wchar_t* str, size_t len) nssv_noexcept;  // (4) (since C++17)
-
-} // namespace string_view_literals
-
-}} // namespace nonstd::sv_lite
-
 // Several typedefs for common character types are provided:
-//
-// Defined in header <string_view>
-// Type Definition
-namespace nonstd { namespace sv_lite {
 
 typedef basic_string_view<char>      string_view;
 typedef basic_string_view<wchar_t>   wstring_view;
@@ -517,7 +568,24 @@ typedef basic_string_view<char16_t>  u16string_view;
 typedef basic_string_view<char32_t>  u32string_view;
 #endif
 
+// 24.4.6 Suffix for basic_string_view literals:
+
+namespace string_view_literals {
+
+// msvc warning C4455: 'operator ""sv': literal suffix identifiers that do not start with an underscore are reserved
+
+//nssv_constexpr string_view operator "" sv(const char* str, size_t len) nssv_noexcept;  // (1)
+//nssv_constexpr u16string_view operator "" sv(const char16_t* str, size_t len) nssv_noexcept;  // (2)
+//nssv_constexpr u32string_view operator "" sv(const char32_t* str, size_t len) nssv_noexcept;  // (3)
+//nssv_constexpr wstring_view   operator "" sv(const wchar_t* str, size_t len) nssv_noexcept;  // (4)
+
+} // namespace string_view_literals
+
 }} // namespace nonstd::sv_lite
+
+//
+// make types and algorithms available in namespace nonstd:
+//
 
 namespace nonstd {
 
@@ -542,7 +610,7 @@ using sv_lite::operator<<;
 
 } // namespace nonstd
 
-// C++11 std::hash support:
+// 24.4.5 Hash support (C++11):
 
 #if nssv_HAVE_STD_HASH
 
