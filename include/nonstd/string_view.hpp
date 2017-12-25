@@ -184,6 +184,7 @@ using std::hash;
 // Before C++17: use string_view lite:
 //
 
+#include <algorithm>
 #include <cassert>
 #include <iterator>
 #include <limits>
@@ -400,14 +401,14 @@ public:
 
     // starts_with(), 3x, since C++20:
 
-    nssv_constexpr bool starts_with( basic_string_view other ) const nssv_noexcept  // (1)
+    nssv_constexpr bool starts_with( basic_string_view v ) const nssv_noexcept  // (1)
     {
-        return size() >= other.size() && compare( 0, other.size(), other ) == 0;
+        return size() >= v.size() && compare( 0, v.size(), v ) == 0;
     }
 
-    nssv_constexpr bool starts_with( CharT ch ) const nssv_noexcept  // (2)
+    nssv_constexpr bool starts_with( CharT c ) const nssv_noexcept  // (2)
     {
-        return starts_with( basic_string_view( &ch, 1 ) );
+        return starts_with( basic_string_view( &c, 1 ) );
     }
 
     nssv_constexpr bool starts_with( CharT const * s ) const  // (3)
@@ -417,14 +418,14 @@ public:
 
     // ends_with(), 3x, since C++20:
 
-    nssv_constexpr bool ends_with( basic_string_view other ) const nssv_noexcept  // (1)
+    nssv_constexpr bool ends_with( basic_string_view v ) const nssv_noexcept  // (1)
     {
-        return size() >= other.size() && compare( size() - other.size(), npos, other ) == 0;
+        return size() >= v.size() && compare( size() - v.size(), npos, v ) == 0;
     }
 
-    nssv_constexpr bool ends_with( CharT ch ) const nssv_noexcept  // (2)
+    nssv_constexpr bool ends_with( CharT c ) const nssv_noexcept  // (2)
     {
-        return ends_with( basic_string_view( &ch, 1 ) );
+        return ends_with( basic_string_view( &c, 1 ) );
     }
 
     nssv_constexpr bool ends_with( CharT const * s ) const  // (3)
@@ -434,17 +435,54 @@ public:
 
     // find(), 4x:
 
-    nssv_constexpr size_type find( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type find( CharT ch, size_type pos = 0 ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type find( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type find( CharT const * s, size_type pos = 0 ) const;  // (4)
+    nssv_constexpr14 size_type find( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
+    {
+        return assert( v.size() == 0 || v.data() != nssv_nullptr )
+            , pos >= size()
+            ? npos
+            : to_pos( std::search( begin() + pos, end(), v.begin(), v.end(), Traits::eq ) );
+    }
+
+    nssv_constexpr size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    {
+        return find( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr size_type find( CharT const * s, size_type pos, size_type n ) const  // (3)
+    {
+        return find( basic_string_view( s, n ), pos );
+    }
+
+    nssv_constexpr size_type find( CharT const * s, size_type pos = 0 ) const  // (4)
+    {
+        return find( basic_string_view( s ), pos );
+    }
 
     // rfind(), 4x:
 
-    nssv_constexpr size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type rfind( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type rfind( CharT const * s, size_type pos = npos ) const;  // (4)
+    nssv_constexpr size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
+    {
+        return pos > size()
+            ? rfind( v, size() )
+            : to_pos(
+                std::search( const_reverse_iterator( begin() + pos ), rend(), v.rbegin(), v.rend(), Traits::eq )
+                , v.size() );
+    }
+
+    nssv_constexpr size_type rfind( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    {
+        return rfind( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr size_type rfind( CharT const * s, size_type pos, size_type n ) const  // (3)
+    {
+        return rfind( basic_string_view( s, n ), pos );
+    }
+
+    nssv_constexpr size_type rfind( CharT const * s, size_type pos = 0 ) const  // (4)
+    {
+        return rfind( basic_string_view( s ), pos );
+    }
 
     // find_first_of(), 4x:
 
@@ -483,6 +521,16 @@ public:
 #else
     enum { npos = size_type(-1) };
 #endif
+
+private:
+    nssv_constexpr size_type to_pos( const_iterator it ) const
+    {
+        return it == end() ? npos : size_type( it - begin() );
+    }
+    nssv_constexpr size_type to_pos( const_reverse_iterator ri, size_type search_size) const
+    {
+        return ri == rend() ? npos : size_type( ri.base() - begin() - search_size );
+    }
 
 private:
     const_pointer data_;
@@ -604,6 +652,22 @@ namespace string_view_literals {
 //nssv_constexpr wstring_view   operator "" sv(const wchar_t* str, size_t len) nssv_noexcept;  // (4)
 
 } // namespace string_view_literals
+
+// Extensions:
+
+template< class CharT, class Traits, class Allocator >
+std::basic_string<CharT, Allocator>
+to_string( basic_string_view<CharT, Traits> v, Allocator const & a = Allocator() )
+{
+    return std::basic_string<CharT, Allocator>( v.begin(), v.end() );
+}
+
+template< class CharT, class Traits, class Allocator >
+basic_string_view<CharT, Traits>
+to_string_view( std::basic_string<CharT, Allocator> const & s )
+{
+    return basic_string_view<CharT, Traits>( s.begin(), s.end() );
+}
 
 }} // namespace nonstd::sv_lite
 

@@ -6,7 +6,6 @@
 //
 
 #include "string-view-lite.t.h"
-#include <algorithm>
 #include <vector>
 
 namespace {
@@ -15,7 +14,7 @@ using namespace nonstd;
 
 typedef string_view::size_type size_type;
 
-// Constructors:
+// 24.4.2.1 Construction and assignment:
 
 CASE( "string_view: Allows to default construct an empty string_view" )
 {
@@ -99,7 +98,7 @@ CASE( "string_view: Allows to copy-assign from non-empty string_view" )
     EXPECT( *(sv2.data() + 4) == 'o'         );
 }
 
-// Iteration:
+// 24.4.2.2 Iterator support:
 
 CASE( "string_view: Allows forward iteration" )
 {
@@ -157,7 +156,7 @@ CASE( "string_view: Allows const reverse iteration" )
     }
 }
 
-// Capacity:
+// 24.4.2.3 Capacity:
 
 CASE( "string_view: Allows to obtain the size of the view via size()" )
 {
@@ -182,10 +181,22 @@ CASE( "string_view: Allows to obtain the maximum size a view can be via max_size
     EXPECT( sv.max_size() == std::numeric_limits< string_view::size_type >::max() );
 }
 
-// Element access:
+CASE( "string_view: Allows to check for an empty string_view via empty()" )
+{
+    string_view sve;
+    string_view svne("hello");
+
+    EXPECT(      sve.size() == size_type( 0 ) );
+    EXPECT(      sve.empty() );
+    EXPECT_NOT( svne.empty() );
+}
+
+// 24.4.2.4 Element access:
 
 CASE( "string_view: Allows to observe an element via array indexing" )
 {
+    // Requires: index < sv.size()
+
     char hello[] = "hello";
     string_view sv( hello );
 
@@ -206,7 +217,7 @@ CASE( "string_view: Allows to observe an element via at()" )
     }
 }
 
-CASE( "string_view: Throws at observing an element via at() that is outside the view" )
+CASE( "string_view: Throws at observing an element via at() with an index of size() or larger" )
 {
     string_view sv("hello");
 
@@ -236,17 +247,7 @@ CASE( "string_view: Yields nullptr (or NULL) with data() for an empty string_vie
     EXPECT( (sv.data() == nssv_nullptr) );
 }
 
-// Modifiers:
-
-CASE( "string_view: Allows to check for an empty string_view via empty()" )
-{
-    string_view sve;
-    string_view svne("hello");
-
-    EXPECT(      sve.size() == size_type( 0 ) );
-    EXPECT(      sve.empty() );
-    EXPECT_NOT( svne.empty() );
-}
+// 24.4.2.5 Modifiers:
 
 CASE( "string_view: Allows to remove a prefix of n elements" )
 {
@@ -283,7 +284,7 @@ CASE( "string_view: Allows to swap with other string_view" )
     EXPECT( std::equal( sv2.begin(), sv2.end(), hello )  );
 }
 
-// Operations:
+// 24.4.2.6 String operations:
 
 CASE( "string_view: Allows to copy a substring of length n, starting at position pos (default: 0) via copy()" )
 {
@@ -407,6 +408,8 @@ CASE( "string_view: Allows to compare a sub string to a C-string prefix via comp
     EXPECT( string_view( hello ).compare( 6, 5, hello, 5 ) >  0 );
 }
 
+// 24.4.2.7 Searching:
+
 CASE( "string_view: Allows to check for a prefix string_view via starts_with(), (1)" )
 {
     char hello[] = "hello world";
@@ -459,15 +462,64 @@ CASE( "string_view: Allows to check for a suffix C-string via ends_with(), (3)" 
     EXPECT_NOT( string_view( hello ).ends_with("hello") );
 }
 
-CASE( "string_view: ends_with 3x" ) {}
-CASE( "string_view: find 4x" ) {}
+CASE( "string_view: Allows to search for a string_view substring via find(), (1)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find( sv    ) == size_type( 0 ) );
+    EXPECT( sv.find( sv, 1 ) == string_view::npos );
+    EXPECT( sv.find( string_view("world" )    ) == size_type( 6 ) );
+    EXPECT( sv.find( string_view("world" ), 6 ) == size_type( 6 ) );
+    EXPECT( sv.find( string_view("world" ), 7 ) == string_view::npos );
+}
+
+CASE( "string_view: Allows to search for a character via find(), (2)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find('h'    ) == size_type( 0 )    );
+    EXPECT( sv.find('h', 1 ) == string_view::npos );
+    EXPECT( sv.find('w'    ) == size_type( 6 )    );
+    EXPECT( sv.find('w', 6 ) == size_type( 6 )    );
+    EXPECT( sv.find('w', 7 ) == string_view::npos );
+}
+
+CASE( "string_view: Allows to search for a C-string substring from position pos and of length n via find(), (3)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find( hello , 0, sv.size() ) == size_type( 0 )    );
+    EXPECT( sv.find( hello , 1, sv.size() ) == string_view::npos );
+    EXPECT( sv.find("world", 0, 5 ) == size_type( 6 )    );
+    EXPECT( sv.find("world", 6, 5 ) == size_type( 6 )    );
+    EXPECT( sv.find("world", 7, 4 ) == string_view::npos );
+    EXPECT( sv.find("world", 3, 0 ) == size_type( 3 )    );
+}
+
+CASE( "string_view: Allows to search for a C-string substring from position pos (default: 0) via find(), (4)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find( hello     ) == size_type( 0 )    );
+    EXPECT( sv.find( hello , 1 ) == string_view::npos );
+    EXPECT( sv.find("world"    ) == size_type( 6 )    );
+    EXPECT( sv.find("world", 6 ) == size_type( 6 )    );
+    EXPECT( sv.find("world", 7 ) == string_view::npos );
+}
+
 CASE( "string_view: rfind 4x" ) {}
+
+
 CASE( "string_view: find_first_of 4x" ) {}
 CASE( "string_view: find_last_of 4x" ) {}
 CASE( "string_view: find_first_not_of 4x" ) {}
 CASE( "string_view: find_last_not_of 4x" ) {}
 
-// Comparison:
+// 24.4.3 Non-member comparison functions:
 
 CASE( "string_view: Allows to compare a string_view with another string_view" )
 {
@@ -496,7 +548,7 @@ CASE( "string_view: Allows to compare empty string_view-s as equal" )
     EXPECT( a == b );
 }
 
-// Streaming:
+// 24.4.4 Inserters and extractors:
 
 CASE ( "operator<<: Allows printing a string_view to an output stream" )
 {
@@ -511,5 +563,10 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
 
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
 }
+
+// nonstd extension:
+
+CASE( "to_string(): " ) {}
+CASE( "to_string_view(): " ) {}
 
 } // anonymous namespace
