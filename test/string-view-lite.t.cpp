@@ -36,13 +36,13 @@ CASE( "string-view-lite version" "[.version]" )
 
 CASE( "string-view-lite configuration" "[.config]" )
 {
-#if nssv_HAVE_STD_SV
+#if nssv_HAVE_STD_STRING_VIEW
     std::cout << "Have std::string_view\n";
 #else
     std::cout << "No std::string_view\n";
 #endif
 
-#if nssv_USES_STD_SV
+#if nssv_USES_STD_STRING_VIEW
     std::cout << "Using std::string_view\n";
 #else
     std::cout << "Using nonstd::string_view\n";

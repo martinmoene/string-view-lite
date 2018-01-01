@@ -25,17 +25,29 @@
 // - force use of std::string_view
 // - force use of nonstd::string_view
 
-#ifndef nssv_CONFIG_SELECT_STD_STRING_VIEW
+#if      nssv_CONFIG_SELECT_STD_STRING_VIEW
+# define nssv_USES_STD_STRING_VIEW  1
+#elif    nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+# define nssv_USES_STD_STRING_VIEW  0
 #endif
 
-#ifndef nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+#if nssv_CONFIG_SELECT_STD_STRING_VIEW && nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+#error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
 #endif
 
-// Compiler detection:
+// Compiler detection (C++20 is speculative):
+// Note: MSVC supports C++14 since it supports C++17.
 
-#define nssv_CPP11_OR_GREATER  ( __cplusplus >= 201103L )
-#define nssv_CPP14_OR_GREATER  ( __cplusplus >= 201402L /* || _MSVC_LANG >= 201402L */ )
-#define nssv_CPP17_OR_GREATER  ( __cplusplus >= 201703L    || _MSVC_LANG >= 201703L    )
+#ifdef _MSVC_LANG
+# define nssv_MSVC_LANG  _MSVC_LANG
+#else
+# define nssv_MSVC_LANG  0
+#endif
+
+#define nssv_CPP11_OR_GREATER  (__cplusplus >= 201103L || nssv_MSVC_LANG >= 201103L )
+#define nssv_CPP14_OR_GREATER  (__cplusplus >= 201402L || nssv_MSVC_LANG >= 201703L )
+#define nssv_CPP17_OR_GREATER  (__cplusplus >= 201703L || nssv_MSVC_LANG >= 201703L )
+#define nssv_CPP20_OR_GREATER  (__cplusplus >= 202000L || nssv_MSVC_LANG >= 202000L )
 
 // use C++17 std::string_view if available:
 
@@ -46,7 +58,13 @@
 #endif
 
 #define nssv_HAVE_STD_STRING_VIEW  ( nssv_CPP17_OR_GREATER && nssv_HAS_INCLUDE(<string_view>) )
-#define nssv_USES_STD_STRING_VIEW  ( 0 )
+
+#ifndef  nssv_USES_STD_STRING_VIEW
+# define nssv_USES_STD_STRING_VIEW  nssv_HAVE_STD_STRING_VIEW
+#endif
+
+#define nssv_HAVE_STARTS_WITH ( nssv_CPP20_OR_GREATER || !nssv_USES_STD_STRING_VIEW )
+#define nssv_HAVE_ENDS_WITH     nssv_HAVE_STARTS_WITH
 
 //
 // Use C++17 std::string_view:
@@ -66,11 +84,22 @@ using std::basic_string_view;
 
 // literal "sv"
 
-using std::hash;
+using std::operator==;
+using std::operator!=;
+using std::operator<;
+using std::operator<=;
+using std::operator>;
+using std::operator>=;
+
+using std::operator<<;
 
 } // namespace nonstd
 
 #else // nssv_HAVE_STD_STRING_VIEW
+
+//
+// Before C++17: use string_view lite:
+//
 
 #if defined(_MSC_VER) && !defined(__clang__)
 # define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 100 - 5 - (_MSC_VER < 1900))
@@ -180,10 +209,6 @@ using std::hash;
 #if nssv_CPP11_OR_GREATER
 #endif
 
-//
-// Before C++17: use string_view lite:
-//
-
 #include <algorithm>
 #include <cassert>
 #include <iterator>
@@ -191,6 +216,36 @@ using std::hash;
 #include <ostream>
 #include <stdexcept>
 #include <string>   // std::char_traits<>
+
+// MSVC warning suppression macros:
+
+#if nssv_COMPILER_MSVC_VERSION >= 14
+# define nssv_SUPPRESS_MSGSL_WARNING(expr)        [[gsl::suppress(expr)]]
+# define nssv_SUPPRESS_MSVC_WARNING(code, descr)  __pragma(warning(suppress: code) )
+# define nssv_DISABLE_MSVC_WARNINGS(codes)        __pragma(warning(push))  __pragma(warning(disable: codes))
+# define nssv_RESTORE_MSVC_WARNINGS()             __pragma(warning(pop ))
+#else
+# define nssv_SUPPRESS_MSGSL_WARNING(expr)
+# define nssv_SUPPRESS_MSVC_WARNING(code, descr)
+# define nssv_DISABLE_MSVC_WARNINGS(codes)
+# define nssv_RESTORE_MSVC_WARNINGS()
+#endif
+
+// Suppress the following MSVC GSL warnings:
+// - C26410: gsl::r.32: the parameter 'ptr' is a reference to const unique pointer, use const T* or const T& instead
+// - C26415: gsl::r.30: smart pointer parameter 'ptr' is used only to access contained pointer. Use T* or T& instead
+// - C26418: gsl::r.36: shared pointer parameter 'ptr' is not copied or moved. Use T* or T& instead
+// - C26472, gsl::t.1 : don't use a static_cast for arithmetic conversions;
+//                      use brace initialization, gsl::narrow_cast or gsl::narow
+// - C26439, gsl::f.6 : special function 'function' can be declared 'noexcept'
+// - C26440, gsl::f.6 : function 'function' can be declared 'noexcept'
+// - C26473: gsl::t.1 : don't cast between pointer types where the source type and the target type are the same
+// - C26481: gsl::b.1 : don't use pointer arithmetic. Use span instead
+// - C26482, gsl::b.2 : only index into arrays using constant expressions
+// - C26490: gsl::t.1 : don't use reinterpret_cast
+
+//nssv_DISABLE_MSVC_WARNINGS( 26410 26415 26418 26472 26439 26440 26473 26481 26482 26490 )
+nssv_DISABLE_MSVC_WARNINGS( 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
 
@@ -440,7 +495,7 @@ public:
         return assert( v.size() == 0 || v.data() != nssv_nullptr )
             , pos >= size()
             ? npos
-            : to_pos( std::search( begin() + pos, end(), v.begin(), v.end(), Traits::eq ) );
+            : to_pos( std::search( cbegin() + pos, cend(), v.cbegin(), v.cend(), Traits::eq ) );
     }
 
     nssv_constexpr size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
@@ -465,8 +520,10 @@ public:
         return pos > size()
             ? rfind( v, size() )
             : to_pos(
-                std::search( const_reverse_iterator( begin() + pos ), rend(), v.rbegin(), v.rend(), Traits::eq )
+                std::search( crbegin(), const_reverse_iterator(cbegin() + pos), v.crbegin(), v.crend(), Traits::eq )
+                , pos
                 , v.size() );
+//                , std::min( pos, v.size() ) );
     }
 
     nssv_constexpr size_type rfind( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
@@ -486,10 +543,29 @@ public:
 
     // find_first_of(), 4x:
 
-    nssv_constexpr size_type find_first_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type find_first_of( CharT c, size_type pos = 0 ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type find_first_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type find_first_of(  CharT const * s, size_type pos = 0 ) const;  // (4)
+    nssv_constexpr size_type find_first_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
+    {
+        return pos >= size()
+            ? npos
+            : npos != v.find( data_[pos] )
+                ? pos
+                : find_first_of( v, pos + 1 );
+    }
+
+    nssv_constexpr size_type find_first_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    {
+        return find_first_of( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr size_type find_first_of( CharT const * s, size_type pos, size_type n ) const  // (3)
+    {
+        return find_first_of( basic_string_view( s, n ), pos );
+    }
+
+    nssv_constexpr size_type find_first_of(  CharT const * s, size_type pos = 0 ) const  // (4)
+    {
+        return find_first_of( basic_string_view( s ), pos );
+    }
 
     // find_last_of(), 4x:
 
@@ -525,11 +601,19 @@ public:
 private:
     nssv_constexpr size_type to_pos( const_iterator it ) const
     {
-        return it == end() ? npos : size_type( it - begin() );
+        return it == cend() ? npos : size_type( it - cbegin() );
     }
-    nssv_constexpr size_type to_pos( const_reverse_iterator ri, size_type search_size) const
+
+    nssv_constexpr size_type to_pos( const_reverse_iterator ri, size_type pos, size_type search_size) const
     {
-        return ri == rend() ? npos : size_type( ri.base() - begin() - search_size );
+std::cout << "to_pos(rev): " << pos << ", " << size_type( crend() - ri) << ", " << std::distance(ri, crbegin()) << ", " << std::distance(ri, crend()) << "\n";
+//        return ri == crend() ? 0 : size_type( ri - crbegin() - search_size );
+//        return ri == crend() ? npos : size_type( ri - crend());
+        return crend() - ri == search_size
+            ? 0
+            : crend() - ri < pos
+                ? npos
+                : crend() - ri - search_size;
     }
 
 private:
@@ -599,11 +683,11 @@ Stream & write_to_stream( Stream & os, View const & sv )
     if ( !os )
         return os;
 
-    std::streamsize length = static_cast<std::streamsize>( sv.length() );
+    const std::streamsize length = static_cast<std::streamsize>( sv.length() );
 
     // Whether, and how, to pad:
-    bool      pad = ( length < os.width() );
-    bool left_pad = pad && ( os.flags() & std::ios_base::adjustfield ) == std::ios_base::left;
+    const bool      pad = ( length < os.width() );
+    const bool left_pad = pad && ( os.flags() & std::ios_base::adjustfield ) == std::ios_base::left;
 
     if ( left_pad )
         write_padding( os, os.width() - length );
