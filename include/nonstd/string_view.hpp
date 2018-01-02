@@ -312,7 +312,7 @@ public:
         , size_( Traits::length(s) )
     {}
 
-	// Assignment:
+    // Assignment:
 
 #if nssv_CPP11_OR_GREATER
     nssv_constexpr14 basic_string_view & operator=( basic_string_view const & other ) nssv_noexcept = default;
@@ -687,7 +687,7 @@ Stream & write_to_stream( Stream & os, View const & sv )
 
     // Whether, and how, to pad:
     const bool      pad = ( length < os.width() );
-    const bool left_pad = pad && ( os.flags() & std::ios_base::adjustfield ) == std::ios_base::left;
+    const bool left_pad = pad && ( os.flags() & std::ios_base::adjustfield ) == std::ios_base::right;
 
     if ( left_pad )
         write_padding( os, os.width() - length );

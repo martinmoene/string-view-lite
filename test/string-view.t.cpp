@@ -629,9 +629,9 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
     string_view sv( s );
 
     oss << sv << '\n'
-        << std::left << std::setw(10) << sv << '\n'
+        << std::right << std::setw(10) << sv << '\n'
         << sv << '\n'
-        << std::setfill('.') << std::right << std::setw(10) << sv;
+        << std::setfill('.') << std::left << std::setw(10) << sv;
 
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
 }
