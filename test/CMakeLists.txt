@@ -19,57 +19,42 @@ include_directories( "${PROJECT_SOURCE_DIR}/../include/nonstd" )
 
 set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
 
-add_executable( string-view-lite.t ${SOURCES} )
+set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
+#add_definitions( -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
 
 set( HAS_STD_FLAGS  FALSE )
+set( HAS_CPP98_FLAG FALSE )
+set( HAS_CPP03_FLAG FALSE )
 set( HAS_CPP11_FLAG FALSE )
 set( HAS_CPP14_FLAG FALSE )
 set( HAS_CPP17_FLAG FALSE )
-
-set( HAS_MSVC_STD_FLAGS  FALSE )
-set( HAS_MSVC_CPP11_FLAG FALSE )
-set( HAS_MSVC_CPP14_FLAG FALSE )
-set( HAS_MSVC_CPP17_FLAG FALSE )
-
-add_definitions( -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
+set( HAS_CPP20_FLAG FALSE )
 
 if( MSVC )
-    set( HAS_MSVC_STD_FLAGS TRUE )
+    set( HAS_STD_FLAGS TRUE )
+
+    set( STD_OPT     -std: )
+    set( OPTIONS     -W3 -EHsc )
+    set( DEFINITIONS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX ${NONSTD_SV_HEADER} )
 
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.00 )
-        set( HAS_MSVC_CPP14_FLAG TRUE )
-        set( HAS_MSVC_CPPLATEST_FLAG TRUE )
+        set( HAS_CPP14_FLAG TRUE )
+        set( HAS_CPPLATEST_FLAG TRUE )
     endif()
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.11 )
-        set( HAS_MSVC_CPP17_FLAG TRUE )
+        set( HAS_CPP17_FLAG TRUE )
     endif()
-
-    add_executable( string-view-lite-cpp98.t ${SOURCES} )
-    target_compile_options( string-view-lite-cpp98.t  PUBLIC )
-
-    if( HAS_MSVC_CPP14_FLAG )
-        add_executable( string-view-lite-cpp14.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpp14.t  PUBLIC -std:c++14 )
-    endif()
-
-    if( HAS_MSVC_CPP17_FLAG )
-        add_executable( string-view-lite-cpp17.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpp17.t  PUBLIC -std:c++17 )
-        enable_msvs_guideline_checker( string-view-lite-cpp17.t )
-    endif()
-
-    if( HAS_MSVC_CPPLATEST_FLAG )
-        add_executable( string-view-lite-cpplatest.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpplatest.t  PUBLIC -std:c++latest )
-    endif()
-
-    add_compile_options( -W3 -EHsc )
-    add_definitions( -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX )
 
 elseif( CMAKE_CXX_COMPILER_ID MATCHES GNU OR
         CMAKE_CXX_COMPILER_ID MATCHES Clang )
 
-    set( HAS_STD_FLAGS TRUE )
+    set( HAS_STD_FLAGS  TRUE )
+    set( HAS_CPP98_FLAG TRUE )
+    set( HAS_CPP03_FLAG TRUE )
+
+    set( STD_OPT     -std= )
+    set( OPTIONS     -Wall -Wno-missing-braces -Wno-unnamed-type-template-args -fno-elide-constructors )
+    set( DEFINITIONS ${NONSTD_SV_HEADER} )
 
     # GNU: available -std flags depends on version
     if( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
@@ -97,29 +82,6 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES GNU OR
         endif()
     endif()
 
-    add_executable( string-view-lite-cpp98.t ${SOURCES} )
-    target_compile_options( string-view-lite-cpp98.t  PUBLIC -std=c++98 )
-
-    add_executable( string-view-lite-cpp03.t ${SOURCES} )
-    target_compile_options( string-view-lite-cpp03.t  PUBLIC -std=c++03 )
-
-    if( HAS_CPP11_FLAG )
-        add_executable( string-view-lite-cpp11.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpp11.t  PUBLIC -std=c++11 )
-    endif()
-
-    if( HAS_CPP14_FLAG )
-        add_executable( string-view-lite-cpp14.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpp14.t  PUBLIC -std=c++14 )
-    endif()
-
-    if( HAS_CPP17_FLAG )
-        add_executable( string-view-lite-cpp17.t ${SOURCES} )
-        target_compile_options( string-view-lite-cpp17.t  PUBLIC -std=c++17 )
-    endif()
-
-    add_compile_options( -Wall -Wno-missing-braces -Wno-unnamed-type-template-args -fno-elide-constructors )
-
 elseif( CMAKE_CXX_COMPILER_ID MATCHES Intel )
 # as is
 else()
@@ -128,14 +90,52 @@ endif()
 
 # add generic executable, unless -std flags can be specified:
 
-if( NOT HAS_STD_FLAGS AND NOT HAS_MSVC_STD_FLAGS )
+if( NOT HAS_STD_FLAGS )
     add_executable( string-view-lite.t ${SOURCES} )
     target_link_libraries( string-view-lite.t string-view-lite )
+else()
+    # unconditionally add C++98 variant for MSVC:
+    add_executable                ( string-view-lite-cpp98.t ${SOURCES} )
+    target_compile_definitions    ( string-view-lite-cpp98.t PRIVATE ${DEFINITIONS} )
+    target_compile_options        ( string-view-lite-cpp98.t PRIVATE ${OPTIONS} )
+    if( HAS_CPP98_FLAG )
+        target_compile_options    ( string-view-lite-cpp98.t PRIVATE ${STD_OPT}c++98 )
+    endif()
+
+    if( HAS_CPP03_FLAG )
+        add_executable            ( string-view-lite-cpp03.t ${SOURCES} )
+        target_compile_options    ( string-view-lite-cpp03.t PRIVATE ${OPTIONS} ${STD_OPT}c++03 )
+        target_compile_definitions( string-view-lite-cpp03.t PRIVATE ${DEFINITIONS} )
+    endif()
+
+    if( HAS_CPP11_FLAG )
+        add_executable            ( string-view-lite-cpp11.t ${SOURCES} )
+        target_compile_options    ( string-view-lite-cpp11.t PRIVATE ${OPTIONS} ${STD_OPT}c++11 )
+        target_compile_definitions( string-view-lite-cpp11.t PRIVATE ${DEFINITIONS} )
+    endif()
+
+    if( HAS_CPP14_FLAG )
+        add_executable            ( string-view-lite-cpp14.t ${SOURCES} )
+        target_compile_options    ( string-view-lite-cpp14.t PRIVATE ${OPTIONS} ${STD_OPT}c++14 )
+        target_compile_definitions( string-view-lite-cpp14.t PRIVATE ${DEFINITIONS} )
+    endif()
+
+    if( HAS_CPP17_FLAG )
+        add_executable            ( string-view-lite-cpp17.t ${SOURCES} )
+        target_compile_options    ( string-view-lite-cpp17.t PRIVATE ${OPTIONS} ${STD_OPT}c++17 )
+        target_compile_definitions( string-view-lite-cpp17.t PRIVATE ${DEFINITIONS} )
+    endif()
+
+    if( HAS_CPPLATEST_FLAG )
+        add_executable            ( string-view-lite-cpplatest.t ${SOURCES} )
+        target_compile_options    ( string-view-lite-cpplatest.t PRIVATE ${OPTIONS} ${STD_OPT}c++latest )
+        target_compile_definitions( string-view-lite-cpplatest.t PRIVATE ${DEFINITIONS} )
+    endif()
 endif()
 
 # with C++17, honour explicit request for std::string_view or nonstd::string_view:
 
-if( HAS_CPP17_FLAG OR HAS_MSVC_CPP17_FLAG )
+if( HAS_CPP17_FLAG )
     if ( NSSV_SELECT_STDSV )
         target_compile_definitions( string-view-lite-cpp17.t PUBLIC nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
     endif()
@@ -149,21 +149,13 @@ endif()
 
 enable_testing()
 
-if( HAS_MSVC_STD_FLAGS )
+if( HAS_STD_FLAGS )
+    # unconditionally add C++98 variant for MSVC:
     add_test(     NAME test-cpp98     COMMAND string-view-lite-cpp98.t )
 
-    if( HAS_MSVC_CPP14_FLAG )
-        add_test( NAME test-cpp14     COMMAND string-view-lite-cpp14.t )
+    if( HAS_CPP03_FLAG )
+        add_test( NAME test-cpp03     COMMAND string-view-lite-cpp03.t )
     endif()
-    if( HAS_MSVC_CPP17_FLAG )
-        add_test( NAME test-cpp17     COMMAND string-view-lite-cpp17.t )
-    endif()
-    if( HAS_MSVC_CPPLATEST_FLAG )
-        add_test( NAME test-cpplatest COMMAND string-view-lite-cpplatest.t )
-    endif()
-elseif( HAS_STD_FLAGS )
-    add_test(     NAME test-cpp98     COMMAND string-view-lite-cpp98.t )
-    add_test(     NAME test-cpp03     COMMAND string-view-lite-cpp03.t )
     if( HAS_CPP11_FLAG )
         add_test( NAME test-cpp11     COMMAND string-view-lite-cpp11.t )
     endif()
@@ -173,11 +165,14 @@ elseif( HAS_STD_FLAGS )
     if( HAS_CPP17_FLAG )
         add_test( NAME test-cpp17     COMMAND string-view-lite-cpp17.t )
     endif()
+    if( HAS_CPPLATEST_FLAG )
+        add_test( NAME test-cpplatest COMMAND string-view-lite-cpplatest.t )
+    endif()
 else()
-    add_test(     NAME test           COMMAND gsl-lite.t --pass )
-    add_test(     NAME list_version   COMMAND gsl-lite.t --version )
-    add_test(     NAME list_tags      COMMAND gsl-lite.t --list-tags )
-    add_test(     NAME list_tests     COMMAND gsl-lite.t --list-tests )
+    add_test(     NAME test           COMMAND string-view-lite.t --pass )
+    add_test(     NAME list_version   COMMAND string-view-lite.t --version )
+    add_test(     NAME list_tags      COMMAND string-view-lite.t --list-tags )
+    add_test(     NAME list_tests     COMMAND string-view-lite.t --list-tests )
 endif()
 
 # end of file
