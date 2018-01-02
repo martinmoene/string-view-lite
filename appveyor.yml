@@ -15,6 +15,9 @@ configuration:
 environment:
     matrix:
         - generator: "Visual Studio 15 2017"
+          select_sv: -DNSSV_SELECT_STDSV=1
+        - generator: "Visual Studio 15 2017"
+          select_sv: -DNSSV_SELECT_NONSTDSV=1
         - generator: "Visual Studio 14 2015"
         - generator: "Visual Studio 12 2013"
         - generator: "Visual Studio 11 2012"
@@ -36,7 +39,7 @@ matrix:
 
 before_build:
     - mkdir build && cd build
-    - cmake -A %platform% -G "%generator%" ..
+    - cmake -A %platform% -G "%generator%" "%select_sv%" ..
 
 build_script:
     - cmake --build . --config %configuration%

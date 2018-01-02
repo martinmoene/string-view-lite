@@ -6,6 +6,9 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( string_view_lite )
 
+option( NSSV_SELECT_STDSV     "Select std::string_view"    OFF )
+option( NSSV_SELECT_NONSTDSV  "Select nonstd::string_view" OFF )
+
 enable_testing()
 
 add_subdirectory( test )

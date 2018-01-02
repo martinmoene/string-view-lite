@@ -126,9 +126,23 @@ else()
 # as is
 endif()
 
+# add generic executable, unless -std flags can be specified:
+
 if( NOT HAS_STD_FLAGS AND NOT HAS_MSVC_STD_FLAGS )
     add_executable( string-view-lite.t ${SOURCES} )
     target_link_libraries( string-view-lite.t string-view-lite )
+endif()
+
+# with C++17, honour explicit request for std::string_view or nonstd::string_view:
+
+if( HAS_CPP17_FLAG OR HAS_MSVC_CPP17_FLAG )
+    if ( NSSV_SELECT_STDSV )
+        target_compile_definitions( string-view-lite-cpp17.t PUBLIC nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
+    endif()
+
+    if ( NSSV_SELECT_NONSTDSV )
+        target_compile_definitions( string-view-lite-cpp17.t PUBLIC nssv_CONFIG_SELECT_NONSTD_STRING_VIEW=1 )
+    endif()
 endif()
 
 # configure unit tests via CTest:
