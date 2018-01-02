@@ -20,7 +20,6 @@ include_directories( "${PROJECT_SOURCE_DIR}/../include/nonstd" )
 set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
 
 set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
-#add_definitions( -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
 
 set( HAS_STD_FLAGS  FALSE )
 set( HAS_CPP98_FLAG FALSE )
@@ -137,11 +136,11 @@ endif()
 
 if( HAS_CPP17_FLAG )
     if ( NSSV_SELECT_STDSV )
-        target_compile_definitions( string-view-lite-cpp17.t PUBLIC nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
+        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
     endif()
 
     if ( NSSV_SELECT_NONSTDSV )
-        target_compile_definitions( string-view-lite-cpp17.t PUBLIC nssv_CONFIG_SELECT_NONSTD_STRING_VIEW=1 )
+        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_NONSTD_STRING_VIEW=1 )
     endif()
 endif()
 
