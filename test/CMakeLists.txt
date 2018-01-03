@@ -94,11 +94,14 @@ function( enable_msvs_guideline_checker target )
     endif()
 endfunction()
 
-# make target, compile for given standard:
+# make target, compile for given standard if specified:
 
 function( make_target target std )
+    if( std )
+        set( OPTIONAL_STD ${STD_OPT}${std} )
+    endif()
     add_executable            ( ${target} ${SOURCES}  )
-    target_compile_options    ( ${target} PRIVATE ${OPTIONS} ${std} )
+    target_compile_options    ( ${target} PRIVATE ${OPTIONS} ${OPTIONAL_STD} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
     target_include_directories( ${target} PRIVATE ${INCDIRS} )
 endfunction()
@@ -108,31 +111,32 @@ endfunction()
 if( NOT HAS_STD_FLAGS )
     make_target( string-view-lite.t "" )
 else()
-    # unconditionally add C++98 variant for MSVC:
-    make_target( string-view-lite-cpp98.t "" )
+    # unconditionally add C++98 variant as MSVC has no option for it:
     if( HAS_CPP98_FLAG )
-        target_compile_options( string-view-lite-cpp98.t PRIVATE ${STD_OPT}c++98 )
+        make_target( string-view-lite-cpp98.t c++98 )
+    else()
+        make_target( string-view-lite-cpp98.t "" )
     endif()
 
     if( HAS_CPP03_FLAG )
-        make_target( string-view-lite-cpp03.t ${STD_OPT}c++03 )
+        make_target( string-view-lite-cpp03.t c++03 )
     endif()
 
     if( HAS_CPP11_FLAG )
-        make_target( string-view-lite-cpp11.t ${STD_OPT}c++11 )
+        make_target( string-view-lite-cpp11.t c++11 )
     endif()
 
     if( HAS_CPP14_FLAG )
-        make_target( string-view-lite-cpp14.t ${STD_OPT}c++14 )
+        make_target( string-view-lite-cpp14.t c++14 )
     endif()
 
     if( HAS_CPP17_FLAG )
-        make_target( string-view-lite-cpp17.t ${STD_OPT}c++17 )
+        make_target( string-view-lite-cpp17.t c++17 )
         enable_msvs_guideline_checker( string-view-lite-cpp17.t )
     endif()
 
     if( HAS_CPPLATEST_FLAG )
-        make_target( string-view-lite-cpplatest.t ${STD_OPT}c++latest )
+        make_target( string-view-lite-cpplatest.t c++latest )
     endif()
 endif()
 
