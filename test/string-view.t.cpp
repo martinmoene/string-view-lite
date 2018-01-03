@@ -359,6 +359,11 @@ CASE( "string_view: Allows to lexically compare to another string_view via compa
     EXPECT( string_view( hello_sp ).compare( string_view( hello    ) ) > 0 );
 }
 
+CASE( "string_view: Allows to compare empty string_views as equal via compare(), (1)" )
+{
+    EXPECT( string_view().compare( string_view() ) == 0 );
+}
+
 CASE( "string_view: Allows to compare a sub string to another string_view via compare(), (2)" )
 {
     string_view sv1("hello world");
