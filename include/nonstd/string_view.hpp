@@ -517,16 +517,19 @@ public:
 
     nssv_constexpr size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
     {
-        return pos > size()
-            ? rfind( v, size() )
-            : to_pos(
-                std::search( crbegin(), const_reverse_iterator(cbegin() + pos), v.crbegin(), v.crend(), Traits::eq )
-                , pos
-                , v.size() );
-//                , std::min( pos, v.size() ) );
+        if ( size() < v.size() )
+            return npos;
+
+        if ( v.empty() )
+            return std::min( size(), pos );
+
+        const_iterator last   = begin() + std::min( size() - v.size(), pos ) + v.size();
+        const_iterator result = std::find_end( begin(), last, v.begin(), v.end() );
+
+        return result != last ? result - data() : npos;
     }
 
-    nssv_constexpr size_type rfind( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    nssv_constexpr size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
     {
         return rfind( basic_string_view( &c, 1 ), pos );
     }
@@ -536,7 +539,7 @@ public:
         return rfind( basic_string_view( s, n ), pos );
     }
 
-    nssv_constexpr size_type rfind( CharT const * s, size_type pos = 0 ) const  // (4)
+    nssv_constexpr size_type rfind( CharT const * s, size_type pos = npos ) const  // (4)
     {
         return rfind( basic_string_view( s ), pos );
     }
@@ -602,18 +605,6 @@ private:
     nssv_constexpr size_type to_pos( const_iterator it ) const
     {
         return it == cend() ? npos : size_type( it - cbegin() );
-    }
-
-    nssv_constexpr size_type to_pos( const_reverse_iterator ri, size_type pos, size_type search_size) const
-    {
-std::cout << "to_pos(rev): " << pos << ", " << size_type( crend() - ri) << ", " << std::distance(ri, crbegin()) << ", " << std::distance(ri, crend()) << "\n";
-//        return ri == crend() ? 0 : size_type( ri - crbegin() - search_size );
-//        return ri == crend() ? npos : size_type( ri - crend());
-        return crend() - ri == search_size
-            ? 0
-            : crend() - ri < pos
-                ? npos
-                : crend() - ri - search_size;
     }
 
 private:

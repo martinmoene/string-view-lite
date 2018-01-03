@@ -550,7 +550,7 @@ CASE( "string_view: Allows to search backwards for a string_view substring from 
     EXPECT( sv.rfind( string_view("world" ), 5 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search backwards for a character from position pos (default: 0) via rfind(), (2)" )
+CASE( "string_view: Allows to search backwards for a character from position pos (default: npos) via rfind(), (2)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
