@@ -4,20 +4,13 @@
 #
 # This code is licensed under the MIT License (MIT).
 
-cmake_minimum_required( VERSION 2.8.12 )
+cmake_minimum_required( VERSION 3.0 )
 
 project( test )
 
-function( enable_msvs_guideline_checker target )
-    set_target_properties( ${target} PROPERTIES
-        VS_GLOBAL_EnableCppCoreCheck true
-        VS_GLOBAL_CodeAnalysisRuleSet CppCoreCheckRules.ruleset
-        VS_GLOBAL_RunCodeAnalysis true )
-endfunction()
-
-include_directories( "${PROJECT_SOURCE_DIR}/../include/nonstd" )
-
 set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
+
+set( INCDIRS "${PROJECT_SOURCE_DIR}/../include/nonstd" )
 
 set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
 
@@ -28,6 +21,20 @@ set( HAS_CPP11_FLAG FALSE )
 set( HAS_CPP14_FLAG FALSE )
 set( HAS_CPP17_FLAG FALSE )
 set( HAS_CPP20_FLAG FALSE )
+
+function( enable_msvs_guideline_checker target )
+    set_target_properties( ${target} PROPERTIES
+        VS_GLOBAL_EnableCppCoreCheck true
+        VS_GLOBAL_CodeAnalysisRuleSet CppCoreCheckRules.ruleset
+        VS_GLOBAL_RunCodeAnalysis true )
+endfunction()
+
+function( make_target target std )
+    add_executable            ( ${target} ${SOURCES}  )
+    target_compile_options    ( ${target}  PRIVATE ${OPTIONS} ${std} )
+    target_compile_definitions( ${target}  PRIVATE ${DEFINITIONS} )
+    target_include_directories( ${target}  PRIVATE ${INCDIRS} )
+endfunction()
 
 if( MSVC )
     set( HAS_STD_FLAGS TRUE )
@@ -94,41 +101,30 @@ if( NOT HAS_STD_FLAGS )
     target_link_libraries( string-view-lite.t string-view-lite )
 else()
     # unconditionally add C++98 variant for MSVC:
-    add_executable                ( string-view-lite-cpp98.t ${SOURCES} )
-    target_compile_definitions    ( string-view-lite-cpp98.t PRIVATE ${DEFINITIONS} )
-    target_compile_options        ( string-view-lite-cpp98.t PRIVATE ${OPTIONS} )
+    make_target( string-view-lite-cpp98.t "" )
     if( HAS_CPP98_FLAG )
-        target_compile_options    ( string-view-lite-cpp98.t PRIVATE ${STD_OPT}c++98 )
+        target_compile_options( string-view-lite-cpp98.t PRIVATE ${STD_OPT}c++98 )
     endif()
 
     if( HAS_CPP03_FLAG )
-        add_executable            ( string-view-lite-cpp03.t ${SOURCES} )
-        target_compile_options    ( string-view-lite-cpp03.t PRIVATE ${OPTIONS} ${STD_OPT}c++03 )
-        target_compile_definitions( string-view-lite-cpp03.t PRIVATE ${DEFINITIONS} )
+        make_target( string-view-lite-cpp03.t ${STD_OPT}c++03 )
     endif()
 
     if( HAS_CPP11_FLAG )
-        add_executable            ( string-view-lite-cpp11.t ${SOURCES} )
-        target_compile_options    ( string-view-lite-cpp11.t PRIVATE ${OPTIONS} ${STD_OPT}c++11 )
-        target_compile_definitions( string-view-lite-cpp11.t PRIVATE ${DEFINITIONS} )
+        make_target( string-view-lite-cpp11.t ${STD_OPT}c++11 )
     endif()
 
     if( HAS_CPP14_FLAG )
-        add_executable            ( string-view-lite-cpp14.t ${SOURCES} )
-        target_compile_options    ( string-view-lite-cpp14.t PRIVATE ${OPTIONS} ${STD_OPT}c++14 )
-        target_compile_definitions( string-view-lite-cpp14.t PRIVATE ${DEFINITIONS} )
+        make_target( string-view-lite-cpp14.t ${STD_OPT}c++14 )
     endif()
 
     if( HAS_CPP17_FLAG )
-        add_executable            ( string-view-lite-cpp17.t ${SOURCES} )
-        target_compile_options    ( string-view-lite-cpp17.t PRIVATE ${OPTIONS} ${STD_OPT}c++17 )
-        target_compile_definitions( string-view-lite-cpp17.t PRIVATE ${DEFINITIONS} )
+        make_target( string-view-lite-cpp17.t ${STD_OPT}c++17 )
+        enable_msvs_guideline_checker( gsl-lite-cpp17.t )
     endif()
 
     if( HAS_CPPLATEST_FLAG )
-        add_executable            ( string-view-lite-cpplatest.t ${SOURCES} )
-        target_compile_options    ( string-view-lite-cpplatest.t PRIVATE ${OPTIONS} ${STD_OPT}c++latest )
-        target_compile_definitions( string-view-lite-cpplatest.t PRIVATE ${DEFINITIONS} )
+        make_target( string-view-lite-cpplatest.t ${STD_OPT}c++latest )
     endif()
 endif()
 
