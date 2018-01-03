@@ -12,7 +12,10 @@ set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
 
 set( INCDIRS "${PROJECT_SOURCE_DIR}/../include/nonstd" )
 
-set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"../../string-view-lite/include/nonstd/string_view.hpp\" )
+set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"string_view.hpp\" )
+
+set( OPTIONS     "" )
+set( DEFINITIONS ${NONSTD_SV_HEADER} )
 
 set( HAS_STD_FLAGS  FALSE )
 set( HAS_CPP98_FLAG FALSE )
@@ -21,20 +24,6 @@ set( HAS_CPP11_FLAG FALSE )
 set( HAS_CPP14_FLAG FALSE )
 set( HAS_CPP17_FLAG FALSE )
 set( HAS_CPP20_FLAG FALSE )
-
-function( enable_msvs_guideline_checker target )
-    set_target_properties( ${target} PROPERTIES
-        VS_GLOBAL_EnableCppCoreCheck true
-        VS_GLOBAL_CodeAnalysisRuleSet CppCoreCheckRules.ruleset
-        VS_GLOBAL_RunCodeAnalysis true )
-endfunction()
-
-function( make_target target std )
-    add_executable            ( ${target} ${SOURCES}  )
-    target_compile_options    ( ${target}  PRIVATE ${OPTIONS} ${std} )
-    target_compile_definitions( ${target}  PRIVATE ${DEFINITIONS} )
-    target_include_directories( ${target}  PRIVATE ${INCDIRS} )
-endfunction()
 
 if( MSVC )
     set( HAS_STD_FLAGS TRUE )
@@ -94,11 +83,30 @@ else()
 # as is
 endif()
 
+# enable MS C++ Core Guidelines checker if MSVC:
+
+function( enable_msvs_guideline_checker target )
+    if( MSVC )
+        set_target_properties( ${target} PROPERTIES
+        VS_GLOBAL_EnableCppCoreCheck true
+        VS_GLOBAL_CodeAnalysisRuleSet CppCoreCheckRules.ruleset
+        VS_GLOBAL_RunCodeAnalysis true )
+    endif()
+endfunction()
+
+# make target, compile for given standard:
+
+function( make_target target std )
+    add_executable            ( ${target} ${SOURCES}  )
+    target_compile_options    ( ${target} PRIVATE ${OPTIONS} ${std} )
+    target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
+    target_include_directories( ${target} PRIVATE ${INCDIRS} )
+endfunction()
+
 # add generic executable, unless -std flags can be specified:
 
 if( NOT HAS_STD_FLAGS )
-    add_executable( string-view-lite.t ${SOURCES} )
-    target_link_libraries( string-view-lite.t string-view-lite )
+    make_target( string-view-lite.t "" )
 else()
     # unconditionally add C++98 variant for MSVC:
     make_target( string-view-lite-cpp98.t "" )
@@ -120,7 +128,7 @@ else()
 
     if( HAS_CPP17_FLAG )
         make_target( string-view-lite-cpp17.t ${STD_OPT}c++17 )
-        enable_msvs_guideline_checker( gsl-lite-cpp17.t )
+        enable_msvs_guideline_checker( string-view-lite-cpp17.t )
     endif()
 
     if( HAS_CPPLATEST_FLAG )
