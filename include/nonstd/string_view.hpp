@@ -498,24 +498,24 @@ public:
             : to_pos( std::search( cbegin() + pos, cend(), v.cbegin(), v.cend(), Traits::eq ) );
     }
 
-    nssv_constexpr size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    nssv_constexpr14 size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
     {
         return find( basic_string_view( &c, 1 ), pos );
     }
 
-    nssv_constexpr size_type find( CharT const * s, size_type pos, size_type n ) const  // (3)
+    nssv_constexpr14 size_type find( CharT const * s, size_type pos, size_type n ) const  // (3)
     {
         return find( basic_string_view( s, n ), pos );
     }
 
-    nssv_constexpr size_type find( CharT const * s, size_type pos = 0 ) const  // (4)
+    nssv_constexpr14 size_type find( CharT const * s, size_type pos = 0 ) const  // (4)
     {
         return find( basic_string_view( s ), pos );
     }
 
     // rfind(), 4x:
 
-    nssv_constexpr size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
+    nssv_constexpr14 size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
     {
         if ( size() < v.size() )
             return npos;
@@ -526,20 +526,20 @@ public:
         const_iterator last   = begin() + std::min( size() - v.size(), pos ) + v.size();
         const_iterator result = std::find_end( begin(), last, v.begin(), v.end() );
 
-        return result != last ? result - data() : npos;
+        return result != last ? result - begin() : npos;
     }
 
-    nssv_constexpr size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
+    nssv_constexpr14 size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
     {
         return rfind( basic_string_view( &c, 1 ), pos );
     }
 
-    nssv_constexpr size_type rfind( CharT const * s, size_type pos, size_type n ) const  // (3)
+    nssv_constexpr14 size_type rfind( CharT const * s, size_type pos, size_type n ) const  // (3)
     {
         return rfind( basic_string_view( s, n ), pos );
     }
 
-    nssv_constexpr size_type rfind( CharT const * s, size_type pos = npos ) const  // (4)
+    nssv_constexpr14 size_type rfind( CharT const * s, size_type pos = npos ) const  // (4)
     {
         return rfind( basic_string_view( s ), pos );
     }
