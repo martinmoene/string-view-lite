@@ -9,10 +9,10 @@ cmake_minimum_required( VERSION 3.0 )
 project( test )
 
 set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
+set( HDRNAME string_view.hpp )
 
-set( INCDIRS "${PROJECT_SOURCE_DIR}/../include/nonstd" )
-
-set( NONSTD_SV_HEADER -Dnssv_STRING_VIEW_HEADER=\"string_view.hpp\" )
+set( HDRDIR  ${PROJECT_SOURCE_DIR}/../include/nonstd )
+set( HDRPATH ${HDRDIR}/${HDRNAME} )
 
 set( OPTIONS     "" )
 set( DEFINITIONS ${NONSTD_SV_HEADER} )
@@ -30,7 +30,7 @@ if( MSVC )
 
     set( STD_OPT     -std: )
     set( OPTIONS     -W3 -EHsc )
-    set( DEFINITIONS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX ${NONSTD_SV_HEADER} )
+    set( DEFINITIONS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
 
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.00 )
         set( HAS_CPP14_FLAG TRUE )
@@ -49,7 +49,7 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES GNU OR
 
     set( STD_OPT     -std= )
     set( OPTIONS     -Wall -Wno-missing-braces -Wno-unnamed-type-template-args -fno-elide-constructors )
-    set( DEFINITIONS ${NONSTD_SV_HEADER} )
+    set( DEFINITIONS -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
 
     # GNU: available -std flags depends on version
     if( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
@@ -100,10 +100,10 @@ function( make_target target std )
     if( std )
         set( OPTIONAL_STD ${STD_OPT}${std} )
     endif()
-    add_executable            ( ${target} ${SOURCES}  )
+    add_executable            ( ${target} ${SOURCES} ${HDRPATH} )
     target_compile_options    ( ${target} PRIVATE ${OPTIONS} ${OPTIONAL_STD} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
-    target_include_directories( ${target} PRIVATE ${INCDIRS} )
+    target_include_directories( ${target} PRIVATE ${HDRDIR} )
 endfunction()
 
 # add generic executable, unless -std flags can be specified:
