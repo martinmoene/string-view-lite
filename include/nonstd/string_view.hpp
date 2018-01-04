@@ -220,9 +220,9 @@ using std::operator<<;
 #endif
 
 #if      nssv_HAVE_NODISCARD
-# define nssv_NODISCARD  [[nodiscard]]
+# define nssv_nodiscard  [[nodiscard]]
 #else
-# define nssv_NODISCARD  /*[[nodiscard]]*/
+# define nssv_nodiscard  /*[[nodiscard]]*/
 #endif
 
 // additional includes:
@@ -367,7 +367,7 @@ public:
     nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
 
     // since C++20
-    nssv_NODISCARD nssv_constexpr bool empty() const nssv_noexcept
+    nssv_nodiscard nssv_constexpr bool empty() const nssv_noexcept
     {
         return 0 == size_;
     }
