@@ -6,8 +6,11 @@ cmake_minimum_required( VERSION 3.0 )
 
 project( string_view_lite )
 
-option( NSSV_SELECT_STDSV     "Select std::string_view"    OFF )
-option( NSSV_SELECT_NONSTDSV  "Select nonstd::string_view" OFF )
+option( STRINGVIEW_LITE_OPT_SELECT_STDSV    "Select std::string_view"    OFF )
+option( STRINGVIEW_LITE_OPT_SELECT_NONSTDSV "Select nonstd::string_view" OFF )
+
+option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
+option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )
 
 include( GNUInstallDirs )
 

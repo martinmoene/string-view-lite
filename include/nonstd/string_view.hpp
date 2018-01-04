@@ -22,8 +22,7 @@
 // String -View Lite configuration:
 
 // Todo:
-// - force use of std::string_view
-// - force use of nonstd::string_view
+// -
 
 #if      nssv_CONFIG_SELECT_STD_STRING_VIEW
 # define nssv_USES_STD_STRING_VIEW  1
@@ -101,6 +100,22 @@ using std::operator<<;
 // Before C++17: use string_view lite:
 //
 
+// String-View Lite configuration:
+
+#ifdef   nssv_CONFIG_CONVERSION_STD_STRING
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   nssv_CONFIG_CONVERSION_STD_STRING
+# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  nssv_CONFIG_CONVERSION_STD_STRING
+#endif
+
+#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   1
+#endif
+#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
+#endif
+
+// Compiler versions:
+
 #if defined(_MSC_VER) && !defined(__clang__)
 # define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 100 - 5 - (_MSC_VER < 1900))
 #else
@@ -176,6 +191,12 @@ using std::operator<<;
 # define nssv_constexpr14  constexpr
 #else
 # define nssv_constexpr14  /*constexpr*/
+#endif
+
+#if      nssv_HAVE_EXPLICIT_CONVERSION
+# define nssv_explicit  explicit
+#else
+# define nssv_explicit  /*explicit*/
 #endif
 
 #if      nssv_HAVE_NOEXCEPT
@@ -610,6 +631,40 @@ private:
 private:
     const_pointer data_;
     size_type     size_;
+
+public:
+#if nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+
+    template< class Allocator >
+    basic_string_view( std::basic_string<CharT, Traits, Allocator> const & s ) nssv_noexcept
+        : data_( s.data() )
+        , size_( s.size() )
+    {}
+
+#if nssv_HAVE_EXPLICIT_CONVERSION
+    template< class Allocator >
+    explicit operator std::basic_string<CharT, Traits, Allocator>() const
+    {
+        return to_string( Allocator() );
+    }
+#endif
+
+#if nssv_CPP11_OR_GREATER
+    template< class Allocator = std::allocator<CharT> >
+    std::basic_string<CharT, Traits, Allocator>
+    to_string( Allocator const & a = Allocator() ) const
+    {
+        return std::basic_string<CharT, Traits, Allocator>( begin(), end(), a );
+    }
+#else
+    std::basic_string<CharT, Traits>
+    to_string() const
+    {
+        return std::basic_string<CharT, Traits>( begin(), end() );
+    }
+#endif
+
+#endif // nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
 };
 
 //
@@ -715,7 +770,9 @@ typedef basic_string_view<char16_t>  u16string_view;
 typedef basic_string_view<char32_t>  u32string_view;
 #endif
 
+//
 // 24.4.6 Suffix for basic_string_view literals:
+//
 
 namespace string_view_literals {
 
@@ -728,21 +785,38 @@ namespace string_view_literals {
 
 } // namespace string_view_literals
 
+//
 // Extensions:
+//
 
-template< class CharT, class Traits, class Allocator >
-std::basic_string<CharT, Allocator>
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+
+#if nssv_CPP11_OR_GREATER
+
+template< class CharT, class Traits, class Allocator = std::allocator<CharT> >
+std::basic_string<CharT, Traits, Allocator>
 to_string( basic_string_view<CharT, Traits> v, Allocator const & a = Allocator() )
 {
-    return std::basic_string<CharT, Allocator>( v.begin(), v.end() );
+    return std::basic_string<CharT,Traits, Allocator>( v.begin(), v.end(), a );
 }
+#else
+
+template< class CharT, class Traits >
+std::basic_string<CharT, Traits>
+to_string( basic_string_view<CharT, Traits> v )
+{
+    return std::basic_string<CharT, Traits>( v.begin(), v.end() );
+}
+#endif // nssv_CPP11_OR_GREATER
 
 template< class CharT, class Traits, class Allocator >
 basic_string_view<CharT, Traits>
-to_string_view( std::basic_string<CharT, Allocator> const & s )
+to_string_view( std::basic_string<CharT, Traits, Allocator> const & s )
 {
-    return basic_string_view<CharT, Traits>( s.begin(), s.end() );
+    return basic_string_view<CharT, Traits>( s.data(), s.size() );
 }
+
+#endif // nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 
 }} // namespace nonstd::sv_lite
 
@@ -771,6 +845,10 @@ using sv_lite::operator>=;
 
 using sv_lite::operator<<;
 
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+using sv_lite::to_string;
+using sv_lite::to_string_view;
+#endif
 } // namespace nonstd
 
 // 24.4.5 Hash support (C++11):

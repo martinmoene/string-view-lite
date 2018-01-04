@@ -593,6 +593,11 @@ CASE( "string_view: Allows to search backwards for a C-string substring from pos
 
 
 CASE( "string_view: find_first_of 4x" ) {}
+
+
+
+
+
 CASE( "string_view: find_last_of 4x" ) {}
 CASE( "string_view: find_first_not_of 4x" ) {}
 CASE( "string_view: find_last_not_of 4x" ) {}
@@ -642,9 +647,96 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
 }
 
-// nonstd extension:
+// nonstd extension: conversions from and to std::basic_string
 
-CASE( "to_string(): " ) {}
-CASE( "to_string_view(): " ) {}
+CASE( "string_view: construct from std::string" "[extension]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
+#elif nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+    char hello[]  = "hello world";
+    std::string s =  hello;
+
+    string_view sv( hello );
+
+    EXPECT( sv.size() == s.size() );
+    EXPECT( sv.compare( s ) == 0  );
+#else
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=0)." );
+#endif
+}
+
+CASE( "string_view: convert to std::string via explicit operator" "[extension]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
+#elif nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+#if nssv_HAVE_EXPLICIT_CONVERSION
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    std::string s( sv );
+//  std::string t{ sv };
+
+    EXPECT( sv.size() == s.size() );
+    EXPECT( sv.compare( s ) == 0  );
+#else
+    EXPECT( !!"explicit conversion is not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=0)." );
+#endif
+}
+
+CASE( "string_view: convert to std::string via to_string()" "[extension]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
+#elif nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    std::string s = sv.to_string();
+
+    EXPECT( sv.size() == s.size() );
+    EXPECT( sv.compare( s ) == 0  );
+#else
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=0)." );
+#endif
+}
+
+CASE( "to_string(): convert to std::string via to_string()" "[extension]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
+#elif nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    std::string s = to_string( sv );
+
+    EXPECT( sv.size() == s.size() );
+    EXPECT( sv.compare( s ) == 0  );
+#else
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=0)." );
+#endif
+}
+
+CASE( "to_string_view(): convert from std::string via to_string_view() " "[extension]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
+#elif nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+    char hello[] = "hello world";
+    std::string s = hello;
+
+    string_view sv = to_string_view( s );
+
+    EXPECT( sv.size() == s.size() );
+    EXPECT( sv.compare( s ) == 0  );
+#else
+    EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=0)." );
+#endif
+}
 
 } // anonymous namespace

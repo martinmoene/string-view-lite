@@ -14,8 +14,25 @@ set( HDRNAME string_view.hpp )
 set( HDRDIR  ${PROJECT_SOURCE_DIR}/../include/nonstd )
 set( HDRPATH ${HDRDIR}/${HDRNAME} )
 
+# option text to Boolean:
+
+macro( opt option_text var )
+    if( ${option_text} )
+        set( ${var} 1 )
+    else()
+        set( ${var} 0 )
+    endif()
+endmacro()
+
+opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  )
+opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS )
+
+set( DEFCMN  -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\"
+             -Dnssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=${nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS}
+             -Dnssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=${nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS} )
+
 set( OPTIONS     "" )
-set( DEFINITIONS -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
+set( DEFINITIONS ${DEFCMN} )
 
 set( HAS_STD_FLAGS  FALSE )
 set( HAS_CPP98_FLAG FALSE )
@@ -30,7 +47,7 @@ if( MSVC )
 
     set( STD_OPT     -std: )
     set( OPTIONS     -W3 -EHsc )
-    set( DEFINITIONS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
+    set( DEFINITIONS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX ${DEFCMN} )
 
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.00 )
         set( HAS_CPP14_FLAG TRUE )
@@ -49,7 +66,7 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES GNU OR
 
     set( STD_OPT     -std= )
     set( OPTIONS     -Wall -Wno-missing-braces -Wno-unnamed-type-template-args -fno-elide-constructors )
-    set( DEFINITIONS -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
+    set( DEFINITIONS ${DEFCMN} )
 
     # GNU: available -std flags depends on version
     if( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
@@ -143,11 +160,11 @@ endif()
 # with C++17, honour explicit request for std::string_view or nonstd::string_view:
 
 if( HAS_CPP17_FLAG )
-    if ( NSSV_SELECT_STDSV )
+    if ( STRINGVIEW_LITE_OPT_SELECT_STDSV )
         target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
     endif()
 
-    if ( NSSV_SELECT_NONSTDSV )
+    if ( STRINGVIEW_LITE_OPT_SELECT_NONSTDSV )
         target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_NONSTD_STRING_VIEW=1 )
     endif()
 endif()
