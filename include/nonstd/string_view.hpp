@@ -523,10 +523,10 @@ public:
         if ( v.empty() )
             return std::min( size(), pos );
 
-        const_iterator last   = begin() + std::min( size() - v.size(), pos ) + v.size();
-        const_iterator result = std::find_end( begin(), last, v.begin(), v.end() );
+        const_iterator last   = cbegin() + std::min( size() - v.size(), pos ) + v.size();
+        const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend() );
 
-        return result != last ? result - begin() : npos;
+        return result != last ? result - cbegin() : npos;
     }
 
     nssv_constexpr14 size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
