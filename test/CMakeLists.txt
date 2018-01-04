@@ -15,7 +15,7 @@ set( HDRDIR  ${PROJECT_SOURCE_DIR}/../include/nonstd )
 set( HDRPATH ${HDRDIR}/${HDRNAME} )
 
 set( OPTIONS     "" )
-set( DEFINITIONS ${NONSTD_SV_HEADER} )
+set( DEFINITIONS -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\" )
 
 set( HAS_STD_FLAGS  FALSE )
 set( HAS_CPP98_FLAG FALSE )
