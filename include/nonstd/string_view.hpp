@@ -786,12 +786,14 @@ namespace string_view_literals {
 } // namespace string_view_literals
 
 //
-// Extensions:
+// Extensions for std::string:
 //
 
 #if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 
-#if nssv_CPP11_OR_GREATER
+// Exclude MSVC 14 (19.00): it yields ambiguous to_string():
+
+#if nssv_CPP11_OR_GREATER && nssv_COMPILER_MSVC_VERSION != 14
 
 template< class CharT, class Traits, class Allocator = std::allocator<CharT> >
 std::basic_string<CharT, Traits, Allocator>
