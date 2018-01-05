@@ -566,7 +566,7 @@ public:
         const_iterator last   = cbegin() + std::min( size() - v.size(), pos ) + v.size();
         const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend(), Traits::eq );
 
-        return result != last ? result - cbegin() : npos;
+        return result != last ? size_type( result - cbegin() ) : npos;
     }
 
     nssv_constexpr14 size_type rfind( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
@@ -634,10 +634,39 @@ public:
 
     // find_first_not_of(), 4x:
 
-    nssv_constexpr size_type find_first_not_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type find_first_not_of( CharT c, size_type pos = 0 ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos = 0 ) const;  // (4)
+    nssv_constexpr14 size_type find_first_not_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
+    {
+        struct not_in_view
+        {
+            const basic_string_view v;
+
+            not_in_view( basic_string_view v ) : v( v ) {}
+
+            bool operator()( CharT c ) const
+            {
+                return npos == v.find_first_of( c );
+            }
+        };
+
+        return pos >= size()
+            ? npos
+            : to_pos( std::find_if( cbegin() + pos, cend(), not_in_view( v ) ) );
+    }
+
+    nssv_constexpr14 size_type find_first_not_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    {
+        return find_first_not_of( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr14 size_type find_first_not_of( CharT const * s, size_type pos, size_type count ) const  // (3)
+    {
+        return find_first_not_of( basic_string_view( s, count ), pos );
+    }
+
+    nssv_constexpr14 size_type find_first_not_of( CharT const * s, size_type pos = 0 ) const  // (4)
+    {
+        return find_first_not_of( basic_string_view( s ), pos );
+    }
 
     // find_last_not_of(), 4x:
 
