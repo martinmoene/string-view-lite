@@ -610,10 +610,27 @@ public:
 
     // find_last_of(), 4x:
 
-    nssv_constexpr size_type find_last_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type find_last_of( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos = npos ) const;  // (4)
+    nssv_constexpr size_type find_last_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
+    {
+        return pos > size()
+            ? find_last_of( v, size() - 1 )
+            : to_pos( std::find_first_of( const_reverse_iterator( cbegin() + pos + 1 ), crend(), v.cbegin(), v.cend() ) );
+    }
+
+    nssv_constexpr size_type find_last_of( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
+    {
+        return find_last_of( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos, size_type count ) const  // (3)
+    {
+        return find_last_of( basic_string_view( s, count ), pos );
+    }
+
+    nssv_constexpr size_type find_last_of( CharT const * s, size_type pos = npos ) const  // (4)
+    {
+        return find_last_of( basic_string_view( s ), pos );
+    }
 
     // find_first_not_of(), 4x:
 
@@ -643,6 +660,11 @@ private:
     nssv_constexpr size_type to_pos( const_iterator it ) const
     {
         return it == cend() ? npos : size_type( it - cbegin() );
+    }
+
+    nssv_constexpr size_type to_pos( const_reverse_iterator it ) const
+    {
+        return it == crend() ? npos : size_type( crend() - it - 1 );
     }
 
 private:
