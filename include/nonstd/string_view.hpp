@@ -612,7 +612,7 @@ public:
 
     nssv_constexpr size_type find_last_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
     {
-        return pos > size()
+        return pos >= size()
             ? find_last_of( v, size() - 1 )
             : to_pos( std::find_first_of( const_reverse_iterator( cbegin() + pos + 1 ), crend(), v.cbegin(), v.cend(), Traits::eq ) );
     }
