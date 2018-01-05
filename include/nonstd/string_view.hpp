@@ -564,7 +564,7 @@ public:
             return std::min( size(), pos );
 
         const_iterator last   = cbegin() + std::min( size() - v.size(), pos ) + v.size();
-        const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend() );
+        const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend(), Traits::eq );
 
         return result != last ? result - cbegin() : npos;
     }
@@ -590,7 +590,7 @@ public:
     {
         return pos >= size()
             ? npos
-            : to_pos( std::find_first_of( cbegin() + pos, cend(), v.cbegin(), v.cend() ) );
+            : to_pos( std::find_first_of( cbegin() + pos, cend(), v.cbegin(), v.cend(), Traits::eq ) );
     }
 
     nssv_constexpr size_type find_first_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
@@ -614,7 +614,7 @@ public:
     {
         return pos > size()
             ? find_last_of( v, size() - 1 )
-            : to_pos( std::find_first_of( const_reverse_iterator( cbegin() + pos + 1 ), crend(), v.cbegin(), v.cend() ) );
+            : to_pos( std::find_first_of( const_reverse_iterator( cbegin() + pos + 1 ), crend(), v.cbegin(), v.cend(), Traits::eq ) );
     }
 
     nssv_constexpr size_type find_last_of( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
