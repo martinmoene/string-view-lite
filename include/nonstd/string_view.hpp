@@ -590,9 +590,7 @@ public:
     {
         return pos >= size()
             ? npos
-            : npos != v.find( data_[pos] )
-                ? pos
-                : find_first_of( v, pos + 1 );
+            : to_pos( std::find_first_of( cbegin() + pos, cend(), v.cbegin(), v.cend() ) );
     }
 
     nssv_constexpr size_type find_first_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
