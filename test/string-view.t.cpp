@@ -707,9 +707,7 @@ CASE( "string_view: convert to std::string via to_string()" "[extension]" )
 
 CASE( "to_string(): convert to std::string via to_string()" "[extension]" )
 {
-#if nssv_USES_STD_STRING_VIEW
-    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
-#elif nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
     char hello[] = "hello world";
     string_view sv( hello );
 
@@ -724,9 +722,7 @@ CASE( "to_string(): convert to std::string via to_string()" "[extension]" )
 
 CASE( "to_string_view(): convert from std::string via to_string_view() " "[extension]" )
 {
-#if nssv_USES_STD_STRING_VIEW
-    EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
-#elif nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
     char hello[] = "hello world";
     std::string s = hello;
 

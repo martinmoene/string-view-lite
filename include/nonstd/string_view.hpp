@@ -1,5 +1,5 @@
 //
-// string-view-lite, a C++17-like string_view for C++98 and later.
+// string-view lite, a C++17-like string_view for C++98 and later.
 // For more information see https://github.com/martinmoene/string-view-lite
 //
 // Copyright (c) 2017-2018 Martin Moene
@@ -19,10 +19,7 @@
 
 #define  string_view_lite_VERSION "0.1.0"
 
-// String -View Lite configuration:
-
-// Todo:
-// -
+// string-view lite configuration:
 
 #if      nssv_CONFIG_SELECT_STD_STRING_VIEW
 # define nssv_USES_STD_STRING_VIEW  1
@@ -32,6 +29,18 @@
 
 #if nssv_CONFIG_SELECT_STD_STRING_VIEW && nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
 #error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
+#endif
+
+#ifdef   nssv_CONFIG_CONVERSION_STD_STRING
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   nssv_CONFIG_CONVERSION_STD_STRING
+# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  nssv_CONFIG_CONVERSION_STD_STRING
+#endif
+
+#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   1
+#endif
+#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
 #endif
 
 // Compiler detection (C++20 is speculative):
@@ -73,6 +82,30 @@
 
 #include <string_view>
 
+// Extensions for std::string:
+
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+
+namespace nonstd {
+
+template< class CharT, class Traits, class Allocator = std::allocator<CharT> >
+std::basic_string<CharT, Traits, Allocator>
+to_string( std::basic_string_view<CharT, Traits> v, Allocator const & a = Allocator() )
+{
+    return std::basic_string<CharT,Traits, Allocator>( v.begin(), v.end(), a );
+}
+
+template< class CharT, class Traits, class Allocator >
+std::basic_string_view<CharT, Traits>
+to_string_view( std::basic_string<CharT, Traits, Allocator> const & s )
+{
+    return std::basic_string_view<CharT, Traits>( s.data(), s.size() );
+}
+
+} // namespace nonstd
+
+#endif // nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+
 namespace nonstd {
 
 using std::string_view;
@@ -99,20 +132,6 @@ using std::operator<<;
 //
 // Before C++17: use string_view lite:
 //
-
-// String-View Lite configuration:
-
-#ifdef   nssv_CONFIG_CONVERSION_STD_STRING
-# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   nssv_CONFIG_CONVERSION_STD_STRING
-# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  nssv_CONFIG_CONVERSION_STD_STRING
-#endif
-
-#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
-# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   1
-#endif
-#ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
-# define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
-#endif
 
 // Compiler versions:
 
@@ -785,11 +804,16 @@ namespace string_view_literals {
 
 } // namespace string_view_literals
 
+}} // namespace nonstd::sv_lite
+
 //
 // Extensions for std::string:
 //
 
 #if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+
+namespace nonstd {
+namespace sv_lite {
 
 // Exclude MSVC 14 (19.00): it yields ambiguous to_string():
 
@@ -801,6 +825,7 @@ to_string( basic_string_view<CharT, Traits> v, Allocator const & a = Allocator()
 {
     return std::basic_string<CharT,Traits, Allocator>( v.begin(), v.end(), a );
 }
+
 #else
 
 template< class CharT, class Traits >
@@ -818,9 +843,9 @@ to_string_view( std::basic_string<CharT, Traits, Allocator> const & s )
     return basic_string_view<CharT, Traits>( s.data(), s.size() );
 }
 
-#endif // nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
-
 }} // namespace nonstd::sv_lite
+
+#endif // nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 
 //
 // make types and algorithms available in namespace nonstd:
