@@ -315,7 +315,7 @@ CASE( "string_view: Throws if requested position of copy() exceeds string_view's
     EXPECT_NO_THROW( sv.copy( vec.data(), sv.size() - 4, sv.size() + 0 ) );
 }
 
-CASE( "string_view: Allow to obtain a sub string from position pos (default: 0) and of length n (default full), via substr()" )
+CASE( "string_view: Allow to obtain a sub string, starting at position pos (default: 0) and of length n (default full), via substr()" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -478,7 +478,7 @@ CASE( "string_view: Allows to check for a suffix C-string via ends_with(), (3)" 
 
 #endif // nssv_HAVE_ENDS_WITH
 
-CASE( "string_view: Allows to search for a string_view substring from position pos (default: 0) via find(), (1)" )
+CASE( "string_view: Allows to search for a string_view substring, starting at position pos (default: 0) via find(), (1)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -490,7 +490,7 @@ CASE( "string_view: Allows to search for a string_view substring from position p
     EXPECT( sv.find( string_view("world" ), 7 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search for a character from position pos (default: 0) via find(), (2)" )
+CASE( "string_view: Allows to search for a character, starting at position pos (default: 0) via find(), (2)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -502,7 +502,7 @@ CASE( "string_view: Allows to search for a character from position pos (default:
     EXPECT( sv.find('w', 7 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search for a C-string substring from position pos and of length n via find(), (3)" )
+CASE( "string_view: Allows to search for a C-string substring, starting at position pos and of length n via find(), (3)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -515,7 +515,7 @@ CASE( "string_view: Allows to search for a C-string substring from position pos 
     EXPECT( sv.find("world", 3, 0 ) == size_type( 3 )    );
 }
 
-CASE( "string_view: Allows to search for a C-string substring from position pos (default: 0) via find(), (4)" )
+CASE( "string_view: Allows to search for a C-string substring, starting at position pos (default: 0) via find(), (4)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -527,7 +527,7 @@ CASE( "string_view: Allows to search for a C-string substring from position pos 
     EXPECT( sv.find("world", 7 ) == string_view::npos );
 }
 
-CASE( "string: Allows to search backwards for a string substring from position pos (default: npos) via rfind()" "[string]" )
+CASE( "string     : Allows to search backwards for a string substring, starting at position pos (default: npos) via rfind()" "[string]" )
 {
     char hello[] = "hello world";
     std::string s( hello );
@@ -539,7 +539,7 @@ CASE( "string: Allows to search backwards for a string substring from position p
     EXPECT( s.rfind( std::string("world" ), 5 ) == std::string::npos );
 }
 
-CASE( "string_view: Allows to search backwards for a string_view substring from position pos (default: npos) via rfind(), (1)" )
+CASE( "string_view: Allows to search backwards for a string_view substring, starting at position pos (default: npos) via rfind(), (1)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -551,7 +551,7 @@ CASE( "string_view: Allows to search backwards for a string_view substring from 
     EXPECT( sv.rfind( string_view("world" ), 5 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search backwards for a character from position pos (default: npos) via rfind(), (2)" )
+CASE( "string_view: Allows to search backwards for a character, starting at position pos (default: npos) via rfind(), (2)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -564,7 +564,7 @@ CASE( "string_view: Allows to search backwards for a character from position pos
     EXPECT( sv.rfind('w', 5 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search backwards for a C-string substring from position pos and of length n via rfind(), (3)" )
+CASE( "string_view: Allows to search backwards for a C-string substring, starting at position pos and of length n via rfind(), (3)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -577,7 +577,7 @@ CASE( "string_view: Allows to search backwards for a C-string substring from pos
     EXPECT( sv.rfind("world",  5, 5 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search backwards for a C-string substring from position pos (default: 0) via rfind(), (4)" )
+CASE( "string_view: Allows to search backwards for a C-string substring, starting at position pos (default: 0) via rfind(), (4)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -589,14 +589,54 @@ CASE( "string_view: Allows to search backwards for a C-string substring from pos
     EXPECT( sv.rfind("world", 5 ) == string_view::npos );
 }
 
+CASE( "string_view: Allows to search for the first occurrence of any of the characters specified in a string view, starting at position pos (default: npos) via find_first_of(), (1)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
 
+    EXPECT( sv.find_first_of( sv    ) == size_type( 0 ) );
+    EXPECT( sv.find_first_of( sv, 3 ) == size_type( 3 ) );
+    EXPECT( sv.find_first_of( string_view("xwo" )    ) == size_type( 4 ) );
+    EXPECT( sv.find_first_of( string_view("wdx" ), 6 ) == size_type( 6 ) );
+    EXPECT( sv.find_first_of( string_view("wxy" ), 7 ) == string_view::npos );
+}
 
+CASE( "string_view: Allows to search for a character, starting at position pos (default: 0) via find_first_of(), (2)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
 
-CASE( "string_view: find_first_of 4x" ) {}
+    EXPECT( sv.find_first_of('h'    ) == size_type( 0 )    );
+    EXPECT( sv.find_first_of('h', 1 ) == string_view::npos );
+    EXPECT( sv.find_first_of('w'    ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of('w', 6 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of('w', 7 ) == string_view::npos );
+}
 
+CASE( "string_view: Allows to search for the first occurrence of any of the characters specified in a C-string, starting at position pos and of length n via find_first_of(), (3)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
 
+    EXPECT( sv.find_first_of( hello , 0, sv.size() ) == size_type( 0 ) );
+    EXPECT( sv.find_first_of( hello , 1, sv.size() ) == size_type( 1 ) );
+    EXPECT( sv.find_first_of("xwy", 0, 3 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of("xwy", 6, 3 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of("xwy", 7, 3 ) == string_view::npos );
+    EXPECT( sv.find_first_of("xyw", 0, 2 ) == string_view::npos );
+}
 
+CASE( "string_view: Allows to search for the first occurrence of any of the characters specified in a C-string, starting at position pos via find_first_of(), (4)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
 
+    EXPECT( sv.find_first_of( hello , 0 ) == size_type( 0 )    );
+    EXPECT( sv.find_first_of( hello , 1 ) == size_type( 1 )    );
+    EXPECT( sv.find_first_of(  "xwy", 0 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of(  "xwy", 6 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of(  "xwy", 7 ) == string_view::npos );
+}
 
 CASE( "string_view: find_last_of 4x" ) {}
 CASE( "string_view: find_first_not_of 4x" ) {}
@@ -649,7 +689,7 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
 
 // nonstd extension: conversions from and to std::basic_string
 
-CASE( "string_view: construct from std::string" "[extension]" )
+CASE( "string_view: construct from std::string " "[extension]" )
 {
 #if nssv_USES_STD_STRING_VIEW
     EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
@@ -666,7 +706,7 @@ CASE( "string_view: construct from std::string" "[extension]" )
 #endif
 }
 
-CASE( "string_view: convert to std::string via explicit operator" "[extension]" )
+CASE( "string_view: convert to std::string via explicit operator " "[extension]" )
 {
 #if nssv_USES_STD_STRING_VIEW
     EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
@@ -688,7 +728,7 @@ CASE( "string_view: convert to std::string via explicit operator" "[extension]" 
 #endif
 }
 
-CASE( "string_view: convert to std::string via to_string()" "[extension]" )
+CASE( "string_view: convert to std::string via to_string() " "[extension]" )
 {
 #if nssv_USES_STD_STRING_VIEW
     EXPECT( !!"Conversion to/from std::string is not available (nssv_USES_STD_STRING_VIEW=1)." );
@@ -705,7 +745,7 @@ CASE( "string_view: convert to std::string via to_string()" "[extension]" )
 #endif
 }
 
-CASE( "to_string(): convert to std::string via to_string()" "[extension]" )
+CASE( "to_string(): convert to std::string via to_string() " "[extension]" )
 {
 #if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
     char hello[] = "hello world";
