@@ -792,8 +792,160 @@ CASE( "string_view: Allows to search backwards for  the first character not equa
     EXPECT( sv.find_last_not_of( "heo "  ,  2 ) == size_type(  2 ) );
     EXPECT( sv.find_last_not_of( "x"          ) == size_type( 10 ) );
 }
-#if 0
-#endif // 0
+
+CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view, u32string_view via literal \"sv\"" )
+{
+#if nssv_HAVE_STD_DEFINED_LITERALS
+    using namespace nonstd::literals::string_view_literals;
+
+    string_view sv1 =  "abc"sv;
+    wstring_view sv2 = L"abc"sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 3 ) );
+
+#if nssv_HAVE_WCHAR16_T
+    u16string_view sv3 = u"abc"sv;
+    EXPECT( sv3.size() == size_type( 3 ) );
+#endif
+#if nssv_HAVE_WCHAR32_T
+    u32string_view sv4 = U"abc"sv;
+    EXPECT( sv4.size() == size_type( 3 ) );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_STD_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::literals::string_view_literals" )
+{
+#if nssv_HAVE_STD_DEFINED_LITERALS
+    using namespace nonstd::literals::string_view_literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_STD_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::string_view_literals" )
+{
+#if nssv_HAVE_STD_DEFINED_LITERALS
+#if nssv_HAVE_INLINE_NAMESPACE
+    using namespace nonstd::string_view_literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"Inline namespaces for user-defined literals for string_view not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_STD_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::literals" )
+{
+#if nssv_HAVE_STD_DEFINED_LITERALS
+#if nssv_HAVE_INLINE_NAMESPACE
+    using namespace nonstd::literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"Inline namespaces for user-defined literals for string_view not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_STD_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view, u32string_view via literal \"_sv\"" )
+{
+#if nssv_HAVE_USER_DEFINED_LITERALS
+    using namespace nonstd::literals::string_view_literals;
+
+    string_view sv1 =  "abc"_sv;
+    wstring_view sv2 = L"abc"_sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 3 ) );
+
+#if nssv_HAVE_WCHAR16_T
+    u16string_view sv3 = u"abc"_sv;
+    EXPECT( sv3.size() == size_type( 3 ) );
+#endif
+#if nssv_HAVE_WCHAR32_T
+    u32string_view sv4 = U"abc"_sv;
+    EXPECT( sv4.size() == size_type( 3 ) );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_USER_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::literals::string_view_literals" )
+{
+#if nssv_HAVE_USER_DEFINED_LITERALS
+    using namespace nonstd::literals::string_view_literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"_sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_USER_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::string_view_literals" )
+{
+#if nssv_HAVE_USER_DEFINED_LITERALS
+#if nssv_HAVE_INLINE_NAMESPACE
+    using namespace nonstd::string_view_literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"_sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"Inline namespaces for user-defined literals for string_view not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_USER_DEFINED_LITERALS
+}
+
+CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::literals" )
+{
+#if nssv_HAVE_USER_DEFINED_LITERALS
+#if nssv_HAVE_INLINE_NAMESPACE
+    using namespace nonstd::literals;
+
+    string_view sv1 = "abc\0\0def";
+    string_view sv2 = "abc\0\0def"_sv;
+
+    EXPECT( sv1.size() == size_type( 3 ) );
+    EXPECT( sv2.size() == size_type( 8 ) );
+#else
+    EXPECT( !!"Inline namespaces for user-defined literals for string_view not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"User-defined literals for string_view not available (no C++11)." );
+#endif // nssv_HAVE_USER_DEFINED_LITERALS
+}
 
 // 24.4.3 Non-member comparison functions:
 

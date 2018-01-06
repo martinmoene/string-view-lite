@@ -52,6 +52,7 @@
 # define nssv_MSVC_LANG  0
 #endif
 
+#define nssv_CPP11             (__cplusplus == 201103L )
 #define nssv_CPP11_OR_GREATER  (__cplusplus >= 201103L || nssv_MSVC_LANG >= 201103L )
 #define nssv_CPP14_OR_GREATER  (__cplusplus >= 201402L || nssv_MSVC_LANG >= 201703L )
 #define nssv_CPP17_OR_GREATER  (__cplusplus >= 201703L || nssv_MSVC_LANG >= 201703L )
@@ -141,11 +142,22 @@ using std::operator<<;
 # define nssv_COMPILER_MSVC_VERSION   0
 #endif
 
+#define nssv_COMPILER_VERSION( major, minor, patch )  (10 * ( 10 * major + minor) + patch)
+
+#if defined __clang__
+# define nssv_COMPILER_CLANG_VERSION  nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
+#else
+# define nssv_COMPILER_CLANG_VERSION    0
+#endif
+
 #if defined __GNUC__
-# define nssv_COMPILER_GNUC_VERSION  __GNUC__
+# define nssv_COMPILER_GNUC_VERSION  nssv_COMPILER_VERSION(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
 #else
 # define nssv_COMPILER_GNUC_VERSION    0
 #endif
+
+// half-open range [lo..hi):
+#define nssv_BETWEEN( v, lo, hi ) ( lo <= v && v < hi )
 
 // Presence of C++11 language features:
 
@@ -167,10 +179,15 @@ using std::operator<<;
 # define nssv_HAVE_CONSTEXPR_11  1
 # define nssv_HAVE_ENUM_CLASS  1
 # define nssv_HAVE_EXPLICIT_CONVERSION  1
+# define nssv_HAVE_INLINE_NAMESPACE  1
 # define nssv_HAVE_IS_DEFAULT  1
 # define nssv_HAVE_IS_DELETE  1
 # define nssv_HAVE_NOEXCEPT  1
 # define nssv_HAVE_REF_QUALIFIER  1
+# define nssv_HAVE_USER_DEFINED_LITERALS  1
+# if ! ( ( nssv_CPP11 && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
+#  define nssv_HAVE_STD_DEFINED_LITERALS  1
+# endif
 #endif
 
 // Presence of C++14 language features:
@@ -218,6 +235,12 @@ using std::operator<<;
 # define nssv_explicit  /*explicit*/
 #endif
 
+#if      nssv_HAVE_INLINE_NAMESPACE
+# define nssv_inline_ns  inline
+#else
+# define nssv_inline_ns  /*inline*/
+#endif
+
 #if      nssv_HAVE_NOEXCEPT
 # define nssv_noexcept  noexcept
 #else
@@ -244,10 +267,7 @@ using std::operator<<;
 # define nssv_nodiscard  /*[[nodiscard]]*/
 #endif
 
-// additional includes:
-
-#if nssv_CPP11_OR_GREATER
-#endif
+// Additional includes:
 
 #include <algorithm>
 #include <cassert>
@@ -257,26 +277,47 @@ using std::operator<<;
 #include <stdexcept>
 #include <string>   // std::char_traits<>
 
-// MSVC warning suppression macros:
+// Clang, GNUC, MSVC warning suppression macros:
+
+#ifdef __clang__
+# pragma clang diagnostic ignored "-Wreserved-user-defined-literal"
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wuser-defined-literals"
+#elif defined  __GNUC__
+# pragma  GCC  diagnostic push
+# pragma  GCC  diagnostic ignored "-Wliteral-suffix"
+#endif // __clang__
 
 #if nssv_COMPILER_MSVC_VERSION >= 14
 # define nssv_SUPPRESS_MSGSL_WARNING(expr)        [[gsl::suppress(expr)]]
 # define nssv_SUPPRESS_MSVC_WARNING(code, descr)  __pragma(warning(suppress: code) )
 # define nssv_DISABLE_MSVC_WARNINGS(codes)        __pragma(warning(push))  __pragma(warning(disable: codes))
-# define nssv_RESTORE_MSVC_WARNINGS()             __pragma(warning(pop ))
 #else
 # define nssv_SUPPRESS_MSGSL_WARNING(expr)
 # define nssv_SUPPRESS_MSVC_WARNING(code, descr)
 # define nssv_DISABLE_MSVC_WARNINGS(codes)
-# define nssv_RESTORE_MSVC_WARNINGS()
 #endif
 
-// Suppress the following MSVC GSL warnings:
+#ifdef __clang__
+# define nssv_RESTORE_WARNINGS()  _Pragma("clang diagnostic pop")
+#elif defined __GNUC__
+# define nssv_RESTORE_WARNINGS()  _Pragma("GCC diagnostic pop")
+#elif nssv_COMPILER_MSVC_VERSION >= 14
+# define nssv_RESTORE_WARNINGS()  __pragma(warning(pop ))
+#else
+# define nssv_RESTORE_WARNINGS()
+#endif
+
+// Suppress the following MSVC (GSL) warnings:
+// - C4455, non-gsl   : 'operator ""sv': literal suffix identifiers that do not
+//                      start with an underscore are reserved
 // - C26472, gsl::t.1 : don't use a static_cast for arithmetic conversions;
 //                      use brace initialization, gsl::narrow_cast or gsl::narow
 // - C26481: gsl::b.1 : don't use pointer arithmetic. Use span instead
 
-nssv_DISABLE_MSVC_WARNINGS( 26481 26472 )
+nssv_DISABLE_MSVC_WARNINGS( 4455 26481 26472 )
+//nssv_DISABLE_CLANG_WARNINGS( "-Wuser-defined-literals" )
+//nssv_DISABLE_GNUC_WARNINGS( -Wliteral-suffix )
 
 namespace nonstd { namespace sv_lite {
 
@@ -846,22 +887,65 @@ typedef basic_string_view<char16_t>  u16string_view;
 typedef basic_string_view<char32_t>  u32string_view;
 #endif
 
+}} // namespace nonstd::sv_lite
+
 //
 // 24.4.6 Suffix for basic_string_view literals:
 //
 
-namespace string_view_literals {
+#if nssv_HAVE_USER_DEFINED_LITERALS
 
-// msvc warning C4455: 'operator ""sv': literal suffix identifiers that do not start with an underscore are reserved
+namespace nonstd {
+nssv_inline_ns namespace literals {
+nssv_inline_ns namespace string_view_literals {
 
-//nssv_constexpr string_view operator "" sv(const char* str, size_t len) nssv_noexcept;  // (1)
-//nssv_constexpr u16string_view operator "" sv(const char16_t* str, size_t len) nssv_noexcept;  // (2)
-//nssv_constexpr u32string_view operator "" sv(const char32_t* str, size_t len) nssv_noexcept;  // (3)
-//nssv_constexpr wstring_view   operator "" sv(const wchar_t* str, size_t len) nssv_noexcept;  // (4)
+#if nssv_HAVE_STD_DEFINED_LITERALS
 
-} // namespace string_view_literals
+nssv_constexpr nonstd::sv_lite::string_view operator "" sv( const char* str, size_t len ) nssv_noexcept  // (1)
+{
+    return nonstd::sv_lite::string_view{ str, len };
+}
 
-}} // namespace nonstd::sv_lite
+nssv_constexpr nonstd::sv_lite::u16string_view operator "" sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
+{
+    return nonstd::sv_lite::u16string_view{ str, len };
+}
+
+nssv_constexpr nonstd::sv_lite::u32string_view operator "" sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
+{
+    return nonstd::sv_lite::u32string_view{ str, len };
+}
+
+nssv_constexpr nonstd::sv_lite::wstring_view operator "" sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
+{
+    return nonstd::sv_lite::wstring_view{ str, len };
+}
+
+#endif // nssv_HAVE_STD_DEFINED_LITERALS
+
+nssv_constexpr nonstd::sv_lite::string_view operator "" _sv( const char* str, size_t len ) nssv_noexcept  // (1)
+{
+    return nonstd::sv_lite::string_view{ str, len };
+}
+
+nssv_constexpr nonstd::sv_lite::u16string_view operator "" _sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
+{
+    return nonstd::sv_lite::u16string_view{ str, len };
+}
+
+nssv_constexpr nonstd::sv_lite::u32string_view operator "" _sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
+{
+    return nonstd::sv_lite::u32string_view{ str, len };
+}
+
+nssv_constexpr nonstd::sv_lite::wstring_view operator "" _sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
+{
+    return nonstd::sv_lite::wstring_view{ str, len };
+}
+
+}}} // namespace nonstd::literals::string_view_literals
+
+#endif
 
 //
 // Extensions for std::string:
@@ -936,6 +1020,7 @@ using sv_lite::operator<<;
 using sv_lite::to_string;
 using sv_lite::to_string_view;
 #endif
+
 } // namespace nonstd
 
 // 24.4.5 Hash support (C++11):
@@ -977,5 +1062,8 @@ public:
 } // namespace std
 
 #endif // nssv_HAVE_STD_HASH
+
+nssv_RESTORE_WARNINGS()
+
 #endif // nssv_HAVE_STD_STRING_VIEW
 #endif // NONSTD_SV_LITE_H_INCLUDED
