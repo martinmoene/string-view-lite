@@ -272,19 +272,10 @@ using std::operator<<;
 #endif
 
 // Suppress the following MSVC GSL warnings:
-// - C26410: gsl::r.32: the parameter 'ptr' is a reference to const unique pointer, use const T* or const T& instead
-// - C26415: gsl::r.30: smart pointer parameter 'ptr' is used only to access contained pointer. Use T* or T& instead
-// - C26418: gsl::r.36: shared pointer parameter 'ptr' is not copied or moved. Use T* or T& instead
 // - C26472, gsl::t.1 : don't use a static_cast for arithmetic conversions;
 //                      use brace initialization, gsl::narrow_cast or gsl::narow
-// - C26439, gsl::f.6 : special function 'function' can be declared 'noexcept'
-// - C26440, gsl::f.6 : function 'function' can be declared 'noexcept'
-// - C26473: gsl::t.1 : don't cast between pointer types where the source type and the target type are the same
 // - C26481: gsl::b.1 : don't use pointer arithmetic. Use span instead
-// - C26482, gsl::b.2 : only index into arrays using constant expressions
-// - C26490: gsl::t.1 : don't use reinterpret_cast
 
-//nssv_DISABLE_MSVC_WARNINGS( 26410 26415 26418 26472 26439 26440 26473 26481 26482 26490 )
 nssv_DISABLE_MSVC_WARNINGS( 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
@@ -634,46 +625,51 @@ public:
 
     // find_first_not_of(), 4x:
 
-    nssv_constexpr14 size_type find_first_not_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
+    nssv_constexpr size_type find_first_not_of( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
     {
-        struct not_in_view
-        {
-            const basic_string_view v;
-
-            not_in_view( basic_string_view v ) : v( v ) {}
-
-            bool operator()( CharT c ) const
-            {
-                return npos == v.find_first_of( c );
-            }
-        };
-
         return pos >= size()
             ? npos
             : to_pos( std::find_if( cbegin() + pos, cend(), not_in_view( v ) ) );
     }
 
-    nssv_constexpr14 size_type find_first_not_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    nssv_constexpr size_type find_first_not_of( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
     {
         return find_first_not_of( basic_string_view( &c, 1 ), pos );
     }
 
-    nssv_constexpr14 size_type find_first_not_of( CharT const * s, size_type pos, size_type count ) const  // (3)
+    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos, size_type count ) const  // (3)
     {
         return find_first_not_of( basic_string_view( s, count ), pos );
     }
 
-    nssv_constexpr14 size_type find_first_not_of( CharT const * s, size_type pos = 0 ) const  // (4)
+    nssv_constexpr size_type find_first_not_of( CharT const * s, size_type pos = 0 ) const  // (4)
     {
         return find_first_not_of( basic_string_view( s ), pos );
     }
 
     // find_last_not_of(), 4x:
 
-    nssv_constexpr size_type find_last_not_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept;  // (1)
-    nssv_constexpr size_type find_last_not_of( CharT c, size_type pos = npos ) const nssv_noexcept;  // (2)
-    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos, size_type count ) const;  // (3)
-    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos = npos ) const;  // (4)
+    nssv_constexpr size_type find_last_not_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
+    {
+        return pos >= size()
+            ? find_last_not_of( v, size() - 1 )
+            : to_pos( std::find_if( const_reverse_iterator( cbegin() + pos + 1 ), crend(), not_in_view( v ) ) );
+    }
+
+    nssv_constexpr size_type find_last_not_of( CharT c, size_type pos = npos ) const nssv_noexcept  // (2)
+    {
+        return find_last_not_of( basic_string_view( &c, 1 ), pos );
+    }
+
+    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos, size_type count ) const  // (3)
+    {
+        return find_last_not_of( basic_string_view( s, count ), pos );
+    }
+
+    nssv_constexpr size_type find_last_not_of( CharT const * s, size_type pos = npos ) const  // (4)
+    {
+        return find_last_not_of( basic_string_view( s ), pos );
+    }
 
     // Constants:
 
@@ -686,6 +682,18 @@ public:
 #endif
 
 private:
+    struct not_in_view
+    {
+        const basic_string_view v;
+
+        nssv_constexpr not_in_view( basic_string_view v ) : v( v ) {}
+
+        nssv_constexpr bool operator()( CharT c ) const
+        {
+            return npos == v.find_first_of( c );
+        }
+    };
+
     nssv_constexpr size_type to_pos( const_iterator it ) const
     {
         return it == cend() ? npos : size_type( it - cbegin() );
@@ -905,8 +913,11 @@ namespace nonstd {
 using sv_lite::basic_string_view;
 using sv_lite::string_view;
 using sv_lite::wstring_view;
+
 #if nssv_HAVE_WCHAR16_T
 using sv_lite::u16string_view;
+#endif
+#if nssv_HAVE_WCHAR32_T
 using sv_lite::u32string_view;
 #endif
 

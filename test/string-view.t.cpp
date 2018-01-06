@@ -620,10 +620,10 @@ CASE( "string_view: Allows to search for the first occurrence of any of the char
 
     EXPECT( sv.find_first_of( hello , 0, sv.size() ) == size_type( 0 ) );
     EXPECT( sv.find_first_of( hello , 1, sv.size() ) == size_type( 1 ) );
-    EXPECT( sv.find_first_of("xwy", 0, 3 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_of("xwy", 6, 3 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_of("xwy", 7, 3 ) == string_view::npos );
-    EXPECT( sv.find_first_of("xyw", 0, 2 ) == string_view::npos );
+    EXPECT( sv.find_first_of(  "xwy", 0, 3 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of(  "xwy", 6, 3 ) == size_type( 6 )    );
+    EXPECT( sv.find_first_of(  "xwy", 7, 3 ) == string_view::npos );
+    EXPECT( sv.find_first_of(  "xyw", 0, 2 ) == string_view::npos );
 }
 
 CASE( "string_view: Allows to search for the first occurrence of any of the characters specified in a C-string, starting at position pos via find_first_of(), (4)" )
@@ -638,7 +638,7 @@ CASE( "string_view: Allows to search for the first occurrence of any of the char
     EXPECT( sv.find_first_of(  "xwy", 7 ) == string_view::npos );
 }
 
-CASE( "string_view: Allows to search for the last occurrence of any of the characters specified in a string view, starting at position pos (default: npos) via find_last_of(), (1)" )
+CASE( "string_view: Allows to search backwards for the last occurrence of any of the characters specified in a string view, starting at position pos (default: npos) via find_last_of(), (1)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
@@ -700,17 +700,16 @@ CASE( "string_view: Allows to search for the first character not specified in a 
     EXPECT( sv.find_first_not_of( string_view("helo wr" )    ) == size_type( 10 ) );
 }
 
-#if 0
 CASE( "string_view: Allows to search for the first character not equal to the specified character, starting at position pos (default: 0) via find_first_not_of(), (2)" )
 {
     char hello[] = "hello world";
     string_view sv( hello );
 
-    EXPECT( sv.find_first_not_of('h'    ) == size_type( 0 )    );
-    EXPECT( sv.find_first_not_of('h', 1 ) == string_view::npos );
-    EXPECT( sv.find_first_not_of('w'    ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of('w', 6 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of('w', 7 ) == string_view::npos );
+    EXPECT( sv.find_first_not_of('h'     ) == size_type( 1 )    );
+    EXPECT( sv.find_first_not_of('h',  1 ) == size_type( 1 )    );
+    EXPECT( sv.find_first_not_of('w'     ) == size_type( 0 )    );
+    EXPECT( sv.find_first_not_of('w',  6 ) == size_type( 7 )    );
+    EXPECT( sv.find_first_not_of('d', 10 ) == string_view::npos );
 }
 
 CASE( "string_view: Allows to search for  the first character not equal to any of the characters specified in a C-string, starting at position pos and of length n via find_first_not_of(), (3)" )
@@ -718,12 +717,13 @@ CASE( "string_view: Allows to search for  the first character not equal to any o
     char hello[] = "hello world";
     string_view sv( hello );
 
-    EXPECT( sv.find_first_not_of( hello , 0, sv.size() ) == size_type( 0 ) );
-    EXPECT( sv.find_first_not_of( hello , 1, sv.size() ) == size_type( 1 ) );
-    EXPECT( sv.find_first_not_of("xwy", 0, 3 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of("xwy", 6, 3 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of("xwy", 7, 3 ) == string_view::npos );
-    EXPECT( sv.find_first_not_of("xyw", 0, 2 ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( hello, 0, sv.size() ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( hello, 3, sv.size() ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( "helo "  , 0, 5     ) == size_type(  6 ) );
+    EXPECT( sv.find_first_not_of( "helo "  , 6, 5     ) == size_type(  6 ) );
+    EXPECT( sv.find_first_not_of( "helo "  , 7, 5     ) == size_type(  8 ) );
+    EXPECT( sv.find_first_not_of( "helo wr", 0, 7     ) == size_type( 10 ) );
+    EXPECT( sv.find_first_not_of( "he"     , 0, 1     ) == size_type(  1 ) );
 }
 
 CASE( "string_view: Allows to search for  the first character not equal to any of the characters specified in a C-string, starting at position pos via find_first_not_of(), (4)" )
@@ -731,16 +731,69 @@ CASE( "string_view: Allows to search for  the first character not equal to any o
     char hello[] = "hello world";
     string_view sv( hello );
 
-    EXPECT( sv.find_first_not_of( hello , 0 ) == size_type( 0 )    );
-    EXPECT( sv.find_first_not_of( hello , 1 ) == size_type( 1 )    );
-    EXPECT( sv.find_first_not_of(  "xwy", 0 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of(  "xwy", 6 ) == size_type( 6 )    );
-    EXPECT( sv.find_first_not_of(  "xwy", 7 ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( hello    , 0 ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( hello    , 3 ) == string_view::npos );
+    EXPECT( sv.find_first_not_of( "helo "  , 0 ) == size_type(  6 ) );
+    EXPECT( sv.find_first_not_of( "helo "  , 6 ) == size_type(  6 ) );
+    EXPECT( sv.find_first_not_of( "helo "  , 7 ) == size_type(  8 ) );
+    EXPECT( sv.find_first_not_of( "helo wr", 0 ) == size_type( 10 ) );
 }
 
-#endif // 0
+CASE( "string_view: Allows to search backwards for the first character not specified in a string view, starting at position pos (default: npos) via find_last_not_of(), (1)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
 
-CASE( "string_view: find_last_not_of 4x" ) {}
+    EXPECT( sv.find_last_not_of( sv    ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( sv, 3 ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( string_view("world " )    ) == size_type(  1 ) );
+    EXPECT( sv.find_last_not_of( string_view("heo "   ), 4 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( string_view("heo "   ), 3 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( string_view("heo "   ), 2 ) == size_type(  2 ) );
+    EXPECT( sv.find_last_not_of( string_view("x"      )    ) == size_type( 10 ) );
+}
+
+CASE( "string_view: Allows to search backwards for the first character not equal to the specified character, starting at position pos (default: npos) via find_last_not_of(), (2)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find_last_not_of('d'     ) == size_type( 9 ) );
+    EXPECT( sv.find_last_not_of('d', 10 ) == size_type( 9 ) );
+    EXPECT( sv.find_last_not_of('d',  9 ) == size_type( 9 ) );
+    EXPECT( sv.find_last_not_of('d',  8 ) == size_type( 8 ) );
+    EXPECT( sv.find_last_not_of('d',  0 ) == size_type( 0 ) );
+}
+
+CASE( "string_view: Allows to search backwards for  the first character not equal to any of the characters specified in a C-string, starting at position pos and of length n via find_last_not_of(), (3)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find_last_not_of( hello, 0, sv.size() ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( hello, 3, sv.size() ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( "world ", 10, 6 ) == size_type(  1 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  4, 4 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  3, 4 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  2, 4 ) == size_type(  2 ) );
+    EXPECT( sv.find_last_not_of( "x"             ) == size_type( 10 ) );
+}
+
+CASE( "string_view: Allows to search backwards for  the first character not equal to any of the characters specified in a C-string, starting at position pos via find_last_not_of(), (4)" )
+{
+    char hello[] = "hello world";
+    string_view sv( hello );
+
+    EXPECT( sv.find_last_not_of( hello    , 0 ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( hello    , 3 ) == string_view::npos );
+    EXPECT( sv.find_last_not_of( "world ", 10 ) == size_type(  1 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  4 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  3 ) == size_type(  3 ) );
+    EXPECT( sv.find_last_not_of( "heo "  ,  2 ) == size_type(  2 ) );
+    EXPECT( sv.find_last_not_of( "x"          ) == size_type( 10 ) );
+}
+#if 0
+#endif // 0
 
 // 24.4.3 Non-member comparison functions:
 
