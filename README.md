@@ -107,17 +107,18 @@ These operators are declared in the namespace `nonstd::literals::string_view_lit
 |----------------------|------|--------|
 | Free functions with:  |&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS`|
 | &nbsp;               |&nbsp;|&nbsp;  |
-| `std::string_view`   |C++17 |template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() );|
+| **`std::string_view`**|C++17 |template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() );|
 | &nbsp;               |C++17|template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
 | &nbsp;               |&nbsp;|&nbsp;  |
-| `nonstd::string_view`<br><br>non-msvc14 (vs2015): |<=C++17| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
-| msvc14 (vs2015):     |<=C++17|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
-| &nbsp;               |&nbsp;|&nbsp;  |
-| Methods in<br>`nonst::basic_string_view`|&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`|
+| **`nonstd::string_view`**<br>&nbsp;<br>*non-msvc14 (vs2015)* |<=C++17| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
+| *msvc14 (vs2015)*<br>&nbsp;<br>&nbsp;|<=C++17|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
+| &nbsp;               |<=C++17|template&lt; class CharT, class Traits, class Allocator ><br>basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
+| &nbsp;               |&nbsp;|&nbsp; |
+| **`nonst::basic_string_view`**|&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`|
 |Constructor |&nbsp;|template&lt; class Allocator ><br>**basic_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s ) nssv_noexcept;|
-| Conversion to string,<br>requires `explicit`|&nbsp;|template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;|
+| Conversion to string |>=C++11|template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;|
 | Conversion to string |>=C++11|template&lt; class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a = Allocator() ) const;|
-| Conversion to string |<C++11|std::basic_string&lt;CharT, Traits><br>**to_string**() const;  |
+| Conversion to string |<C++11|std::basic_string&lt;CharT, Traits><br>**to_string**() const;|
 
 
 Configuration
