@@ -70,17 +70,37 @@ Synopsis
 --------
 
 **Contents**  
-[Documentation `std::string_view`](#stdstring_view)  
+[Documentation of `std::string_view`](#stdstring_view)  
+[C++20 extensions](#c20-extensions)  
 [Non-standard extensions](#non-standard-extensions)  
 [Configuration](#configuration)    
 
-`std::string_view`
-------------------
+Documentation of `std::string_view`
+-----------------------------------
 Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string-view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
 
+C++20 extensions
+----------------
+*string_view-lite* provides the following C++20 *extensions*.
+
+- *[[nodiscard]]* constexpr bool **empty**() const noexcept;
+- constexpr bool ***starts_with***( basic_string_view v ) const noexcept;  // (1)
+- constexpr bool ***starts_with***( CharT c ) const noexcept;  // (2)
+- constexpr bool ***starts_with***( CharT const * s ) const;  // (3)
+- constexpr bool ***ends_with***( basic_string_view v ) const noexcept;  // (1)
+- constexpr bool ***ends_with***( CharT c ) const noexcept;  // (2)
+- constexpr bool ***ends_with***( CharT const * s ) const;  // (3)
+
+Note: [[nodiscard]], constexpr and noexcept if available.
+     
 Non-standard extensions
 -----------------------
+### `string_view` literals `sv` and `_sv`
+clang compilers do not allow to write `auto sv = "..."sv` with *string-view lite* under C++11. To still provide a literal operator that can be used in that case, *string-view lite* also provides `_sv`.
 
+These operators are declared in the namespace `nonstd::literals::string_view_literals`, where both `literals` and `string_view_literals` are inline namespaces, if supported. Access to these operators can be gained with using namespace `std::literals`, using namespace `std::string_view_literals`, and using namespace `std::literals::string_view_literals`. If inline namespaces are not supported by the compiler, only the latter form is available.
+
+### Cooperation between `std::string`&ndash;`nonstd::string_view`
 *string-view lite* can provide several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` that exists in C++17. See the table below. Several macros allow you to control the presence of these functions, see section [Configuration](#configuration).
 
 | Kind                 | Std  | Function or method |                                       
@@ -146,7 +166,7 @@ To build the tests you need:
 - [CMake](http://cmake.org), version 3.0 or later to be installed and in your PATH.
 - A [suitable compiler](#reported-to-work-with).
 
-The [*lest* test framework](https://github.com/martinmoene/lest)  is included in the [test folder](test).
+The [*lest* test framework](https://github.com/martinmoene/lest) is included in the [test folder](test).
 
 The following steps assume that the [*string-view lite* source code](https://github.com/martinmoene/string-view-lite) has been cloned into a directory named `c:\string-view-lite`.
 
