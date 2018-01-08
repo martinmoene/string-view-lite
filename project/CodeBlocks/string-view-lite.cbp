@@ -16,6 +16,7 @@
 		<Unit filename="../../.travis.yml" />
 		<Unit filename="../../CMakeLists.txt" />
 		<Unit filename="../../LICENSE" />
+		<Unit filename="../../README.md" />
 		<Unit filename="../../appveyor.yml" />
 		<Unit filename="../../include/nonstd/string_view.hpp" />
 		<Unit filename="../../test/CMakeLists.txt" />
