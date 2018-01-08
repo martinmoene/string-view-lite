@@ -139,10 +139,10 @@ At default, *string-view lite* provides several methods and free functions to mi
 Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via methods of `nonstd::basic_string_view` and free functions, define it to 0 to omit all said methods and functions. Default is undefined.
 
 -D<b>nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS</b>=1  
-Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via methods of `nonstd::basic_string_view`, define it to 0 to omit all said methods. This also controls the presence of these function if `std::string_view` is used. Default is undefined.
+Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via methods of `nonstd::basic_string_view`, define it to 0 to omit all said methods. Default is undefined.
 
 -D<b>nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS</b>=1  
-Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via free functions, define it to 0 to omit all said functions. Default is undefined.
+Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via free functions, define it to 0 to omit all said functions. This also controls the presence of these function if `std::string_view` is used. Default is undefined.
 
 
 Reported to work with
