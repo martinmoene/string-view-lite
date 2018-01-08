@@ -111,7 +111,7 @@ These operators are declared in the namespace `nonstd::literals::string_view_lit
 | &nbsp;               |C++17|template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
 | &nbsp;               |&nbsp;|&nbsp;  |
 | `nonstd::string_view`<br><br>non-msvc14 (vs2015): |<=C++17| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
-| msvc14 (vs2015): ||<=C++17|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
+| msvc14 (vs2015):     |<=C++17|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
 | &nbsp;               |&nbsp;|&nbsp;  |
 | Methods in<br>`nonst::basic_string_view`|&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`|
 |Constructor |&nbsp;|template&lt; class Allocator ><br>**basic_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s ) nssv_noexcept;|
