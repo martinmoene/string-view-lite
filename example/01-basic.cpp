@@ -1,9 +1,9 @@
 #include "string_view.hpp"
 #include <iostream>
 
-using namespace nonstd;
-using namespace nonstd::literals;
 using namespace std::literals;
+using namespace nonstd::literals;
+using namespace nonstd;
     
 void write( string_view sv )
 {
