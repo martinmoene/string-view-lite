@@ -28,7 +28,7 @@
 #endif
 
 #if nssv_CONFIG_SELECT_STD_STRING_VIEW && nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
-#error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
+# error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
 #endif
 
 #ifdef   nssv_CONFIG_CONVERSION_STD_STRING
