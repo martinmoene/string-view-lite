@@ -50,7 +50,7 @@ In a nutshell
 ---------------
 **string-view lite** is a single-file header-only library to provide a non-owning reference to a string. The library provides a [C++17-like string_view](http://en.cppreference.com/w/cpp/string/basic_string_view) for use with C++98 and later. If available, `std::string_view` is used, unless [configured otherwise](#configuration).
 
-**Features and properties of string-view lite** are ease of installation (single header), freedom of dependencies other than the standard library. To provide cooperation with `std::string` as provided by C++17, `nonstd::string_view` provides several conversion functions. These functions may be [omitted via configuration](#configuration).
+**Features and properties of string-view lite** are ease of installation (single header), freedom of dependencies other than the standard library. To mimic C++17-like cooperation with `std::string`, `nonstd::string_view` provides several non-standard conversion functions. These functions may be [omitted via configuration](#configuration).
 
 
 License
@@ -123,7 +123,7 @@ These operators are declared in the namespace `nonstd::literals::string_view_lit
 
 | Kind                 | Std  | Function or method |                                       
 |----------------------|------|--------|
-| Free functions with:  |&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS`|
+| Free functions with:  |&nbsp;|macro `nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS`|
 | &nbsp;               |&nbsp;|&nbsp;  |
 | **`std::string_view`**|>=C++17 |template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() );|
 | &nbsp;               |>=C++17|template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
@@ -132,7 +132,7 @@ These operators are declared in the namespace `nonstd::literals::string_view_lit
 | *msvc14 (vs2015)*<br>&nbsp;<br>&nbsp;|>=C++98|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
 | &nbsp;               |>=C++98|template&lt; class CharT, class Traits, class Allocator ><br>basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
 | &nbsp;               |&nbsp;|&nbsp; |
-| **`nonst::basic_string_view`**|&nbsp;|`nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`|
+| **`nonst::basic_string_view`**|&nbsp;|macro `nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`|
 |Constructor |>=C++98|template&lt; class Allocator ><br>**basic_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s ) nssv_noexcept;|
 | Conversion to string |>=C++11|template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;|
 | Conversion to string |>=C++11|template&lt; class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a = Allocator() ) const;|
@@ -143,7 +143,7 @@ Configuration
 -------------
 
 ### Select `std::string_view` or `nonstd::string_view`
-At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
+At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
 
 -D<b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b>=1  
 Define this to 1 to select `std::string_view` as `nonstd::string_view`. Default is undefined.
