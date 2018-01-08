@@ -21,11 +21,29 @@ Example usage
 
 ```C++
 #include "string_view.hpp"
-// ...
+#include <iostream>
+
+using namespace std::literals;
+using namespace nonstd::literals;
+using namespace nonstd;
+    
+void write( string_view sv )
+{
+    std::cout << sv;
+}
+
+int main()
+{
+    write( "hello"    );	// C-string
+    write( ", "s      );	// std::string
+    write( "world!"sv );	// nonstd::string_view
+}
 ```
+
 ### Compile and run
 ```
-prompt> g++ -Wall -Wextra -std=c++03 -I.. -o xxxx.exe xxxx.cpp && xxxx
+prompt> g++ -Wall -std=c++14 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
+hello, world!
 ```
 
 In a nutshell
@@ -131,7 +149,7 @@ At default, *string-view lite* uses `std::string_view` if it is available and le
 Define this to 1 to select `std::string_view` as `nonstd::string_view`. Default is undefined.
 
 -D<b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b>=1  
-Define this to 1 to select `nonstd::string_view`. Default is undefined.
+Define this to 1 to select *string-view lite*'s `nonstd::string_view`. Default is undefined.
 
 ### Omit cooperation between `std::string`&ndash;`nonstd::string_view`
 At default, *string-view lite* provides several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` (or `std::string_view`) that exists in C++17. See section [Non-standard extensions](#non-standard-extensions). The following macros allow you to control the presence of these functions.
