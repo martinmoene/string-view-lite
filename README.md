@@ -98,9 +98,9 @@ Non-standard extensions
 ### `string_view` literals `sv` and `_sv`
 clang compilers do not allow to write `auto sv = "..."sv` with *string-view lite* under C++11. To still provide a literal operator that can be used in that case, *string-view lite* also provides `_sv`.
 
-These operators are declared in the namespace `nonstd::literals::string_view_literals`, where both `literals` and `string_view_literals` are inline namespaces, if supported. Access to these operators can be gained with using namespace `std::literals`, using namespace `std::string_view_literals`, and using namespace `std::literals::string_view_literals`. If inline namespaces are not supported by the compiler, only the latter form is available.
+These operators are declared in the namespace `nonstd::literals::string_view_literals`, where both `literals` and `string_view_literals` are inline namespaces, if supported. Access to these operators can be gained with using namespace `nonstd::literals`, using namespace `nonstd::string_view_literals`, and using namespace `nonstd::literals::string_view_literals`. If inline namespaces are not supported by the compiler, only the latter form is available.
 
-### Cooperation between `std::string`&ndash;`nonstd::string_view`
+### Cooperation between `std::string` and `nonstd::string_view`
 *string-view lite* can provide several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` that exists in C++17. See the table below. Several macros allow you to control the presence of these functions, see section [Configuration](#configuration).
 
 | Kind                 | Std  | Function or method |                                       
@@ -125,10 +125,10 @@ Configuration
 -------------
 
 ### Select `std::string_view` or `nonstd::string_view`
-At default, *string-view lite* uses `std::string_view` if it is available. You can however override this default and explicitly request to use `std::string_view` or string-view lite's `nonstd::string_view` via the following macros.
+At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
 
 -D<b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b>=1  
-Define this to 1 to select `std::string_view`. Default is undefined.
+Define this to 1 to select `std::string_view` as `nonstd::string_view`. Default is undefined.
 
 -D<b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b>=1  
 Define this to 1 to select `nonstd::string_view`. Default is undefined.
