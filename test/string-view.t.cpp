@@ -783,7 +783,7 @@ CASE( "string_view: Allows to search backwards for  the first character not equa
 
 CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view, u32string_view via literal \"sv\"" )
 {
-#if nssv_CONFIG_STD_SV_OPERATOR 
+#if nssv_CONFIG_STD_SV_OPERATOR
 #if nssv_HAVE_STD_DEFINED_LITERALS
     using namespace nonstd::literals::string_view_literals;
 
@@ -811,7 +811,7 @@ CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view
 
 CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::literals::string_view_literals" )
 {
-#if nssv_CONFIG_STD_SV_OPERATOR 
+#if nssv_CONFIG_STD_SV_OPERATOR
 #if nssv_HAVE_STD_DEFINED_LITERALS
     using namespace nonstd::literals::string_view_literals;
 
@@ -830,7 +830,7 @@ CASE( "string_view: Allows to create a string_view via literal \"sv\", using nam
 
 CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::string_view_literals" )
 {
-#if nssv_CONFIG_STD_SV_OPERATOR 
+#if nssv_CONFIG_STD_SV_OPERATOR
 #if nssv_HAVE_STD_DEFINED_LITERALS
 #if nssv_HAVE_INLINE_NAMESPACE
     using namespace nonstd::string_view_literals;
@@ -853,7 +853,7 @@ CASE( "string_view: Allows to create a string_view via literal \"sv\", using nam
 
 CASE( "string_view: Allows to create a string_view via literal \"sv\", using namespace nonstd::literals" )
 {
-#if nssv_CONFIG_STD_SV_OPERATOR 
+#if nssv_CONFIG_STD_SV_OPERATOR
 #if nssv_HAVE_STD_DEFINED_LITERALS
 #if nssv_HAVE_INLINE_NAMESPACE
     using namespace nonstd::literals;
@@ -876,7 +876,7 @@ CASE( "string_view: Allows to create a string_view via literal \"sv\", using nam
 
 CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view, u32string_view via literal \"_sv\"" )
 {
-#if nssv_CONFIG_USR_SV_OPERATOR 
+#if nssv_CONFIG_USR_SV_OPERATOR
 #if nssv_HAVE_USER_DEFINED_LITERALS
     using namespace nonstd::literals::string_view_literals;
 
@@ -904,7 +904,7 @@ CASE( "string_view: Allows to create a string_view, wstring_view, u16string_view
 
 CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::literals::string_view_literals" )
 {
-#if nssv_CONFIG_USR_SV_OPERATOR 
+#if nssv_CONFIG_USR_SV_OPERATOR
 #if nssv_HAVE_USER_DEFINED_LITERALS
     using namespace nonstd::literals::string_view_literals;
 
@@ -923,7 +923,7 @@ CASE( "string_view: Allows to create a string_view via literal \"_sv\", using na
 
 CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::string_view_literals" )
 {
-#if nssv_CONFIG_USR_SV_OPERATOR 
+#if nssv_CONFIG_USR_SV_OPERATOR
 #if nssv_HAVE_USER_DEFINED_LITERALS
 #if nssv_HAVE_INLINE_NAMESPACE
     using namespace nonstd::string_view_literals;
@@ -946,7 +946,7 @@ CASE( "string_view: Allows to create a string_view via literal \"_sv\", using na
 
 CASE( "string_view: Allows to create a string_view via literal \"_sv\", using namespace nonstd::literals" )
 {
-#if nssv_CONFIG_USR_SV_OPERATOR 
+#if nssv_CONFIG_USR_SV_OPERATOR
 #if nssv_HAVE_USER_DEFINED_LITERALS
 #if nssv_HAVE_INLINE_NAMESPACE
     using namespace nonstd::literals;
@@ -991,8 +991,8 @@ CASE( "string_view: Allows to compare a string_view with another string_view" )
 
 CASE( "string_view: Allows to compare a string_view with an object with implicit conversion to string_view" )
 {
-#if nssv_CPP11_OR_GREATER 
-#if ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
+#if nssv_CPP11_OR_GREATER
+#if _MSC_VER != 1900
     char s[] = "hello";
     string_view sv( s );
 
