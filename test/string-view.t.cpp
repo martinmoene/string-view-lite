@@ -960,7 +960,7 @@ CASE( "string_view: Allows to compare a string_view with another string_view" )
 CASE( "string_view: Allows to compare a string_view with an object with implicit conversion to string_view" )
 {
 #if nssv_CPP11_OR_GREATER 
-#if ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 10, 16 )
+#if ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
     char s[] = "hello";
     string_view sv( s );
 

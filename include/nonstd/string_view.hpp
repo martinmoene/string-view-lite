@@ -135,9 +135,20 @@ using std::operator<<;
 //
 
 // Compiler versions:
+//
+// MSVC++ 6.0  _MSC_VER == 1200 (Visual Studio 6.0)
+// MSVC++ 7.0  _MSC_VER == 1300 (Visual Studio .NET 2002)
+// MSVC++ 7.1  _MSC_VER == 1310 (Visual Studio .NET 2003)
+// MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
+// MSVC++ 9.0  _MSC_VER == 1500 (Visual Studio 2008)
+// MSVC++ 10.0 _MSC_VER == 1600 (Visual Studio 2010)
+// MSVC++ 11.0 _MSC_VER == 1700 (Visual Studio 2012)
+// MSVC++ 12.0 _MSC_VER == 1800 (Visual Studio 2013)
+// MSVC++ 14.0 _MSC_VER == 1900 (Visual Studio 2015)
+// MSVC++ 14.1 _MSC_VER >= 1910 (Visual Studio 2017)
 
 #if defined(_MSC_VER) && !defined(__clang__)
-# define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 100 - 5 - (_MSC_VER < 1900))
+# define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 10 - 10 * ( 5 + (_MSC_VER < 1900)) )
 #else
 # define nssv_COMPILER_MSVC_VERSION   0
 #endif
@@ -161,7 +172,7 @@ using std::operator<<;
 
 // Presence of C++11 language features:
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 10
+#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 100
 # define nssv_HAVE_AUTO  1
 # define nssv_HAVE_NULLPTR  1
 # define nssv_HAVE_STATIC_ASSERT  1
@@ -169,12 +180,12 @@ using std::operator<<;
 # define nssv_HAVE_WCHAR32_T  1
 #endif
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 12
+#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 120
 # define nssv_HAVE_DEFAULT_FUNCTION_TEMPLATE_ARG  1
 # define nssv_HAVE_INITIALIZER_LIST  1
 #endif
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 14
+#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 140
 # define nssv_HAVE_ALIAS_TEMPLATE  1
 # define nssv_HAVE_CONSTEXPR_11  1
 # define nssv_HAVE_ENUM_CLASS  1
@@ -205,14 +216,14 @@ using std::operator<<;
 
 // For the rest, consider VC14 as C++11 for optional-lite:
 
-#if      nssv_COMPILER_MSVC_VERSION >= 14
+#if      nssv_COMPILER_MSVC_VERSION >= 140
 # undef  nssv_CPP11_OR_GREATER
 # define nssv_CPP11_OR_GREATER  1
 #endif
 
 // Presence of C++ library features:
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 12
+#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 120
 # define nssv_HAVE_STD_HASH  1
 #endif
 
@@ -293,7 +304,7 @@ using std::operator<<;
 # pragma  GCC  diagnostic ignored "-Wliteral-suffix"
 #endif // __clang__
 
-#if nssv_COMPILER_MSVC_VERSION >= 14
+#if nssv_COMPILER_MSVC_VERSION >= 140
 # define nssv_SUPPRESS_MSGSL_WARNING(expr)        [[gsl::suppress(expr)]]
 # define nssv_SUPPRESS_MSVC_WARNING(code, descr)  __pragma(warning(suppress: code) )
 # define nssv_DISABLE_MSVC_WARNINGS(codes)        __pragma(warning(push))  __pragma(warning(disable: codes))
@@ -307,7 +318,7 @@ using std::operator<<;
 # define nssv_RESTORE_WARNINGS()  _Pragma("clang diagnostic pop")
 #elif defined __GNUC__
 # define nssv_RESTORE_WARNINGS()  _Pragma("GCC diagnostic pop")
-#elif nssv_COMPILER_MSVC_VERSION >= 14
+#elif nssv_COMPILER_MSVC_VERSION >= 140
 # define nssv_RESTORE_WARNINGS()  __pragma(warning(pop ))
 #else
 # define nssv_RESTORE_WARNINGS()
@@ -837,19 +848,25 @@ nssv_constexpr bool operator>= (
 // constexpr and noexcept so that an object t with an implicit conversion
 // to S can be compared according to Table 67.
 
-#if nssv_CPP11_OR_GREATER && ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 10, 16 )
+#if nssv_CPP11_OR_GREATER && ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
 
 #define nssv_BASIC_STRING_VIEW_I(T,U)  typename std::decay< basic_string_view<T,U> >::type
 
+#if nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 140, 150 ) 
+# define nssv_MSVC_ORDER(x)  , int=x
+#else
+# define nssv_MSVC_ORDER(x)  /*, int=x*/
+#endif
+
 // == 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator==(
          basic_string_view  <CharT, Traits> lhs,
     nssv_BASIC_STRING_VIEW_I(CharT, Traits) rhs ) nssv_noexcept 
 { return lhs.compare( rhs ) == 0; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator==(
     nssv_BASIC_STRING_VIEW_I(CharT, Traits) lhs,
          basic_string_view  <CharT, Traits> rhs ) nssv_noexcept 
@@ -857,13 +874,13 @@ nssv_constexpr bool operator==(
 
 // != 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator!= (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) != 0 ; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator!= (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
@@ -871,13 +888,13 @@ nssv_constexpr bool operator!= (
 
 // < 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator< (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) < 0 ; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator< (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
@@ -885,13 +902,13 @@ nssv_constexpr bool operator< (
 
 // <= 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator<= (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) <= 0 ; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator<= (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
@@ -899,13 +916,13 @@ nssv_constexpr bool operator<= (
 
 // > 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator> (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) > 0 ; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator> (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
@@ -913,18 +930,19 @@ nssv_constexpr bool operator> (
 
 // >= 
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator>= (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) >= 0 ; }
 
-template< class CharT, class Traits >
+template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator>= (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
 { return lhs.compare( rhs ) >= 0 ; }
 
+#undef nssv_MSVC_ORDER
 #undef nssv_BASIC_STRING_VIEW_I
 
 #endif // nssv_CPP11_OR_GREATER
@@ -1060,7 +1078,7 @@ namespace sv_lite {
 
 // Exclude MSVC 14 (19.00): it yields ambiguous to_string():
 
-#if nssv_CPP11_OR_GREATER && nssv_COMPILER_MSVC_VERSION != 14
+#if nssv_CPP11_OR_GREATER && nssv_COMPILER_MSVC_VERSION != 140
 
 template< class CharT, class Traits, class Allocator = std::allocator<CharT> >
 std::basic_string<CharT, Traits, Allocator>
