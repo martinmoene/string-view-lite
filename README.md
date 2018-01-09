@@ -114,9 +114,9 @@ Note: [[nodiscard]], constexpr and noexcept if available.
 Non-standard extensions
 -----------------------
 ### `string_view` literals `sv` and `_sv`
-clang compilers do not allow to write `auto sv = "..."sv` with *string-view lite* under C++11. To still provide a literal operator that can be used in that case, *string-view lite* also provides `_sv`.
+clang compilers do not allow to write `auto sv = "..."sv` with *string-view lite* under C++11. To still provide a literal operator that can be used in that case, *string-view lite* also provides `_sv`. See section [Configuration](#configuration) for how to control the presence of these operators.
 
-These operators are declared in the namespace `nonstd::literals::string_view_literals`, where both `literals` and `string_view_literals` are inline namespaces, if supported. Access to these operators can be gained with using namespace `nonstd::literals`, using namespace `nonstd::string_view_literals`, and using namespace `nonstd::literals::string_view_literals`. If inline namespaces are not supported by the compiler, only the latter form is available.
+The literal operators are declared in the namespace `nonstd::literals::string_view_literals`, where both `literals` and `string_view_literals` are inline namespaces, if supported. Access to these operators can be gained with using namespace `nonstd::literals`, using namespace `nonstd::string_view_literals`, and using namespace `nonstd::literals::string_view_literals`. If inline namespaces are not supported by the compiler, only the latter form is available.
 
 ### Cooperation between `std::string` and `nonstd::string_view`
 *string-view lite* can provide several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` that exists in C++17. See the table below. Several macros allow you to control the presence of these functions, see section [Configuration](#configuration).
