@@ -157,6 +157,12 @@ CASE( "presence of C++ language features" "[.stdlanguage]" )
 #else
     nssv_ABSENT(  nssv_HAVE_REF_QUALIFIER );
 #endif
+
+#if nssv_HAVE_UNICODE_LITERALS
+    nssv_PRESENT( nssv_HAVE_UNICODE_LITERALS );
+#else
+    nssv_ABSENT(  nssv_HAVE_UNICODE_LITERALS );
+#endif
 }
 
 CASE( "presence of C++ library features" "[.stdlibrary]" )
@@ -195,6 +201,18 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
     nssv_PRESENT( nssv_HAVE_TYPE_TRAITS );
 #else
     nssv_ABSENT(  nssv_HAVE_TYPE_TRAITS );
+#endif
+
+#if nssv_HAVE_WCHAR16_T
+    nssv_PRESENT( nssv_HAVE_WCHAR16_T );
+#else
+    nssv_ABSENT(  nssv_HAVE_WCHAR16_T );
+#endif
+
+#if nssv_HAVE_WCHAR32_T
+    nssv_PRESENT( nssv_HAVE_WCHAR32_T );
+#else
+    nssv_ABSENT(  nssv_HAVE_WCHAR32_T );
 #endif
 
 #if _HAS_CPP0X
