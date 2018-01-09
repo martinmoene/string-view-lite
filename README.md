@@ -218,6 +218,7 @@ Other implementations of string_view
 - Matthew Rodusek's, @bitwizeshift. [string_view Standalone](https://github.com/bitwizeshift/string_view-standalone). GitHub.
 - @satoren. [string_view for C++03 C++11 C++14](https://github.com/satoren/string_view). GitHub.
 - Google Abseil [string_view](https://github.com/abseil/abseil-cpp/tree/master/absl/strings) (non-templated).
+- [Search _string view c++_ on GitHub](https://github.com/search?l=C%2B%2B&q=string+view+c%2B%2B&type=Repositories&utf8=%E2%9C%93).
 
 
 Notes and references
