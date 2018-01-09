@@ -851,8 +851,8 @@ nssv_constexpr bool operator>= (
     basic_string_view <CharT, Traits> rhs ) nssv_noexcept
 { return lhs.compare( rhs ) >= 0 ; }
 
-// Let S be basic_string_view<CharT, Traits>, and sv be an instance of S. 
-// Implementations shall provide sufficient additional overloads marked 
+// Let S be basic_string_view<CharT, Traits>, and sv be an instance of S.
+// Implementations shall provide sufficient additional overloads marked
 // constexpr and noexcept so that an object t with an implicit conversion
 // to S can be compared according to Table 67.
 
@@ -860,27 +860,27 @@ nssv_constexpr bool operator>= (
 
 #define nssv_BASIC_STRING_VIEW_I(T,U)  typename std::decay< basic_string_view<T,U> >::type
 
-#if nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 140, 150 ) 
+#if nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 140, 150 )
 # define nssv_MSVC_ORDER(x)  , int=x
 #else
 # define nssv_MSVC_ORDER(x)  /*, int=x*/
 #endif
 
-// == 
+// ==
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator==(
          basic_string_view  <CharT, Traits> lhs,
-    nssv_BASIC_STRING_VIEW_I(CharT, Traits) rhs ) nssv_noexcept 
+    nssv_BASIC_STRING_VIEW_I(CharT, Traits) rhs ) nssv_noexcept
 { return lhs.compare( rhs ) == 0; }
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator==(
     nssv_BASIC_STRING_VIEW_I(CharT, Traits) lhs,
-         basic_string_view  <CharT, Traits> rhs ) nssv_noexcept 
+         basic_string_view  <CharT, Traits> rhs ) nssv_noexcept
 { return lhs.compare( rhs ) == 0; }
 
-// != 
+// !=
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator!= (
@@ -894,7 +894,7 @@ nssv_constexpr bool operator!= (
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
 { return lhs.compare( rhs ) != 0 ; }
 
-// < 
+// <
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator< (
@@ -908,7 +908,7 @@ nssv_constexpr bool operator< (
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
 { return lhs.compare( rhs ) < 0 ; }
 
-// <= 
+// <=
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator<= (
@@ -922,7 +922,7 @@ nssv_constexpr bool operator<= (
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
 { return lhs.compare( rhs ) <= 0 ; }
 
-// > 
+// >
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator> (
@@ -936,7 +936,7 @@ nssv_constexpr bool operator> (
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
 { return lhs.compare( rhs ) > 0 ; }
 
-// >= 
+// >=
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator>= (
