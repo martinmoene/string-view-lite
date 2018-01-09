@@ -527,18 +527,6 @@ CASE( "string_view: Allows to search for a C-string substring, starting at posit
     EXPECT( sv.find("world", 7 ) == string_view::npos );
 }
 
-CASE( "string     : Allows to search backwards for a string substring, starting at position pos (default: npos) via rfind()" "[string]" )
-{
-    char hello[] = "hello world";
-    std::string s( hello );
-
-    EXPECT( s.rfind( s    ) == size_type( 0 ) );
-    EXPECT( s.rfind( s, 3 ) == size_type( 0 ) );
-    EXPECT( s.rfind( std::string("world" )    ) == size_type( 6 ) );
-    EXPECT( s.rfind( std::string("world" ), 6 ) == size_type( 6 ) );
-    EXPECT( s.rfind( std::string("world" ), 5 ) == std::string::npos );
-}
-
 CASE( "string_view: Allows to search backwards for a string_view substring, starting at position pos (default: npos) via rfind(), (1)" )
 {
     char hello[] = "hello world";
@@ -990,6 +978,60 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
         << std::setfill('.') << std::left << std::setw(10) << sv;
 
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
+}
+
+// 24.4.5 Hash support (C++11):
+
+CASE ( "std::hash<>: Hash value of string_view equals hash value of corresponding string object" )
+{
+#if nssv_HAVE_STD_HASH
+    EXPECT( std::hash<string_view>()( "Hello, world!" ) == std::hash<std::string>()( "Hello, world!" ) );
+#else
+    EXPECT( !!"std::hash is not available (no C++11)" );
+#endif
+}
+
+CASE ( "std::hash<>: Hash value of wstring_view equals hash value of corresponding string object" )
+{
+#if nssv_HAVE_STD_HASH
+    EXPECT( std::hash<wstring_view>()( L"Hello, world!" ) == std::hash<std::wstring>()( L"Hello, world!" ) );
+#else
+    EXPECT( !!"std::hash is not available (no C++11)" );
+#endif
+}
+
+CASE ( "std::hash<>: Hash value of u16string_view equals hash value of corresponding string object" )
+{
+#if nssv_HAVE_STD_HASH
+#if nssv_HAVE_WCHAR16_T
+#if nssv_HAVE_UNICODE_LITERALS
+    EXPECT( std::hash<u16string_view>()( u"Hello, world!" ) == std::hash<std::u16string>()( u"Hello, world!" ) );
+#else
+    EXPECT( !!"Unicode literal u\"...\" is not available (no C++11)" );
+#endif
+#else
+    EXPECT( !!"std::u16string is not available (no C++11)" );
+#endif
+#else
+    EXPECT( !!"std::hash is not available (no C++11)" );
+#endif
+}
+
+CASE ( "std::hash<>: Hash value of u32string_view equals hash value of corresponding string object" )
+{
+#if nssv_HAVE_STD_HASH
+#if nssv_HAVE_WCHAR16_T
+#if nssv_HAVE_UNICODE_LITERALS
+    EXPECT( std::hash<u32string_view>()( U"Hello, world!" ) == std::hash<std::u32string>()( U"Hello, world!" ) );
+#else
+    EXPECT( !!"Unicode literal U\"...\" is not available (no C++11)" );
+#endif
+#else
+    EXPECT( !!"std::u32string is not available (no C++11)" );
+#endif
+#else
+    EXPECT( !!"std::hash is not available (no C++11)" );
+#endif
 }
 
 // nonstd extension: conversions from and to std::basic_string

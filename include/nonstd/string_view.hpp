@@ -184,6 +184,7 @@ using std::operator<<;
 # define nssv_HAVE_IS_DELETE  1
 # define nssv_HAVE_NOEXCEPT  1
 # define nssv_HAVE_REF_QUALIFIER  1
+# define nssv_HAVE_UNICODE_LITERALS  1
 # define nssv_HAVE_USER_DEFINED_LITERALS  1
 # if ! ( ( nssv_CPP11 && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
 #  define nssv_HAVE_STD_DEFINED_LITERALS  1
@@ -1025,6 +1026,9 @@ using sv_lite::to_string_view;
 
 // 24.4.5 Hash support (C++11):
 
+// Note: The hash value of a string view object is equal to the hash value of
+// the corresponding string object.
+
 #if nssv_HAVE_STD_HASH
 
 #include <functional>
@@ -1035,28 +1039,40 @@ template<>
 struct hash< nonstd::string_view >
 {
 public:
-    std::size_t operator()( nonstd::string_view v ) const nssv_noexcept;
+    std::size_t operator()( nonstd::string_view v ) const nssv_noexcept
+    {
+        return std::hash<std::string>()( std::string( v.data(), v.size() ) );
+    }
 };
 
 template<>
 struct hash< nonstd::wstring_view >
 {
 public:
-    std::size_t operator()( nonstd::wstring_view v ) const nssv_noexcept;
+    std::size_t operator()( nonstd::wstring_view v ) const nssv_noexcept
+    {
+        return std::hash<std::wstring>()( std::wstring( v.data(), v.size() ) );
+    }
 };
 
 template<>
 struct hash< nonstd::u16string_view >
 {
 public:
-    std::size_t operator()( nonstd::u16string_view v ) const nssv_noexcept;
+    std::size_t operator()( nonstd::u16string_view v ) const nssv_noexcept
+    {
+        return std::hash<std::u16string>()( std::u16string( v.data(), v.size() ) );
+    }
 };
 
 template<>
 struct hash< nonstd::u32string_view >
 {
 public:
-    std::size_t operator()( nonstd::u32string_view v ) const nssv_noexcept;
+    std::size_t operator()( nonstd::u32string_view v ) const nssv_noexcept
+    {
+        return std::hash<std::u32string>()( std::u32string( v.data(), v.size() ) );
+    }
 };
 
 } // namespace std

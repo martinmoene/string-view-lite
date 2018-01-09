@@ -292,7 +292,6 @@ string_view: Allows to search for a string_view substring, starting at position 
 string_view: Allows to search for a character, starting at position pos (default: 0) via find(), (2)
 string_view: Allows to search for a C-string substring, starting at position pos and of length n via find(), (3)
 string_view: Allows to search for a C-string substring, starting at position pos (default: 0) via find(), (4)
-string     : Allows to search backwards for a string substring, starting at position pos (default: npos) via rfind()[string]
 string_view: Allows to search backwards for a string_view substring, starting at position pos (default: npos) via rfind(), (1)
 string_view: Allows to search backwards for a character, starting at position pos (default: npos) via rfind(), (2)
 string_view: Allows to search backwards for a C-string substring, starting at position pos and of length n via rfind(), (3)
@@ -324,6 +323,10 @@ string_view: Allows to create a string_view via literal "_sv", using namespace n
 string_view: Allows to compare a string_view with another string_view
 string_view: Allows to compare empty string_view-s as equal
 operator<<: Allows printing a string_view to an output stream
+std::hash<>: Hash value of string_view equals hash value of corresponding string object
+std::hash<>: Hash value of wstring_view equals hash value of corresponding string object
+std::hash<>: Hash value of u16string_view equals hash value of corresponding string object
+std::hash<>: Hash value of u32string_view equals hash value of corresponding string object
 string_view: construct from std::string [extension]
 string_view: convert to std::string via explicit operator [extension]
 string_view: convert to std::string via to_string() [extension]
