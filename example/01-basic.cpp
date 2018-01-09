@@ -4,7 +4,7 @@
 using namespace std::literals;
 using namespace nonstd::literals;
 using namespace nonstd;
-    
+
 void write( string_view sv )
 {
     std::cout << sv;
@@ -12,9 +12,9 @@ void write( string_view sv )
 
 int main()
 {
-    write( "hello"    );
-    write( ", "s      );
-    write( "world!"sv );
+    write( "hello"     );	// C-string
+    write( ", "s       );	// std::string
+    write( "world!"_sv );	// nonstd::string_view
 }
 
-// g++ -Wall -std=c++14 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
+// g++ -Wall -std=c++14 -Dnssv_CONFIG_STD_SV_OPERATOR=1 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
