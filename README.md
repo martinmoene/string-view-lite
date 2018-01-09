@@ -34,9 +34,9 @@ void write( string_view sv )
 
 int main()
 {
-    write( "hello"    );	// C-string
-    write( ", "s      );	// std::string
-    write( "world!"sv );	// nonstd::string_view
+    write( "hello"     );	// C-string
+    write( ", "s       );	// std::string
+    write( "world!"_sv );	// nonstd::string_view
 }
 ```
 
