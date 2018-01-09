@@ -12,9 +12,9 @@ void write( string_view sv )
 
 int main()
 {
-    write( "hello"     );	// C-string
-    write( ", "s       );	// std::string
-    write( "world!"_sv );	// nonstd::string_view
+    write( "hello"    );    // C-string
+    write( ", "s      );    // std::string
+    write( "world!"sv );    // nonstd::string_view
 }
 
 // g++ -Wall -std=c++14 -Dnssv_CONFIG_STD_SV_OPERATOR=1 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
