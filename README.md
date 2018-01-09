@@ -151,6 +151,14 @@ Define this to 1 to select `std::string_view` as `nonstd::string_view`. Default 
 -D<b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b>=1  
 Define this to 1 to select *string-view lite*'s `nonstd::string_view`. Default is undefined.
 
+### Add or omit literal operators `sv` and `_sv`
+
+-D<b>nssv_CONFIG_STD_SV_OPERATOR</b>=1  
+Define this to 1 to provide literal operator `sv` to create a `string_view` from a literal string. Default is 0. Note that literal operators without leading underscore are reserved for the C++ standard.
+
+-D<b>nssv_CONFIG_USR_SV_OPERATOR</b>=0  
+Define this to 0 to omit literal operator `_sv` to create a `string_view` from a literal string. Default is 1.
+
 ### Omit cooperation between `std::string`&ndash;`nonstd::string_view`
 At default, *string-view lite* provides several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` (or `std::string_view`) that exists in C++17. See section [Non-standard extensions](#non-standard-extensions). The following macros allow you to control the presence of these functions.
  

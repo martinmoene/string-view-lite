@@ -31,6 +31,14 @@
 # error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
 #endif
 
+#ifndef  nssv_CONFIG_STD_SV_OPERATOR
+# define nssv_CONFIG_STD_SV_OPERATOR  0
+#endif
+
+#ifndef  nssv_CONFIG_USR_SV_OPERATOR
+# define nssv_CONFIG_USR_SV_OPERATOR  1
+#endif
+
 #ifdef   nssv_CONFIG_CONVERSION_STD_STRING
 # define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   nssv_CONFIG_CONVERSION_STD_STRING
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  nssv_CONFIG_CONVERSION_STD_STRING
@@ -1019,7 +1027,7 @@ namespace nonstd {
 nssv_inline_ns namespace literals {
 nssv_inline_ns namespace string_view_literals {
 
-#if nssv_HAVE_STD_DEFINED_LITERALS
+#if nssv_CONFIG_STD_SV_OPERATOR && nssv_HAVE_STD_DEFINED_LITERALS
 
 nssv_constexpr nonstd::sv_lite::string_view operator "" sv( const char* str, size_t len ) nssv_noexcept  // (1)
 {
@@ -1041,7 +1049,9 @@ nssv_constexpr nonstd::sv_lite::wstring_view operator "" sv( const wchar_t* str,
     return nonstd::sv_lite::wstring_view{ str, len };
 }
 
-#endif // nssv_HAVE_STD_DEFINED_LITERALS
+#endif // nssv_CONFIG_STD_SV_OPERATOR && nssv_HAVE_STD_DEFINED_LITERALS
+
+#if nssv_CONFIG_USR_SV_OPERATOR
 
 nssv_constexpr nonstd::sv_lite::string_view operator "" _sv( const char* str, size_t len ) nssv_noexcept  // (1)
 {
@@ -1062,6 +1072,8 @@ nssv_constexpr nonstd::sv_lite::wstring_view operator "" _sv( const wchar_t* str
 {
     return nonstd::sv_lite::wstring_view{ str, len };
 }
+
+#endif // nssv_CONFIG_USR_SV_OPERATOR
 
 }}} // namespace nonstd::literals::string_view_literals
 

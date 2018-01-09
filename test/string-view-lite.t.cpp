@@ -224,6 +224,52 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
 
 #endif // nssv_HAVE_STD_OPTIONAL
 
+CASE( "Configuration of string_view lite" "[.config]" )
+{
+#if nssv_CONFIG_SELECT_STD_STRING_VIEW
+    nssv_PRESENT( nssv_CONFIG_SELECT_STD_STRING_VIEW );
+#else
+    nssv_ABSENT(  nssv_CONFIG_SELECT_STD_STRING_VIEW );
+#endif
+
+#if nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+    nssv_PRESENT( nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
+#else
+    nssv_ABSENT(  nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
+#endif
+
+#if nssv_CONFIG_STD_SV_OPERATOR
+    nssv_PRESENT( nssv_CONFIG_STD_SV_OPERATOR );
+#else
+    nssv_ABSENT(  nssv_CONFIG_STD_SV_OPERATOR );
+#endif
+
+#if nssv_CONFIG_USR_SV_OPERATOR
+    nssv_PRESENT( nssv_CONFIG_USR_SV_OPERATOR );
+#else
+    nssv_ABSENT(  nssv_CONFIG_USR_SV_OPERATOR );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+#endif
+
+}
+
 int main( int argc, char * argv[] )
 {
     return lest::run( specification(), argc, argv );
