@@ -111,6 +111,44 @@ to_string_view( std::basic_string<CharT, Traits, Allocator> const & s )
     return std::basic_string_view<CharT, Traits>( s.data(), s.size() );
 }
 
+// Literal operators sv and _sv:
+
+#if nssv_CONFIG_STD_SV_OPERATOR
+
+using namespace std::literals::string_view_literals;
+
+#endif
+
+#if nssv_CONFIG_USR_SV_OPERATOR
+
+inline namespace literals {
+inline namespace string_view_literals {
+
+
+constexpr std::string_view operator "" _sv( const char* str, size_t len ) noexcept  // (1)
+{
+    return std::string_view{ str, len };
+}
+
+constexpr std::u16string_view operator "" _sv( const char16_t* str, size_t len ) noexcept  // (2)
+{
+    return std::u16string_view{ str, len };
+}
+
+constexpr std::u32string_view operator "" _sv( const char32_t* str, size_t len ) noexcept  // (3)
+{
+    return std::u32string_view{ str, len };
+}
+
+constexpr std::wstring_view operator "" _sv( const wchar_t* str, size_t len ) noexcept  // (4)
+{
+    return std::wstring_view{ str, len };
+}
+
+}} // namespace literals::string_view_literals
+
+#endif // nssv_CONFIG_USR_SV_OPERATOR
+
 } // namespace nonstd
 
 #endif // nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS

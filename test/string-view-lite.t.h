@@ -24,6 +24,8 @@
 # define nssv_nullptr  nullptr
 #endif
 
+#define nssv_STD_SV_OR( expr )  ( nssv_USES_STD_STRING_VIEW || (expr) )
+
 using namespace nonstd;
 
 #define CASE( name ) lest_CASE( specification(), name )
