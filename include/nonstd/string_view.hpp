@@ -17,7 +17,7 @@
 #ifndef NONSTD_SV_LITE_H_INCLUDED
 #define NONSTD_SV_LITE_H_INCLUDED
 
-#define  string_view_lite_VERSION "0.1.0"
+#define  string_view_lite_VERSION "0.2.0"
 
 // string-view lite configuration:
 
@@ -161,7 +161,7 @@ using std::u16string_view;
 using std::u32string_view;
 using std::basic_string_view;
 
-// literal "sv"
+// literal "sv" and "_sv", see above
 
 using std::operator==;
 using std::operator!=;
