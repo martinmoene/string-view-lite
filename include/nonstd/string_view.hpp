@@ -1,23 +1,15 @@
+// Copyright 2017-2018 by Martin Moene
 //
 // string-view lite, a C++17-like string_view for C++98 and later.
 // For more information see https://github.com/martinmoene/string-view-lite
 //
-// Copyright (c) 2017-2018 Martin Moene
-//
-// This code is licensed under the MIT License (MIT).
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef NONSTD_SV_LITE_H_INCLUDED
 #define NONSTD_SV_LITE_H_INCLUDED
 
-#define  string_view_lite_VERSION "0.2.0"
+#define  string_view_lite_VERSION "1.0.0"
 
 // string-view lite configuration:
 
