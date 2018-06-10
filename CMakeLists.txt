@@ -18,7 +18,7 @@ option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion t
 
 include( GNUInstallDirs )
 
-project( string_view_lite )
+project( string_view_lite LANGUAGES CXX )
 
 set( package_name "string-view--lite" )
 set( include_source_dir "${PROJECT_SOURCE_DIR}/include" )

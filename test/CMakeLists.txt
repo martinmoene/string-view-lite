@@ -7,7 +7,7 @@
 
 cmake_minimum_required( VERSION 3.0 )
 
-project( test )
+project( test LANGUAGES CXX )
 
 set( SOURCES string-view-lite.t.cpp string-view.t.cpp )
 set( HDRNAME string_view.hpp )
