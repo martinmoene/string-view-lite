@@ -117,10 +117,10 @@ function( make_target target std )
     target_include_directories( ${target} PRIVATE ${HDRDIR} )
     if( std )
         if( MSVC )
-            target_compile_options( ${target} PRIVATE -std:c++${std} )
+            target_compile_options( ${target} PRIVATE -std:${std} )
         else()
             # Necessary for clang 3.x:
-            target_compile_options( ${target} PRIVATE -std=c++${std} )
+            target_compile_options( ${target} PRIVATE -std=${std} )
             # Ok for clang 4 and later:
             # set( CMAKE_CXX_STANDARD ${std} )
             # set( CMAKE_CXX_STANDARD_REQUIRED ON )
