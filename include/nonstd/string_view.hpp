@@ -433,12 +433,16 @@ public:
     {}
 
 #if nssv_CPP11_OR_GREATER
+
     nssv_constexpr basic_string_view( basic_string_view const & other ) nssv_noexcept = default;
+
 #else
+
     nssv_constexpr basic_string_view( basic_string_view const & other ) nssv_noexcept
         : data_( other.data_)
         , size_( other.size_)
     {}
+
 #endif
 
     nssv_constexpr basic_string_view( CharT const * s, size_type count )
@@ -454,14 +458,18 @@ public:
     // Assignment:
 
 #if nssv_CPP11_OR_GREATER
+
     nssv_constexpr14 basic_string_view & operator=( basic_string_view const & other ) nssv_noexcept = default;
+
 #else
+
     nssv_constexpr14 basic_string_view & operator=( basic_string_view const & other ) nssv_noexcept
     {
         data_ = other.data_;
         size_ = other.size_;
         return *this;
     }
+
 #endif
 
     // 24.4.2.2 Iterator support:
@@ -826,21 +834,26 @@ public:
     {}
 
 #if nssv_HAVE_EXPLICIT_CONVERSION
+
     template< class Allocator >
     explicit operator std::basic_string<CharT, Traits, Allocator>() const
     {
         return to_string( Allocator() );
     }
+
 #endif
 
 #if nssv_CPP11_OR_GREATER
+
     template< class Allocator = std::allocator<CharT> >
     std::basic_string<CharT, Traits, Allocator>
     to_string( Allocator const & a = Allocator() ) const
     {
         return std::basic_string<CharT, Traits, Allocator>( begin(), end(), a );
     }
+
 #else
+
     std::basic_string<CharT, Traits>
     to_string() const
     {
@@ -1150,6 +1163,7 @@ to_string( basic_string_view<CharT, Traits> v )
 {
     return std::basic_string<CharT, Traits>( v.begin(), v.end() );
 }
+
 #endif // nssv_CPP11_OR_GREATER
 
 template< class CharT, class Traits, class Allocator >
