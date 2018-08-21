@@ -45,8 +45,9 @@
 #endif
 
 #ifndef  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
-# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   1
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  1
 #endif
+
 #ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
 #endif
@@ -110,6 +111,10 @@ to_string_view( std::basic_string<CharT, Traits, Allocator> const & s )
 {
     return std::basic_string_view<CharT, Traits>( s.data(), s.size() );
 }
+
+template< class CharT, class Traits, class Allocator >
+std::basic_string_view<CharT, Traits>
+to_string_view( std::basic_string<CharT, Traits, Allocator> && s ) = delete;
 
 // Literal operators sv and _sv:
 
