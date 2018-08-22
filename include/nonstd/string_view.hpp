@@ -45,8 +45,9 @@
 #endif
 
 #ifndef  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
-# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS   1
+# define nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  1
 #endif
+
 #ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
 #endif
@@ -821,12 +822,14 @@ public:
     {}
 
 #if nssv_HAVE_EXPLICIT_CONVERSION
+
     template< class Allocator >
     explicit operator std::basic_string<CharT, Traits, Allocator>() const
     {
         return to_string( Allocator() );
     }
-#endif
+
+#endif // nssv_HAVE_EXPLICIT_CONVERSION
 
 #if nssv_CPP11_OR_GREATER
 
@@ -852,7 +855,7 @@ public:
         return std::basic_string<CharT, Traits, Allocator>( begin(), end(), a );
     }
 
-#endif
+#endif // nssv_CPP11_OR_GREATER
 
 #endif // nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
 };
