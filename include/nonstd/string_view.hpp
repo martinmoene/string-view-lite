@@ -1159,6 +1159,14 @@ to_string( basic_string_view<CharT, Traits> v )
 {
     return std::basic_string<CharT, Traits>( v.begin(), v.end() );
 }
+
+template< class CharT, class Traits, class Allocator >
+std::basic_string<CharT, Traits, Allocator>
+to_string( basic_string_view<CharT, Traits> v, Allocator const & a )
+{
+    return std::basic_string<CharT, Traits, Allocator>( v.begin(), v.end(), a );
+}
+
 #endif // nssv_CPP11_OR_GREATER
 
 template< class CharT, class Traits, class Allocator >
