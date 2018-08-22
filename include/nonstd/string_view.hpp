@@ -829,18 +829,29 @@ public:
 #endif
 
 #if nssv_CPP11_OR_GREATER
+
     template< class Allocator = std::allocator<CharT> >
     std::basic_string<CharT, Traits, Allocator>
     to_string( Allocator const & a = Allocator() ) const
     {
         return std::basic_string<CharT, Traits, Allocator>( begin(), end(), a );
     }
+
 #else
+
     std::basic_string<CharT, Traits>
     to_string() const
     {
         return std::basic_string<CharT, Traits>( begin(), end() );
     }
+
+    template< class Allocator >
+    std::basic_string<CharT, Traits, Allocator>
+    to_string( Allocator const & a ) const
+    {
+        return std::basic_string<CharT, Traits, Allocator>( begin(), end(), a );
+    }
+
 #endif
 
 #endif // nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
