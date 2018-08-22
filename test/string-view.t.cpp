@@ -1171,10 +1171,16 @@ CASE( "to_string(): convert to std::string via to_string() " "[extension]" )
     char hello[] = "hello world";
     string_view sv( hello );
 
-    std::string s = to_string( sv );
+    std::string s1 = to_string( sv );
 
-    EXPECT( sv.size() == s.size() );
-    EXPECT( sv.compare( s ) == 0  );
+    EXPECT( sv.size() == s1.size() );
+    EXPECT( sv.compare( s1 ) == 0  );
+
+    std::string s2 = to_string( sv, std::string::allocator_type() );
+
+    EXPECT( sv.size() == s2.size() );
+    EXPECT( sv.compare( s2 ) == 0  );
+
 #else
     EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=0)." );
 #endif
