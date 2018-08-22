@@ -1151,10 +1151,15 @@ CASE( "string_view: convert to std::string via to_string() " "[extension]" )
     char hello[] = "hello world";
     string_view sv( hello );
 
-    std::string s = sv.to_string();
+    std::string s1 = sv.to_string();
 
-    EXPECT( sv.size() == s.size() );
-    EXPECT( sv.compare( s ) == 0  );
+    EXPECT( sv.size() == s1.size() );
+    EXPECT( sv.compare( s1 ) == 0  );
+
+    std::string s2 = sv.to_string( std::string::allocator_type() );
+
+    EXPECT( sv.size() == s2.size() );
+    EXPECT( sv.compare( s2 ) == 0  );
 #else
     EXPECT( !!"Conversion to/from std::string is not available (nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=0)." );
 #endif
