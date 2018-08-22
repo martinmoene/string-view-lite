@@ -128,8 +128,9 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 | to_string()           |>=C++17| template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() );|
 | to_string_view()      |>=C++17| template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
 | **`nonstd::string_view`**|&nbsp; | &nbsp;  |
-| to_string()<br>&nbsp;<br>*non-msvc14 (vs2015)* |>=C++98| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
-| *msvc14 (vs2015)*<br>&nbsp;<br>to_string() |>=C++98|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
+| to_string()<br>&nbsp;<br>*non-msvc14 (vs2015)* |>=C++11| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
+| to_string()<br>&nbsp;<br>*msvc14 (vs2015)* |>=C++98|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
+| to_string()<br>&nbsp;<br>*msvc14 (vs2015)* |>=C++98|template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a );|
 | to_string_view()      |>=C++98| template&lt; class CharT, class Traits, class Allocator ><br>basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
 | &nbsp;                |&nbsp; | &nbsp; |
 | **Class methods**     |&nbsp; | macro `nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS` |
@@ -138,6 +139,7 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 | Converting operator   |>=C++11| template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;|
 | to_string()           |>=C++11| template&lt; class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a = Allocator() ) const;|
 | to_string()           |<C++11 | std::basic_string&lt;CharT, Traits><br>**to_string**() const;|
+| to_string()           |<C++11 | template&lt; class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a ) const;|
 | &nbsp;                |&nbsp; | &nbsp; |
 | **Literal operator `sv`**|>=C++11| macro `nssv_CONFIG_STD_SV_OPERATOR` |
 | &nbsp;                |&nbsp; | constexpr string_view operator "" **sv**( const char* str, size_t len ) noexcept; |
