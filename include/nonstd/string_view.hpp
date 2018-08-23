@@ -208,7 +208,7 @@ using std::operator<<;
 # define nssv_COMPILER_CLANG_VERSION    0
 #endif
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__clang__)
 # define nssv_COMPILER_GNUC_VERSION  nssv_COMPILER_VERSION(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
 #else
 # define nssv_COMPILER_GNUC_VERSION    0
