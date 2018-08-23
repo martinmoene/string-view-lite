@@ -55,9 +55,12 @@ if( MSVC )
     endif()
     if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.11 )
         set( HAS_CPP17_FLAG TRUE )
+        set( OPTIONS ${OPTIONS} /permissive- )
     endif()
 
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+
+    set( CMAKE_VERBOSE_MAKEFILE ON )
 
     set( HAS_STD_FLAGS  TRUE )
     set( HAS_CPP98_FLAG TRUE )
@@ -150,7 +153,11 @@ else()
     endif()
 
     if( HAS_CPP17_FLAG )
-        make_target( string-view-lite-cpp17.t c++17 )
+        if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang" )
+            make_target( string-view-lite-cpp17.t c++1z ) # Add с++17 when Xcode will support this.
+        else()
+            make_target( string-view-lite-cpp17.t c++17 )
+        endif()
         enable_msvs_guideline_checker( string-view-lite-cpp17.t )
     endif()
 
