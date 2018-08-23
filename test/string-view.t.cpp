@@ -12,6 +12,16 @@ namespace {
 
 using namespace nonstd;
 
+template < class T>
+T * data( std::vector<T> & v )
+{
+#if nssv_CPP11_OR_GREATER
+    return v.data();
+#else
+    return &v[0];
+#endif
+}
+
 typedef string_view::size_type size_type;
 
 // 24.4.2.1 Construction and assignment:
@@ -293,14 +303,14 @@ CASE( "string_view: Allows to copy a substring of length n, starting at position
     {
         std::vector<string_view::value_type> vec( sv.size() );
 
-        sv.copy( vec.data(), vec.size() );
+        sv.copy( data(vec), vec.size() );
 
         EXPECT( std::equal( vec.begin(), vec.end(), hello )  );
     }{
         int offset = 3; int length = 4;
         std::vector<string_view::value_type> vec( length );
 
-        sv.copy( vec.data(), length, offset );
+        sv.copy( data(vec), length, offset );
 
         EXPECT( std::equal( vec.begin(), vec.end(), hello + offset )  );
     }
@@ -311,8 +321,8 @@ CASE( "string_view: Throws if requested position of copy() exceeds string_view's
     string_view sv("hello world");
     std::vector<string_view::value_type> vec( sv.size() );
 
-    EXPECT_THROWS(   sv.copy( vec.data(), sv.size() - 4, sv.size() + 1 ) );
-    EXPECT_NO_THROW( sv.copy( vec.data(), sv.size() - 4, sv.size() + 0 ) );
+    EXPECT_THROWS(   sv.copy( data(vec), sv.size() - 4, sv.size() + 1 ) );
+    EXPECT_NO_THROW( sv.copy( data(vec), sv.size() - 4, sv.size() + 0 ) );
 }
 
 CASE( "string_view: Allow to obtain a sub string, starting at position pos (default: 0) and of length n (default full), via substr()" )
