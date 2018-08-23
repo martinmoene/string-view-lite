@@ -490,21 +490,21 @@ public:
 
     nssv_constexpr const_reference operator[]( size_type pos ) const
     {
-        return assert( pos < size() ),
-            data_[pos];
+        return data_at( pos );
     }
 
     nssv_constexpr14 const_reference at( size_type pos ) const
     {
         if ( pos < size() )
         {
-            return data_[pos];
+            return data_at( pos );
         }
+
         throw std::out_of_range("nonst::string_view::at()");
     }
 
-    nssv_constexpr const_reference front() const { return assert( !empty() ), data_[0]; }
-    nssv_constexpr const_reference back()  const { return assert( !empty() ), data_[size() - 1]; }
+    nssv_constexpr const_reference front() const { return data_at( 0 );          }
+    nssv_constexpr const_reference back()  const { return data_at( size() - 1 ); }
 
     nssv_constexpr const_pointer   data()  const nssv_noexcept { return data_; }
 
@@ -806,6 +806,15 @@ private:
     nssv_constexpr size_type to_pos( const_reverse_iterator it ) const
     {
         return it == crend() ? npos : size_type( crend() - it - 1 );
+    }
+
+    nssv_constexpr const_reference data_at( size_type pos ) const
+    {
+#if nssv_BETWEEN( nssv_COMPILER_GNUC_VERSION, 1, 500 )
+        return data_[pos];
+#else
+        return assert( pos < size() ), data_[pos];
+#endif
     }
 
 private:
