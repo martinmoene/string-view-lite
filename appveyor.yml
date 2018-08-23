@@ -43,6 +43,9 @@ matrix:
           generator: "Visual Studio 10 2010"
         - image:      Visual Studio 2017
           generator: "Visual Studio 9 2008"
+        - image:      Visual Studio 2015
+          platform:   x64
+          generator: "Visual Studio 9 2008"
 
 before_build:
     - mkdir build && cd build
