@@ -195,10 +195,10 @@ OS        | Compiler   | Versions |
 ---------:|:-----------|:---------|
 Windows   | Clang/LLVM | ?        |
 &nbsp;    | GCC        | 7.2.0    |
-&nbsp;    | Visual C++<br>(Visual Studio)| 8 (2005)?, 10 (2010), 11 (2012),<br>12 (2013), 14 (2015), 15 (2017) |
-GNU/Linux | Clang/LLVM | 3.5.0, 5.0, ...    |
-&nbsp;    | GCC        | 5.4.1, 6.3.0, 7.2.0 |
-OS X      | ?          | ?        |
+&nbsp;    | Visual C++<br>(Visual Studio)| 8 (2005), 9 (2008), 10 (2010), 11 (2012),<br>12 (2013), 14 (2015), 15 (2017) |
+GNU/Linux | Clang/LLVM | 3.5 - 6.0  |
+&nbsp;    | GCC        | 4.8 - 8 |
+OS X      | Clang/LLVM | Xcode 6, Xcode 7, Xcode 8, Xcode 9 |
 
 
 Building the tests
