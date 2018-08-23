@@ -30,7 +30,6 @@ environment:
         - generator: "Visual Studio 9 2008"
 
 matrix:
-    fast_finish: true
     exclude:
         - image:      Visual Studio 2015
           generator: "Visual Studio 15 2017"
