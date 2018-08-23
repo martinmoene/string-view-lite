@@ -32,6 +32,9 @@ CASE( "__cplusplus" "[.stdc++]" )
 
 CASE( "string-view-lite version" "[.version]" )
 {
+    nssv_PRESENT( string_view_lite_MAJOR   );
+    nssv_PRESENT( string_view_lite_MINOR   );
+    nssv_PRESENT( string_view_lite_PATCH   );
     nssv_PRESENT( string_view_lite_VERSION );
 }
 
