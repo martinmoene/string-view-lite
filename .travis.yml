@@ -19,7 +19,6 @@ addons:
       - llvm-toolchain-trusty-6.0
 
 matrix:
-  fast_finish: true
   include:
     - os: linux
       env: COMPILER=g++-4.8
