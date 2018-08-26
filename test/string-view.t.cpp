@@ -12,7 +12,7 @@ namespace {
 
 using namespace nonstd;
 
-template < class T>
+template< class T >
 T * data( std::vector<T> & v )
 {
 #if nssv_CPP11_OR_GREATER
