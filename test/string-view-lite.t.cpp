@@ -19,6 +19,14 @@ lest::tests & specification()
     return tests;
 }
 
+CASE( "string-view-lite version" "[.version]" )
+{
+    nssv_PRESENT( string_view_lite_MAJOR   );
+    nssv_PRESENT( string_view_lite_MINOR   );
+    nssv_PRESENT( string_view_lite_PATCH   );
+    nssv_PRESENT( string_view_lite_VERSION );
+}
+
 CASE( "__cplusplus" "[.stdc++]" )
 {
     nssv_PRESENT( __cplusplus );
@@ -29,31 +37,6 @@ CASE( "__cplusplus" "[.stdc++]" )
     nssv_ABSENT(  _MSVC_LANG );
 #endif
 }
-
-CASE( "string-view-lite version" "[.version]" )
-{
-    nssv_PRESENT( string_view_lite_MAJOR   );
-    nssv_PRESENT( string_view_lite_MINOR   );
-    nssv_PRESENT( string_view_lite_PATCH   );
-    nssv_PRESENT( string_view_lite_VERSION );
-}
-
-CASE( "string-view-lite configuration" "[.config]" )
-{
-#if nssv_HAVE_STD_STRING_VIEW
-    std::cout << "Have std::string_view\n";
-#else
-    std::cout << "No std::string_view\n";
-#endif
-
-#if nssv_USES_STD_STRING_VIEW
-    std::cout << "Using std::string_view\n";
-#else
-    std::cout << "Using nonstd::string_view\n";
-#endif
-}
-
-#if !nssv_HAVE_STD_OPTIONAL
 
 CASE( "compiler version" "[.compiler]" )
 {
@@ -69,6 +52,65 @@ CASE( "compiler version" "[.compiler]" )
     nssv_ABSENT(  nssv_COMPILER_MSVC_VERSION );
 #endif
 }
+
+CASE( "string-view-lite configuration" "[.config]" )
+{
+#if nssv_HAVE_STD_STRING_VIEW
+    std::cout << "Have std::string_view\n";
+#else
+    std::cout << "No std::string_view\n";
+#endif
+
+#if nssv_USES_STD_STRING_VIEW
+    std::cout << "Using std::string_view\n";
+#else
+    std::cout << "Using nonstd::string_view\n";
+#endif
+
+#if nssv_CONFIG_SELECT_STD_STRING_VIEW
+    nssv_PRESENT( nssv_CONFIG_SELECT_STD_STRING_VIEW );
+#else
+    nssv_ABSENT(  nssv_CONFIG_SELECT_STD_STRING_VIEW );
+#endif
+
+#if nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
+    nssv_PRESENT( nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
+#else
+    nssv_ABSENT(  nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
+#endif
+
+#if nssv_CONFIG_STD_SV_OPERATOR
+    nssv_PRESENT( nssv_CONFIG_STD_SV_OPERATOR );
+#else
+    nssv_ABSENT(  nssv_CONFIG_STD_SV_OPERATOR );
+#endif
+
+#if nssv_CONFIG_USR_SV_OPERATOR
+    nssv_PRESENT( nssv_CONFIG_USR_SV_OPERATOR );
+#else
+    nssv_ABSENT(  nssv_CONFIG_USR_SV_OPERATOR );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
+#endif
+
+#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
+    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+#else
+    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+#endif
+}
+
+#if !nssv_HAVE_STD_OPTIONAL
 
 CASE( "presence of C++ language features" "[.stdlanguage]" )
 {
@@ -227,52 +269,6 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
 }
 
 #endif // nssv_HAVE_STD_OPTIONAL
-
-CASE( "Configuration of string_view lite" "[.config]" )
-{
-#if nssv_CONFIG_SELECT_STD_STRING_VIEW
-    nssv_PRESENT( nssv_CONFIG_SELECT_STD_STRING_VIEW );
-#else
-    nssv_ABSENT(  nssv_CONFIG_SELECT_STD_STRING_VIEW );
-#endif
-
-#if nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
-    nssv_PRESENT( nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
-#else
-    nssv_ABSENT(  nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
-#endif
-
-#if nssv_CONFIG_STD_SV_OPERATOR
-    nssv_PRESENT( nssv_CONFIG_STD_SV_OPERATOR );
-#else
-    nssv_ABSENT(  nssv_CONFIG_STD_SV_OPERATOR );
-#endif
-
-#if nssv_CONFIG_USR_SV_OPERATOR
-    nssv_PRESENT( nssv_CONFIG_USR_SV_OPERATOR );
-#else
-    nssv_ABSENT(  nssv_CONFIG_USR_SV_OPERATOR );
-#endif
-
-#if nssv_CONFIG_CONVERSION_STD_STRING
-    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING );
-#else
-    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING );
-#endif
-
-#if nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS
-    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
-#else
-    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
-#endif
-
-#if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
-    nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
-#else
-    nssv_ABSENT(  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
-#endif
-
-}
 
 int main( int argc, char * argv[] )
 {
