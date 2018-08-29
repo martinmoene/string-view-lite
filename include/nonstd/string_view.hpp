@@ -479,7 +479,7 @@ public:
 
     nssv_constexpr size_type size()     const nssv_noexcept { return size_; }
     nssv_constexpr size_type length()   const nssv_noexcept { return size_; }
-    nssv_constexpr size_type max_size() const nssv_noexcept { return std::numeric_limits< size_type >::max(); }
+    nssv_constexpr size_type max_size() const nssv_noexcept { return (std::numeric_limits< size_type >::max)(); }
 
     // since C++20
     nssv_nodiscard nssv_constexpr bool empty() const nssv_noexcept
@@ -538,7 +538,7 @@ public:
         if ( pos > size() )
             throw std::out_of_range("nonst::string_view::copy()");
 
-        const size_type rlen = std::min( n, size() - pos );
+        const size_type rlen = (std::min)( n, size() - pos );
 
         (void) Traits::copy( dest, data() + pos, rlen );
 
@@ -550,14 +550,14 @@ public:
         if ( pos > size() )
             throw std::out_of_range("nonst::string_view::substr()");
 
-        return basic_string_view( data() + pos, std::min( n, size() - pos ) );
+        return basic_string_view( data() + pos, (std::min)( n, size() - pos ) );
     }
 
     // compare(), 6x:
 
     nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
-        if ( const int result = Traits::compare( data(), other.data(), std::min( size(), other.size() ) ) )
+        if ( const int result = Traits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
             return result;
 
         return size() == other.size() ? 0 : size() < other.size() ? -1 : 1;
@@ -657,9 +657,9 @@ public:
             return npos;
 
         if ( v.empty() )
-            return std::min( size(), pos );
+            return (std::min)( size(), pos );
 
-        const_iterator last   = cbegin() + std::min( size() - v.size(), pos ) + v.size();
+        const_iterator last   = cbegin() + (std::min)( size() - v.size(), pos ) + v.size();
         const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend(), Traits::eq );
 
         return result != last ? size_type( result - cbegin() ) : npos;
