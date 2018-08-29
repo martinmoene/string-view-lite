@@ -187,7 +187,7 @@ CASE( "string_view: Allows to obtain the size of the view via length()" )
 CASE( "string_view: Allows to obtain the maximum size a view can be via max_size()" )
 {
     // "large"
-    EXPECT( string_view().max_size() >= std::numeric_limits< string_view::size_type >::max() / 10 );
+    EXPECT( string_view().max_size() >= (std::numeric_limits< string_view::size_type >::max)() / 10 );
 }
 
 CASE( "string_view: Allows to check for an empty string_view via empty()" )
