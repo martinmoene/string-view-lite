@@ -153,11 +153,11 @@ else()
     endif()
 
     if( HAS_CPP17_FLAG )
+        set( std17 c++17 )
         if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang" )
-            make_target( string-view-lite-cpp17.t c++1z ) # Add с++17 when Xcode will support this.
-        else()
-            make_target( string-view-lite-cpp17.t c++17 )
+            set( std17 c++1z )
         endif()
+        make_target( string-view-lite-cpp17.t ${std17} )
         enable_msvs_guideline_checker( string-view-lite-cpp17.t )
     endif()
 
