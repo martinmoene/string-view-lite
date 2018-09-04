@@ -24,7 +24,7 @@ include( GNUInstallDirs )
 
 project( string_view_lite LANGUAGES CXX )
 
-set( package_name "string-view--lite" )
+set( package_name "string-view-lite" )
 set( include_source_dir "${PROJECT_SOURCE_DIR}/include" )
 
 # Interface library:
