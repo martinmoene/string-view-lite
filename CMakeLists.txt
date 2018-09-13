@@ -20,9 +20,9 @@ option( STRINGVIEW_LITE_OPT_SELECT_NONSTDSV "Select nonstd::string_view" OFF )
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )
 
-include( GNUInstallDirs )
-
 project( string_view_lite LANGUAGES CXX )
+
+include( GNUInstallDirs )
 
 set( package_name "string-view-lite" )
 set( include_source_dir "${PROJECT_SOURCE_DIR}/include" )
@@ -35,6 +35,13 @@ add_library(
 target_include_directories(
     ${package_name} INTERFACE "$<BUILD_INTERFACE:${include_source_dir}>" )
 
+# Installation:
+
+install( 
+    DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+
+# If requested, build and perform tests, build examples:
+
 enable_testing()
 
 if ( STRINGVIEW_LITE_OPT_BUILD_TESTS )
@@ -44,7 +51,5 @@ endif()
 if ( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES )
     add_subdirectory( example )
 endif()
-
-install( DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
 # end of file
