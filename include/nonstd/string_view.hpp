@@ -68,7 +68,7 @@
 #define nssv_CPP17_OR_GREATER  (__cplusplus >= 201703L || nssv_MSVC_LANG >= 201703L )
 #define nssv_CPP20_OR_GREATER  (__cplusplus >= 202000L || nssv_MSVC_LANG >= 202000L )
 
-// use C++17 std::string_view if available:
+// use C++17 std::string_view if available and requested:
 
 #if defined(__has_include)
 # define nssv_HAS_INCLUDE( arg )  __has_include( arg )
