@@ -58,7 +58,7 @@ if( MSVC )
         set( OPTIONS ${OPTIONS} /permissive- )
     endif()
 
-elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang" )
 
     set( CMAKE_VERBOSE_MAKEFILE ON )
 
@@ -82,7 +82,7 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
     endif()
 
     # Clang: available -std flags depends on version
-    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang" )
         if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.3.0 )
             set( HAS_CPP11_FLAG TRUE )
         endif()
