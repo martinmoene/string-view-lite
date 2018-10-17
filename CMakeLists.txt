@@ -11,7 +11,7 @@ set( string_view_lite_version "1.0.0" )
 
 # Enable building and performing of tests and building of examples:
 
-option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" ON )
+option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" OFF )
 option( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
 
 option( STRINGVIEW_LITE_OPT_SELECT_STDSV    "Select std::string_view"    OFF )
@@ -37,7 +37,7 @@ target_include_directories(
 
 # Installation:
 
-install( 
+install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
 # If requested, build and perform tests, build examples:
