@@ -49,7 +49,7 @@ matrix:
 
 before_build:
     - mkdir build && cd build
-    - cmake -A %platform% -G "%generator%" "%select_sv%" ..
+    - cmake -A %platform% -G "%generator%" "%select_sv%" -DSTRINGVIEW_LITE_OPT_BUILD_TESTS=ON -DSTRINGVIEW_LITE_OPT_BUILD_EXAMPLES=OFF ..
 
 build_script:
     - cmake --build . --config %configuration%
