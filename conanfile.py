@@ -1,7 +1,7 @@
 from conans import ConanFile
 
 class StringViewLiteConan(ConanFile):
-    version = "0.0.0"
+    version = "1.1.0"
     name = "string-view-lite"
     description = "string-view"
     license = "Boost Software License - Version 1.0. http://www.boost.org/LICENSE_1_0.txt"

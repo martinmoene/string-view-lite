@@ -72,12 +72,12 @@ Or, if you use the [conan package manager](https://www.conan.io/), follow these 
 
 1. Add *nonstd-lite* to the conan remotes:
 
-        conan remote add nonstd-lite https://api.bintray.com/conan/agauniyal/nonstd-lite
+        conan remote add nonstd-lite https://api.bintray.com/conan/martinmoene/nonstd-lite
 
 2. Add a reference to *string-view-lite* to the *requires* section of your project's `conanfile.txt` file:
 
         [requires]
-        string-view-lite/0.2.0@nonstd-lite/stable
+        string-view-lite/[~=1]@nonstd-lite/testing
 
 3. Run conan's install command:
 

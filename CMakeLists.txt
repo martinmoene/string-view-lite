@@ -7,7 +7,7 @@ cmake_minimum_required( VERSION 3.5 )
 
 # string_view-lite version, updated by script/update-version.py:
 
-set( string_view_lite_version "1.0.0" )
+set( string_view_lite_version "1.1.0" )
 
 # Enable building and performing of tests and building of examples:
 
