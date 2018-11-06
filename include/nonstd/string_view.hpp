@@ -22,14 +22,16 @@
 
 // string-view lite configuration:
 
-#if      nssv_CONFIG_SELECT_STD_STRING_VIEW
-# define nssv_USES_STD_STRING_VIEW  1
-#elif    nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
-# define nssv_USES_STD_STRING_VIEW  0
+#define nssv_STRING_VIEW_DEFAULT  0
+#define nssv_STRING_VIEW_NONSTD   1
+#define nssv_STRING_VIEW_STD      2
+
+#if !defined( nssv_CONFIG_SELECT_STRING_VIEW )
+# define nssv_CONFIG_SELECT_STRING_VIEW  ( nssv_HAVE_STD_STRING_VIEW ? nssv_STRING_VIEW_STD : nssv_STRING_VIEW_NONSTD )
 #endif
 
-#if nssv_CONFIG_SELECT_STD_STRING_VIEW && nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
-# error Please define none or one of nssv_CONFIG_SELECT_STD_STRING_VIEW, nssv_CONFIG_SELECT_NONSTD_STRING_VIEW to 1, but not both.
+#if defined( nssv_CONFIG_SELECT_STD_STRING_VIEW ) || defined( nssv_CONFIG_SELECT_NONSTD_STRING_VIEW )
+# error nssv_CONFIG_SELECT_STD_STRING_VIEW and nssv_CONFIG_SELECT_NONSTD_STRING_VIEW are deprecated and removed, please use nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_...
 #endif
 
 #ifndef  nssv_CONFIG_STD_SV_OPERATOR
@@ -53,20 +55,22 @@
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
 #endif
 
-// Compiler detection (C++20 is speculative):
-// Note: MSVC supports C++14 since it supports C++17.
+// C++ language version detection (C++20 is speculative):
+// Note: VC14.0/1900 (VS2015) lacks too much from C++14.
 
-#if defined(_MSVC_LANG)
-# define nssv_MSVC_LANG  _MSVC_LANG
-#else
-# define nssv_MSVC_LANG  0
+#ifndef   nssv_CPLUSPLUS
+# ifdef  _MSVC_LANG
+#  define nssv_CPLUSPLUS  (_MSC_VER == 1900 ? 201103L : _MSVC_LANG )
+# else
+#  define nssv_CPLUSPLUS  __cplusplus
+# endif
 #endif
 
-#define nssv_CPP11             (__cplusplus == 201103L )
-#define nssv_CPP11_OR_GREATER  (__cplusplus >= 201103L || nssv_MSVC_LANG >= 201103L )
-#define nssv_CPP14_OR_GREATER  (__cplusplus >= 201402L || nssv_MSVC_LANG >= 201703L )
-#define nssv_CPP17_OR_GREATER  (__cplusplus >= 201703L || nssv_MSVC_LANG >= 201703L )
-#define nssv_CPP20_OR_GREATER  (__cplusplus >= 202000L || nssv_MSVC_LANG >= 202000L )
+#define nssv_CPP98_OR_GREATER  ( nssv_CPLUSPLUS >= 199711L )
+#define nssv_CPP11_OR_GREATER  ( nssv_CPLUSPLUS >= 201103L )
+#define nssv_CPP14_OR_GREATER  ( nssv_CPLUSPLUS >= 201402L )
+#define nssv_CPP17_OR_GREATER  ( nssv_CPLUSPLUS >= 201703L )
+#define nssv_CPP20_OR_GREATER  ( nssv_CPLUSPLUS >= 202000L )
 
 // use C++17 std::string_view if available and requested:
 

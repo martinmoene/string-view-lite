@@ -68,15 +68,9 @@ CASE( "string-view-lite configuration" "[.config]" )
 #endif
 
 #if nssv_CONFIG_SELECT_STD_STRING_VIEW
-    nssv_PRESENT( nssv_CONFIG_SELECT_STD_STRING_VIEW );
+    nssv_PRESENT( nssv_CONFIG_SELECT_STRING_VIEW );
 #else
-    nssv_ABSENT(  nssv_CONFIG_SELECT_STD_STRING_VIEW );
-#endif
-
-#if nssv_CONFIG_SELECT_NONSTD_STRING_VIEW
-    nssv_PRESENT( nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
-#else
-    nssv_ABSENT(  nssv_CONFIG_SELECT_NONSTD_STRING_VIEW );
+    nssv_ABSENT(  nssv_CONFIG_SELECT_STRING_VIEW );
 #endif
 
 #if nssv_CONFIG_STD_SV_OPERATOR

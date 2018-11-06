@@ -14,8 +14,8 @@ set( string_view_lite_version "1.1.0" )
 option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" OFF )
 option( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
 
-option( STRINGVIEW_LITE_OPT_SELECT_STDSV    "Select std::string_view"    OFF )
-option( STRINGVIEW_LITE_OPT_SELECT_NONSTDSV "Select nonstd::string_view" OFF )
+option( STRINGVIEW_LITE_OPT_SELECT_STD      "Select std::string_view"    OFF )
+option( STRINGVIEW_LITE_OPT_SELECT_NONSTD   "Select nonstd::string_view" OFF )
 
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )

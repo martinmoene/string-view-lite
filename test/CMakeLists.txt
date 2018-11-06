@@ -190,12 +190,12 @@ endif()
 # with C++17, honour explicit request for std::string_view or nonstd::string_view:
 
 if( HAS_CPP17_FLAG )
-    if ( STRINGVIEW_LITE_OPT_SELECT_STDSV )
-        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_STD_STRING_VIEW=1 )
+    if ( STRINGVIEW_LITE_OPT_SELECT_STD )
+        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_STD )
     endif()
 
-    if ( STRINGVIEW_LITE_OPT_SELECT_NONSTDSV )
-        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_NONSTD_STRING_VIEW=1 )
+    if ( STRINGVIEW_LITE_OPT_SELECT_NONSTD )
+        target_compile_definitions( string-view-lite-cpp17.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD )
     endif()
 endif()
 

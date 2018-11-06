@@ -160,11 +160,10 @@ Configuration
 ### Select `std::string_view` or `nonstd::string_view`
 At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
 
--D<b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b>=1  
-Define this to 1 to select `std::string_view` as `nonstd::string_view`. Default is undefined.
+-D<b>nssv\_CONFIG\_SELECT\_STRING_VIEW</b>=nssv_STRING_VIEW_DEFAULT  
+Define this to `nssv_STRING_VIEW_STD` to select `std::string_view` as `nonstd::string_view`. Define this to `nssv_STRING_VIEW_NONSTD` to select `nonstd::string_view` as `nonstd::string_view`. Default is undefined, which has the same effect as defining to `nssv_STRING_VIEW_DEFAULT`.
 
--D<b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b>=1  
-Define this to 1 to select *string-view lite*'s `nonstd::string_view`. Default is undefined.
+Note: <b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b> and <b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b> are deprecated and have been removed.
 
 ### Add or omit literal operators `sv` and `_sv`
 
