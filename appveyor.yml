@@ -20,9 +20,9 @@ build:
 environment:
     matrix:
         - generator: "Visual Studio 15 2017"
-          select_sv: -DNSSV_SELECT_STDSV=1
+          select_sv: -DSTRINGVIEW_LITE_OPT_SELECT_STD=ON
         - generator: "Visual Studio 15 2017"
-          select_sv: -DNSSV_SELECT_NONSTDSV=1
+          select_sv: -DSTRINGVIEW_LITE_OPT_SELECT_NONSTD=ON
         - generator: "Visual Studio 14 2015"
         - generator: "Visual Studio 12 2013"
         - generator: "Visual Studio 11 2012"
