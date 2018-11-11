@@ -59,7 +59,7 @@
 // Note: VC14.0/1900 (VS2015) lacks too much from C++14.
 
 #ifndef   nssv_CPLUSPLUS
-# ifdef  _MSVC_LANG
+# if defined(_MSVC_LANG ) && !defined(__clang__)
 #  define nssv_CPLUSPLUS  (_MSC_VER == 1900 ? 201103L : _MSVC_LANG )
 # else
 #  define nssv_CPLUSPLUS  __cplusplus
@@ -199,10 +199,12 @@ using std::operator<<;
 // MSVC++ 14.0 _MSC_VER == 1900 (Visual Studio 2015)
 // MSVC++ 14.1 _MSC_VER >= 1910 (Visual Studio 2017)
 
-#if defined(_MSC_VER) && !defined(__clang__)
-# define nssv_COMPILER_MSVC_VERSION   (_MSC_VER / 10 - 10 * ( 5 + (_MSC_VER < 1900)) )
+#if defined(_MSC_VER ) && !defined(__clang__)
+# define nssv_COMPILER_MSVC_VER      (_MSC_VER )
+# define nssv_COMPILER_MSVC_VERSION  (_MSC_VER / 10 - 10 * ( 5 + (_MSC_VER < 1900 ) ) )
 #else
-# define nssv_COMPILER_MSVC_VERSION   0
+# define nssv_COMPILER_MSVC_VER      0
+# define nssv_COMPILER_MSVC_VERSION  0
 #endif
 
 #define nssv_COMPILER_VERSION( major, minor, patch )  (10 * ( 10 * major + minor) + patch)
