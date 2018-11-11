@@ -222,7 +222,7 @@ using std::operator<<;
 #endif
 
 // half-open range [lo..hi):
-#define nssv_BETWEEN( v, lo, hi ) ( lo <= v && v < hi )
+#define nssv_BETWEEN( v, lo, hi ) ( (lo) <= (v) && (v) < (hi) )
 
 // Presence of C++11 language features:
 
