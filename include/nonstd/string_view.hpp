@@ -68,23 +68,24 @@
 
 #define nssv_CPP98_OR_GREATER  ( nssv_CPLUSPLUS >= 199711L )
 #define nssv_CPP11_OR_GREATER  ( nssv_CPLUSPLUS >= 201103L )
+#define nssv_CPP11_OR_GREATER_ ( nssv_CPLUSPLUS >= 201103L )
 #define nssv_CPP14_OR_GREATER  ( nssv_CPLUSPLUS >= 201402L )
 #define nssv_CPP17_OR_GREATER  ( nssv_CPLUSPLUS >= 201703L )
 #define nssv_CPP20_OR_GREATER  ( nssv_CPLUSPLUS >= 202000L )
 
 // use C++17 std::string_view if available and requested:
 
-#if defined(__has_include)
-# define nssv_HAS_INCLUDE( arg )  __has_include( arg )
+#if nssv_CPP17_OR_GREATER && defined(__has_include )
+# if __has_include( <string_view> )
+#  define nssv_HAVE_STD_STRING_VIEW  1
+# else
+#  define nssv_HAVE_STD_STRING_VIEW  0
+# endif
 #else
-# define nssv_HAS_INCLUDE( arg )  0
+# define  nssv_HAVE_STD_STRING_VIEW  0
 #endif
 
-#define nssv_HAVE_STD_STRING_VIEW  ( nssv_CPP17_OR_GREATER && nssv_HAS_INCLUDE(<string_view>) )
-
-#ifndef  nssv_USES_STD_STRING_VIEW
-# define nssv_USES_STD_STRING_VIEW  nssv_HAVE_STD_STRING_VIEW
-#endif
+#define  nssv_USES_STD_STRING_VIEW  ( (nssv_CONFIG_SELECT_STRING_VIEW == nssv_STRING_VIEW_STD) || ((nssv_CONFIG_SELECT_STRING_VIEW == nssv_STRING_VIEW_DEFAULT) && nssv_HAVE_STD_STRING_VIEW) )
 
 #define nssv_HAVE_STARTS_WITH ( nssv_CPP20_OR_GREATER || !nssv_USES_STD_STRING_VIEW )
 #define nssv_HAVE_ENDS_WITH     nssv_HAVE_STARTS_WITH
@@ -224,102 +225,99 @@ using std::operator<<;
 // half-open range [lo..hi):
 #define nssv_BETWEEN( v, lo, hi ) ( (lo) <= (v) && (v) < (hi) )
 
-// Presence of C++11 language features:
+// Presence of language and library features:
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 100
-# define nssv_HAVE_AUTO  1
-# define nssv_HAVE_NULLPTR  1
-# define nssv_HAVE_STATIC_ASSERT  1
-# define nssv_HAVE_WCHAR16_T  1
-# define nssv_HAVE_WCHAR32_T  1
+#ifdef _HAS_CPP0X
+# define nssv_HAS_CPP0X  _HAS_CPP0X
+#else
+# define nssv_HAS_CPP0X  0
 #endif
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 120
-# define nssv_HAVE_DEFAULT_FUNCTION_TEMPLATE_ARG  1
-# define nssv_HAVE_INITIALIZER_LIST  1
-#endif
+// Unless defined otherwise below, consider VC14 as C++11 for variant-lite:
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 140
-# define nssv_HAVE_ALIAS_TEMPLATE  1
-# define nssv_HAVE_CONSTEXPR_11  1
-# define nssv_HAVE_ENUM_CLASS  1
-# define nssv_HAVE_EXPLICIT_CONVERSION  1
-# define nssv_HAVE_INLINE_NAMESPACE  1
-# define nssv_HAVE_IS_DEFAULT  1
-# define nssv_HAVE_IS_DELETE  1
-# define nssv_HAVE_NOEXCEPT  1
-# define nssv_HAVE_REF_QUALIFIER  1
-# define nssv_HAVE_UNICODE_LITERALS  1
-# define nssv_HAVE_USER_DEFINED_LITERALS  1
-# if ! ( ( nssv_CPP11 && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
-#  define nssv_HAVE_STD_DEFINED_LITERALS  1
-# endif
-#endif
-
-// Presence of C++14 language features:
-
-#if nssv_CPP14_OR_GREATER
-# define nssv_HAVE_CONSTEXPR_14  1
-#endif
-
-// Presence of C++17 language features:
-
-#if nssv_CPP17_OR_GREATER
-# define nssv_HAVE_NODISCARD  1
-#endif
-
-// For the rest, consider VC14 as C++11 for string_view lite:
-
-#if      nssv_COMPILER_MSVC_VERSION >= 140
+#if nssv_COMPILER_MSVC_VER >= 1900
 # undef  nssv_CPP11_OR_GREATER
 # define nssv_CPP11_OR_GREATER  1
 #endif
 
+#define nssv_CPP11_90   (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1500)
+#define nssv_CPP11_100  (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1600)
+#define nssv_CPP11_110  (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1700)
+#define nssv_CPP11_120  (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1800)
+#define nssv_CPP11_140  (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1900)
+#define nssv_CPP11_141  (nssv_CPP11_OR_GREATER_ || nssv_COMPILER_MSVC_VER >= 1910)
+
+#define nssv_CPP14_000  (nssv_CPP14_OR_GREATER)
+#define nssv_CPP17_000  (nssv_CPP17_OR_GREATER)
+
+// Presence of C++11 language features:
+
+#define nssv_HAVE_CONSTEXPR_11          nssv_CPP11_140
+#define nssv_HAVE_EXPLICIT_CONVERSION   nssv_CPP11_140
+#define nssv_HAVE_INLINE_NAMESPACE      nssv_CPP11_140
+#define nssv_HAVE_NOEXCEPT              nssv_CPP11_140
+#define nssv_HAVE_NULLPTR               nssv_CPP11_100
+#define nssv_HAVE_REF_QUALIFIER         nssv_CPP11_140
+#define nssv_HAVE_UNICODE_LITERALS      nssv_CPP11_140
+#define nssv_HAVE_USER_DEFINED_LITERALS nssv_CPP11_140
+#define nssv_HAVE_WCHAR16_T             nssv_CPP11_100
+#define nssv_HAVE_WCHAR32_T             nssv_CPP11_100
+
+#if ! ( ( nssv_CPP11 && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
+# define nssv_HAVE_STD_DEFINED_LITERALS  nssv_CPP11_140
+#endif
+
+// Presence of C++14 language features:
+
+#define nssv_HAVE_CONSTEXPR_14          nssv_CPP14_000
+
+// Presence of C++17 language features:
+
+#define nssv_HAVE_NODISCARD             nssv_CPP17_000
+
 // Presence of C++ library features:
 
-#if nssv_CPP11_OR_GREATER || nssv_COMPILER_MSVC_VERSION >= 120
-# define nssv_HAVE_STD_HASH  1
-#endif
+#define nssv_HAVE_STD_HASH              nssv_CPP11_120
 
 // C++ feature usage:
 
-#if      nssv_HAVE_CONSTEXPR_11
+#if nssv_HAVE_CONSTEXPR_11
 # define nssv_constexpr  constexpr
 #else
 # define nssv_constexpr  /*constexpr*/
 #endif
 
-#if      nssv_HAVE_CONSTEXPR_14
+#if  nssv_HAVE_CONSTEXPR_14
 # define nssv_constexpr14  constexpr
 #else
 # define nssv_constexpr14  /*constexpr*/
 #endif
 
-#if      nssv_HAVE_EXPLICIT_CONVERSION
+#if nssv_HAVE_EXPLICIT_CONVERSION
 # define nssv_explicit  explicit
 #else
 # define nssv_explicit  /*explicit*/
 #endif
 
-#if      nssv_HAVE_INLINE_NAMESPACE
+#if nssv_HAVE_INLINE_NAMESPACE
 # define nssv_inline_ns  inline
 #else
 # define nssv_inline_ns  /*inline*/
 #endif
 
-#if      nssv_HAVE_NOEXCEPT
+#if nssv_HAVE_NOEXCEPT
 # define nssv_noexcept  noexcept
 #else
 # define nssv_noexcept  /*noexcept*/
 #endif
 
-#if      nssv_HAVE_REF_QUALIFIER
-# define nssv_ref_qual  &
-# define nssv_refref_qual  &&
-#else
-# define nssv_ref_qual  /*&*/
-# define nssv_refref_qual  /*&&*/
-#endif
+//#if nssv_HAVE_REF_QUALIFIER
+//# define nssv_ref_qual  &
+//# define nssv_refref_qual  &&
+//#else
+//# define nssv_ref_qual  /*&*/
+//# define nssv_refref_qual  /*&&*/
+//#endif
 
 #if nssv_HAVE_NULLPTR
 # define nssv_nullptr  nullptr
@@ -327,7 +325,7 @@ using std::operator<<;
 # define nssv_nullptr  NULL
 #endif
 
-#if      nssv_HAVE_NODISCARD
+#if nssv_HAVE_NODISCARD
 # define nssv_nodiscard  [[nodiscard]]
 #else
 # define nssv_nodiscard  /*[[nodiscard]]*/
