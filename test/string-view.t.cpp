@@ -307,7 +307,7 @@ CASE( "string_view: Allows to copy a substring of length n, starting at position
 
         EXPECT( std::equal( vec.begin(), vec.end(), hello )  );
     }{
-        auto offset = 3u; auto length = 4u;
+        std::size_t offset = 3u; std::size_t length = 4u;
         std::vector<string_view::value_type> vec( length );
 
         sv.copy( data(vec), length, offset );
