@@ -12,6 +12,19 @@
 
 #include nssv_STRING_VIEW_HEADER
 
+// Compiler warning suppression for usage of lest:
+
+#ifdef __clang__
+# pragma clang diagnostic ignored "-Wstring-conversion"
+# pragma clang diagnostic ignored "-Wunused-parameter"
+# pragma clang diagnostic ignored "-Wunused-template"
+# pragma clang diagnostic ignored "-Wunused-function"
+# pragma clang diagnostic ignored "-Wunused-member-function"
+#elif defined __GNUC__
+# pragma GCC   diagnostic ignored "-Wunused-parameter"
+# pragma GCC   diagnostic ignored "-Wunused-function"
+#endif
+
 // Limit C++ Core Guidelines checking to GSL Lite:
 
 #if defined(_MSC_VER) && _MSC_VER >= 1910
@@ -19,25 +32,25 @@
 # pragma warning(disable: ALL_CPPCORECHECK_WARNINGS)
 #endif
 
-#include "lest_cpp03.hpp"
-
 #if nssv_USES_STD_STRING_VIEW
 # define nssv_nullptr  nullptr
 #endif
 
 #define nssv_STD_SV_OR( expr )  ( nssv_USES_STD_STRING_VIEW || (expr) )
 
-using namespace nonstd;
-
-#define CASE( name ) lest_CASE( specification(), name )
-
-extern lest::tests & specification();
+#include <iostream>
 
 namespace lest {
 
 using ::nonstd::operator<<;
 
 } // namespace lest
+
+#include "lest_cpp03.hpp"
+
+extern lest::tests & specification();
+
+#define CASE( name ) lest_CASE( specification(), name )
 
 #endif // TEST_SV_LITE_H_INCLUDED
 

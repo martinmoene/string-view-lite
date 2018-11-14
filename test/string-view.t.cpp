@@ -5,7 +5,7 @@
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "string-view-lite.t.h"
+#include "string-view-main.t.hpp"
 #include <vector>
 
 namespace {
@@ -307,7 +307,7 @@ CASE( "string_view: Allows to copy a substring of length n, starting at position
 
         EXPECT( std::equal( vec.begin(), vec.end(), hello )  );
     }{
-        int offset = 3; int length = 4;
+        auto offset = 3u; auto length = 4u;
         std::vector<string_view::value_type> vec( length );
 
         sv.copy( data(vec), length, offset );
