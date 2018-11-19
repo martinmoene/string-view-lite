@@ -944,7 +944,7 @@ template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator==(
     nssv_BASIC_STRING_VIEW_I(CharT, Traits) lhs,
          basic_string_view  <CharT, Traits> rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) == 0; }
+{ return lhs.size() == rhs.size() && lhs.compare( rhs ) == 0; }
 
 // !=
 
@@ -952,7 +952,7 @@ template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator!= (
          basic_string_view  < CharT, Traits > lhs,
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) != 0 ; }
+{ return lhs.size() != rhs.size() || lhs.compare( rhs ) != 0 ; }
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator!= (
