@@ -5,13 +5,23 @@
 
 cmake_minimum_required( VERSION 3.5 )
 
-# string_view-lite version, updated by script/update-version.py:
+# string_view-lite project and version, updated by script/update-version.py:
+
+project( string_view_lite LANGUAGES CXX )
 
 set( string_view_lite_version "1.1.0" )
 
+# Toplevel or subproject:
+
+if ( CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR )
+    set( string_view_IS_TOPLEVEL_PROJECT TRUE )
+else()
+    set( string_view_IS_TOPLEVEL_PROJECT FALSE )
+endif()
+
 # Enable building and performing of tests and building of examples:
 
-option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" OFF )
+option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" ${string_view_IS_TOPLEVEL_PROJECT} )
 option( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
 
 option( STRINGVIEW_LITE_OPT_SELECT_STD      "Select std::string_view"    OFF )
@@ -19,8 +29,6 @@ option( STRINGVIEW_LITE_OPT_SELECT_NONSTD   "Select nonstd::string_view" OFF )
 
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
 option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )
-
-project( string_view_lite LANGUAGES CXX )
 
 include( GNUInstallDirs )
 
