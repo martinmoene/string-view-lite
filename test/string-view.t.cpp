@@ -639,13 +639,17 @@ CASE( "string_view: Allows to search for the first occurrence of any of the char
 CASE( "string_view: Allows to search backwards for the last occurrence of any of the characters specified in a string view, starting at position pos (default: npos) via find_last_of(), (1)" )
 {
     char hello[] = "hello world";
+    char empty[] = "";
     string_view sv( hello );
+    string_view sve( empty );
 
     EXPECT( sv.find_last_of( sv    ) == size_type( 10 ) );
     EXPECT( sv.find_last_of( sv, 3 ) == size_type(  3 ) );
     EXPECT( sv.find_last_of( string_view("xwo" )    ) == size_type( 7 ) );
     EXPECT( sv.find_last_of( string_view("wdx" ), 6 ) == size_type( 6 ) );
     EXPECT( sv.find_last_of( string_view("wxy" ), 7 ) == size_type( 6 ) );
+    
+    EXPECT( sve.find_last_of( string_view("x") ) == string_view::npos );    // issue 20 (endless loop)
 }
 
 CASE( "string_view: Allows to search backwards for a character, starting at position pos (default: 0) via find_last_of(), (2)" )
@@ -740,7 +744,9 @@ CASE( "string_view: Allows to search for  the first character not equal to any o
 CASE( "string_view: Allows to search backwards for the first character not specified in a string view, starting at position pos (default: npos) via find_last_not_of(), (1)" )
 {
     char hello[] = "hello world";
+    char empty[] = "";
     string_view sv( hello );
+    string_view sve( empty );
 
     EXPECT( sv.find_last_not_of( sv    ) == string_view::npos );
     EXPECT( sv.find_last_not_of( sv, 3 ) == string_view::npos );
@@ -749,6 +755,8 @@ CASE( "string_view: Allows to search backwards for the first character not speci
     EXPECT( sv.find_last_not_of( string_view("heo "   ), 3 ) == size_type(  3 ) );
     EXPECT( sv.find_last_not_of( string_view("heo "   ), 2 ) == size_type(  2 ) );
     EXPECT( sv.find_last_not_of( string_view("x"      )    ) == size_type( 10 ) );
+
+    EXPECT( sve.find_last_not_of( string_view("x") ) == string_view::npos );    // issue 20 (endless loop)
 }
 
 CASE( "string_view: Allows to search backwards for the first character not equal to the specified character, starting at position pos (default: npos) via find_last_not_of(), (2)" )
