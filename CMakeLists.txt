@@ -20,7 +20,7 @@ set( ${PROJECT_NAME}_version "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.
 
 # Toplevel or subproject:
 
-if ( CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR )
+if ( CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME )
     set( string_view_IS_TOPLEVEL_PROJECT TRUE )
 else()
     set( string_view_IS_TOPLEVEL_PROJECT FALSE )
@@ -53,7 +53,8 @@ target_include_directories(
 # Installation:
 
 install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+    DIRECTORY   ${CMAKE_SOURCE_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 
 # If requested, build and perform tests, build examples:
 
