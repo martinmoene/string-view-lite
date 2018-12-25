@@ -1,5 +1,7 @@
 # Copyright 2017-2018 by Martin Moene
 #
+# https://github.com/martinmoene/string-view-lite
+#
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -7,9 +9,14 @@ cmake_minimum_required( VERSION 3.5 )
 
 # string_view-lite project and version, updated by script/update-version.py:
 
-project( string_view_lite LANGUAGES CXX )
+project(
+    string_view_lite
+    VERSION 1.1.0
+    DESCRIPTION "A C++17-like string_view for C++98, C++11 and later in a single-file header-only library"
+#   HOMEPAGE_URL "https://github.com/martinmoene/string-view-lite"
+    LANGUAGES CXX )
 
-set( string_view_lite_version "1.1.0" )
+set( ${PROJECT_NAME}_version "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" )
 
 # Toplevel or subproject:
 
@@ -19,7 +26,7 @@ else()
     set( string_view_IS_TOPLEVEL_PROJECT FALSE )
 endif()
 
-# Enable building and performing of tests and building of examples:
+# If toplevel project, enable building and performing of tests, disable building of examples:
 
 option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" ${string_view_IS_TOPLEVEL_PROJECT} )
 option( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
