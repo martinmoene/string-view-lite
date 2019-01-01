@@ -2,10 +2,10 @@
 //
 // https://github.com/martinmoene/string-view-lite
 //
-// Distributed under the Boost Software License, Version 1.0. 
+// Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "string-view-main.t.hpp"
+#include "string_view-main.t.hpp"
 #include <vector>
 
 namespace {
@@ -648,7 +648,7 @@ CASE( "string_view: Allows to search backwards for the last occurrence of any of
     EXPECT( sv.find_last_of( string_view("xwo" )    ) == size_type( 7 ) );
     EXPECT( sv.find_last_of( string_view("wdx" ), 6 ) == size_type( 6 ) );
     EXPECT( sv.find_last_of( string_view("wxy" ), 7 ) == size_type( 6 ) );
-    
+
     EXPECT( sve.find_last_of( string_view("x") ) == string_view::npos );    // issue 20 (endless loop)
 }
 

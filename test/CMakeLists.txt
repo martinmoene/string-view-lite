@@ -9,12 +9,12 @@ cmake_minimum_required( VERSION 3.5 )
 
 project( test LANGUAGES CXX )
 
-set( MAIN_BASE string-view-main )
-set( HDRNAME   string_view.hpp )
-set( SOURCES   ${MAIN_BASE}.t.cpp string-view.t.cpp )
+set( PACKAGE   ${package_name} )
+set( PROGRAM   ${unit_name}-lite )
+set( SOURCES   ${unit_name}-main.t.cpp ${unit_name}.t.cpp )
+set( HEADER    "nonstd/${unit_name}.hpp" )
 
-set( HDRDIR  ${PROJECT_SOURCE_DIR}/../include/nonstd )
-set( HDRPATH ${HDRDIR}/${HDRNAME} )
+message( STATUS "Subproject '${PROJECT_NAME}', programs '${PROGRAM}-*'")
 
 # option text to Boolean:
 
@@ -29,7 +29,7 @@ endmacro()
 opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  )
 opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS )
 
-set( DEFCMN  -Dnssv_STRING_VIEW_HEADER=\"${HDRNAME}\"
+set( DEFCMN  -Dnssv_STRING_VIEW_HEADER=\"${HEADER}\"
              -Dnssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=${nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS}
              -Dnssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=${nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS} )
 
@@ -135,10 +135,11 @@ endfunction()
 function( make_target target std )
     message( STATUS "Make target: '${std}'" )
 
-    add_executable            ( ${target} ${SOURCES} ${HDRPATH} )
+    add_executable            ( ${target} ${SOURCES} )
+    target_link_libraries     ( ${target} PRIVATE ${PACKAGE} )
     target_compile_options    ( ${target} PRIVATE ${OPTIONS} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
-    target_include_directories( ${target} PRIVATE ${HDRDIR} )
+
     if( std )
         if( MSVC )
             target_compile_options( ${target} PRIVATE -std:${std} )
@@ -156,21 +157,21 @@ endfunction()
 # add generic executable, unless -std flags can be specified:
 
 if( NOT HAS_STD_FLAGS )
-    make_target( ${MAIN_BASE}.t "" )
+    make_target( ${PROGRAM}.t "" )
 else()
     # unconditionally add C++98 variant as MSVC has no option for it:
     if( HAS_CPP98_FLAG )
-        make_target( ${MAIN_BASE}-cpp98.t c++98 )
+        make_target( ${PROGRAM}-cpp98.t c++98 )
     else()
-        make_target( ${MAIN_BASE}-cpp98.t "" )
+        make_target( ${PROGRAM}-cpp98.t "" )
     endif()
 
     if( HAS_CPP11_FLAG )
-        make_target( ${MAIN_BASE}-cpp11.t c++11 )
+        make_target( ${PROGRAM}-cpp11.t c++11 )
     endif()
 
     if( HAS_CPP14_FLAG )
-        make_target( ${MAIN_BASE}-cpp14.t c++14 )
+        make_target( ${PROGRAM}-cpp14.t c++14 )
     endif()
 
     if( HAS_CPP17_FLAG )
@@ -178,12 +179,12 @@ else()
         if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang" )
             set( std17 c++1z )
         endif()
-        make_target( ${MAIN_BASE}-cpp17.t ${std17} )
-        enable_msvs_guideline_checker( ${MAIN_BASE}-cpp17.t )
+        make_target( ${PROGRAM}-cpp17.t ${std17} )
+        enable_msvs_guideline_checker( ${PROGRAM}-cpp17.t )
     endif()
 
     if( HAS_CPPLATEST_FLAG )
-        make_target( ${MAIN_BASE}-cpplatest.t c++latest )
+        make_target( ${PROGRAM}-cpplatest.t c++latest )
     endif()
 endif()
 
@@ -198,10 +199,10 @@ if( HAS_CPP17_FLAG )
         set( WHICH nssv_STRING_VIEW_NONSTD )
     endif()
 
-    target_compile_definitions( ${MAIN_BASE}-cpp17.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=${WHICH} )
+    target_compile_definitions( ${PROGRAM}-cpp17.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=${WHICH} )
 
     if( HAS_CPPLATEST_FLAG )
-        target_compile_definitions( ${MAIN_BASE}-cpplatest.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=${WHICH} )
+        target_compile_definitions( ${PROGRAM}-cpplatest.t PRIVATE nssv_CONFIG_SELECT_STRING_VIEW=${WHICH} )
     endif()
 endif()
 
@@ -211,25 +212,25 @@ enable_testing()
 
 if( HAS_STD_FLAGS )
     # unconditionally add C++98 variant for MSVC:
-    add_test(     NAME test-cpp98     COMMAND ${MAIN_BASE}-cpp98.t )
+    add_test(     NAME test-cpp98     COMMAND ${PROGRAM}-cpp98.t )
 
     if( HAS_CPP11_FLAG )
-        add_test( NAME test-cpp11     COMMAND ${MAIN_BASE}-cpp11.t )
+        add_test( NAME test-cpp11     COMMAND ${PROGRAM}-cpp11.t )
     endif()
     if( HAS_CPP14_FLAG )
-        add_test( NAME test-cpp14     COMMAND ${MAIN_BASE}-cpp14.t )
+        add_test( NAME test-cpp14     COMMAND ${PROGRAM}-cpp14.t )
     endif()
     if( HAS_CPP17_FLAG )
-        add_test( NAME test-cpp17     COMMAND ${MAIN_BASE}-cpp17.t )
+        add_test( NAME test-cpp17     COMMAND ${PROGRAM}-cpp17.t )
     endif()
     if( HAS_CPPLATEST_FLAG )
-        add_test( NAME test-cpplatest COMMAND ${MAIN_BASE}-cpplatest.t )
+        add_test( NAME test-cpplatest COMMAND ${PROGRAM}-cpplatest.t )
     endif()
 else()
-    add_test(     NAME test           COMMAND ${MAIN_BASE}.t --pass )
-    add_test(     NAME list_version   COMMAND ${MAIN_BASE}.t --version )
-    add_test(     NAME list_tags      COMMAND ${MAIN_BASE}.t --list-tags )
-    add_test(     NAME list_tests     COMMAND ${MAIN_BASE}.t --list-tests )
+    add_test(     NAME test           COMMAND ${PROGRAM}.t --pass )
+    add_test(     NAME list_version   COMMAND ${PROGRAM}.t --version )
+    add_test(     NAME list_tags      COMMAND ${PROGRAM}.t --list-tags )
+    add_test(     NAME list_tests     COMMAND ${PROGRAM}.t --list-tests )
 endif()
 
 # end of file
