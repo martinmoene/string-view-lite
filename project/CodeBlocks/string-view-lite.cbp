@@ -21,6 +21,7 @@
 		<Unit filename="../../cmake/string-view-lite-config.cmake.in" />
 		<Unit filename="../../conanfile.py" />
 		<Unit filename="../../example/01-basic.cpp" />
+		<Unit filename="../../example/02-no-exceptions.cpp" />
 		<Unit filename="../../include/nonstd/string_view.hpp" />
 		<Unit filename="../../script/update-version.py" />
 		<Unit filename="../../test/CMakeLists.txt" />

@@ -3,7 +3,7 @@
 // string-view lite, a C++17-like string_view for C++98 and later.
 // For more information see https://github.com/martinmoene/string-view-lite
 //
-// Distributed under the Boost Software License, Version 1.0. 
+// Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
@@ -53,6 +53,16 @@
 
 #ifndef  nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
+#endif
+
+// Control presence of exception handling (try and auto discover):
+
+#ifndef nssv_CONFIG_NO_EXCEPTIONS
+# if defined(__cpp_exceptions) || defined(__EXCEPTIONS) || defined(_CPPUNWIND)
+#  define nssv_CONFIG_NO_EXCEPTIONS  0
+# else
+#  define nssv_CONFIG_NO_EXCEPTIONS  1
+# endif
 #endif
 
 // C++ language version detection (C++20 is speculative):
@@ -338,8 +348,11 @@ using std::operator<<;
 #include <iterator>
 #include <limits>
 #include <ostream>
-#include <stdexcept>
 #include <string>   // std::char_traits<>
+
+#if ! nssv_CONFIG_NO_EXCEPTIONS
+# include <stdexcept>
+#endif
 
 #if nssv_CPP11_OR_GREATER
 # include <type_traits>
@@ -500,12 +513,15 @@ public:
 
     nssv_constexpr14 const_reference at( size_type pos ) const
     {
-        if ( pos < size() )
+#if nssv_CONFIG_NO_EXCEPTIONS
+        assert( pos < size() );
+#else
+        if ( pos >= size() )
         {
-            return data_at( pos );
+            throw std::out_of_range("nonst::string_view::at()");
         }
-
-        throw std::out_of_range("nonst::string_view::at()");
+#endif
+        return data_at( pos );
     }
 
     nssv_constexpr const_reference front() const { return data_at( 0 );          }
@@ -539,9 +555,14 @@ public:
 
     size_type copy( CharT * dest, size_type n, size_type pos = 0 ) const
     {
+#if nssv_CONFIG_NO_EXCEPTIONS
+        assert( pos <= size() );
+#else
         if ( pos > size() )
+        {
             throw std::out_of_range("nonst::string_view::copy()");
-
+        }
+#endif
         const size_type rlen = (std::min)( n, size() - pos );
 
         (void) Traits::copy( dest, data() + pos, rlen );
@@ -551,9 +572,14 @@ public:
 
     nssv_constexpr14 basic_string_view substr( size_type pos = 0, size_type n = npos ) const
     {
+#if nssv_CONFIG_NO_EXCEPTIONS
+        assert( pos <= size() );
+#else
         if ( pos > size() )
+        {
             throw std::out_of_range("nonst::string_view::substr()");
-
+        }
+#endif
         return basic_string_view( data() + pos, (std::min)( n, size() - pos ) );
     }
 
@@ -712,7 +738,7 @@ public:
 
     nssv_constexpr size_type find_last_of( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
     {
-        return empty() 
+        return empty()
             ? npos
             : pos >= size()
             ? find_last_of( v, size() - 1 )

@@ -31,15 +31,16 @@ CASE( "string-view-lite configuration" "[.string-view][.config]" )
 {
     nssv_PRESENT( nssv_HAVE_STD_STRING_VIEW );
     nssv_PRESENT( nssv_USES_STD_STRING_VIEW );
-    nssv_PRESENT( nssv_CONFIG_SELECT_STRING_VIEW );
     nssv_PRESENT( nssv_STRING_VIEW_DEFAULT );
     nssv_PRESENT( nssv_STRING_VIEW_NONSTD );
     nssv_PRESENT( nssv_STRING_VIEW_STD );
+    nssv_PRESENT( nssv_CONFIG_SELECT_STRING_VIEW );
     nssv_PRESENT( nssv_CONFIG_STD_SV_OPERATOR );
     nssv_PRESENT( nssv_CONFIG_USR_SV_OPERATOR );
 //  nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING );
     nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
     nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+    nssv_PRESENT( nssv_CONFIG_NO_EXCEPTIONS );
     nssv_PRESENT( nssv_CPLUSPLUS );
 }
 

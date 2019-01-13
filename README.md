@@ -95,7 +95,7 @@ Synopsis
 
 Documentation of `std::string_view`
 -----------------------------------
-Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string-view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
+Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string_view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
 
 C++20 extensions
 ----------------
@@ -156,6 +156,10 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 
 Configuration
 -------------
+
+### Disable exceptions
+-D<b>nssv_CONFIG_NO_EXCEPTIONS</b>=0
+Define this to 1 if you want to compile without exceptions. If not defined, the header tries and detect if exceptions have been disabled (e.g. via `-fno-exceptions`). Default is undefined.
 
 ### Select `std::string_view` or `nonstd::string_view`
 At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
