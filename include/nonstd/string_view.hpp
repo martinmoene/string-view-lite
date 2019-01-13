@@ -1,4 +1,4 @@
-// Copyright 2017-2018 by Martin Moene
+// Copyright 2017-2019 by Martin Moene
 //
 // string-view lite, a C++17-like string_view for C++98 and later.
 // For more information see https://github.com/martinmoene/string-view-lite
