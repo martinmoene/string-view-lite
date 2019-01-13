@@ -106,15 +106,15 @@ int main( int argc, char * argv[] )
 }
 
 #if 0
-g++            -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++98 -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++03 -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++0x -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++11 -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++14 -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
-g++ -std=c++17 -I../include/nonstd -o string-view-lite.t.exe string-view-lite.t.cpp && string-view-lite.t.exe --pass
+g++            -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++98 -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++03 -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++0x -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++11 -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++14 -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
+g++ -std=c++17 -I../include -o string_view-main.t.exe string_view-main.t.cpp && string_view-main.t.exe --pass
 
-cl -EHsc -I../include/nonstd string-view-lite.t.cpp && string-view-lite.t.exe --pass
+cl -EHsc -I../include string_view-main.t.cpp && string_view-main.t.exe --pass
 #endif
 
 // end of file

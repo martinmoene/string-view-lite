@@ -17,4 +17,4 @@ int main()
     write( "world!"sv );    // nonstd::string_view
 }
 
-// g++ -Wall -std=c++14 -Dnssv_CONFIG_STD_SV_OPERATOR=1 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
+// g++ -Wall -std=c++14 -Dnssv_CONFIG_STD_SV_OPERATOR=1 -I../include/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe

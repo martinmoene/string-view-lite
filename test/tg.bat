@@ -4,7 +4,7 @@
 ::
 
 set      unit=string_view
-set unit_file=string-view
+set unit_file=string_view
 
 :: if no std is given, use c++11
 
@@ -27,13 +27,13 @@ set unit_select=-D%unit%_CONFIG_SELECT_%UCAP%=%unit%_%UCAP%_DEFAULT
 set unit_config=^
     -Dnssv_CONFIG_STD_SV_OPERATOR=1 ^
     -Dnssv_CONFIG_USR_SV_OPERATOR=1 ^
-    -Dnssv_STRING_VIEW_HEADER=\"string_view.hpp\"
+    -Dnssv_STRING_VIEW_HEADER=\"nonstd/string_view.hpp\"
 
 rem -flto / -fwhole-program
 set  optflags=-O2
 set warnflags=-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wno-padded -Wno-missing-noreturn
 
-%gpp% -std=%std% %optflags% %warnflags% %unit_select% %unit_config% -o %unit_file%-main.t.exe -I../include/nonstd %unit_file%-main.t.cpp %unit_file%.t.cpp && %unit_file%-main.t.exe
+%gpp% -std=%std% %optflags% %warnflags% %unit_select% %unit_config% -o %unit_file%-main.t.exe -I../include %unit_file%-main.t.cpp %unit_file%.t.cpp && %unit_file%-main.t.exe
 
 endlocal & goto :EOF
 
