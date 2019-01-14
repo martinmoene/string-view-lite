@@ -1,12 +1,9 @@
 #include "nonstd/string_view.hpp"
-#include <iostream>
 
 using namespace nonstd;
 
 int main()
 {
-    std::cout << "nssv_CONFIG_NO_EXCEPTIONS: '" << nssv_CONFIG_NO_EXCEPTIONS << "'\n";
-
     string_view svw( "Hello, world" );
 
     char c = svw.at( 12 );  // asserts (normally throws)
