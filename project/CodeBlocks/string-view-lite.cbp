@@ -18,7 +18,7 @@
 		<Unit filename="../../LICENSE.txt" />
 		<Unit filename="../../README.md" />
 		<Unit filename="../../appveyor.yml" />
-		<Unit filename="../../cmake/string-view-lite-config.cmake.in" />
+		<Unit filename="../../cmake/string_view-lite-config.cmake.in" />
 		<Unit filename="../../conanfile.py" />
 		<Unit filename="../../example/01-basic.cpp" />
 		<Unit filename="../../example/02-no-exceptions.cpp" />

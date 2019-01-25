@@ -9,7 +9,8 @@ cmake_minimum_required( VERSION 3.5 )
 
 project( test LANGUAGES CXX )
 
-set( PACKAGE   ${package_name} )
+set( unit_name "string_view" )
+set( PACKAGE   ${unit_name}-lite )
 set( PROGRAM   ${unit_name}-lite )
 set( SOURCES   ${unit_name}-main.t.cpp ${unit_name}.t.cpp )
 set( HEADER    "nonstd/${unit_name}.hpp" )
