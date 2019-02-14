@@ -272,7 +272,12 @@ Notes and references
 
 Appendix
 --------
-### A.1 string-view lite test specification
+
+### A.1 Compile-time information
+
+The version of *string-view lite* is available via tag `[.version]`. The following tags are available for information on the compiler and on the C++ standard library used: `[.compiler]`, `[.stdc++]`, `[.stdlanguage]` and `[.stdlibrary]`.
+
+### A.2 string-view lite test specification
 
 ```
 string_view: Allows to default construct an empty string_view
