@@ -544,9 +544,11 @@ CASE( "string_view: Allows to search backwards for a string_view substring, star
 
     EXPECT( sv.rfind( sv    ) == size_type( 0 ) );
     EXPECT( sv.rfind( sv, 3 ) == size_type( 0 ) );
+    EXPECT( sv.rfind( string_view(        )    ) == size_type(11 ) );
     EXPECT( sv.rfind( string_view("world" )    ) == size_type( 6 ) );
     EXPECT( sv.rfind( string_view("world" ), 6 ) == size_type( 6 ) );
     EXPECT( sv.rfind( string_view("world" ), 5 ) == string_view::npos );
+    EXPECT( sv.rfind( string_view("hello world, a longer text" ) ) == string_view::npos );
 }
 
 CASE( "string_view: Allows to search backwards for a character, starting at position pos (default: npos) via rfind(), (2)" )
