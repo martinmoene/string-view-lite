@@ -20,7 +20,7 @@ Example usage
 -------------
 
 ```C++
-#include "string_view.hpp"
+#include "nonstd/string_view.hpp"
 #include <iostream>
 
 using namespace std::literals;
@@ -34,15 +34,15 @@ void write( string_view sv )
 
 int main()
 {
-    write( "hello"     );	// C-string
-    write( ", "s       );	// std::string
-    write( "world!"_sv );	// nonstd::string_view
+    write( "hello"     );   // C-string
+    write( ", "s       );   // std::string
+    write( "world!"_sv );   // nonstd::string_view
 }
 ```
 
 ### Compile and run
 ```
-prompt> g++ -Wall -std=c++14 -I../include/nonstd/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
+prompt> g++ -Wall -std=c++14 -I../include/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
 hello, world!
 ```
 
