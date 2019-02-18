@@ -157,9 +157,10 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 Configuration
 -------------
 
-### Disable exceptions
--D<b>nssv_CONFIG_NO_EXCEPTIONS</b>=0
-Define this to 1 if you want to compile without exceptions. If not defined, the header tries and detect if exceptions have been disabled (e.g. via `-fno-exceptions`). Default is undefined.
+### Standard selection macro
+
+\-D<b>nssv\_CPLUSPLUS</b>=199711L
+Define this macro to override the auto-detection of the supported C++ standard, if your compiler does not set the `__cpluplus` macro correctly.
 
 ### Select `std::string_view` or `nonstd::string_view`
 At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
@@ -168,6 +169,10 @@ At default, *string-view lite* uses `std::string_view` if it is available and le
 Define this to `nssv_STRING_VIEW_STD` to select `std::string_view` as `nonstd::string_view`. Define this to `nssv_STRING_VIEW_NONSTD` to select `nonstd::string_view` as `nonstd::string_view`. Default is undefined, which has the same effect as defining to `nssv_STRING_VIEW_DEFAULT`.
 
 Note: <b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b> and <b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b> are deprecated and have been removed.
+
+### Disable exceptions
+-D<b>nssv\_CONFIG\_NO\_EXCEPTIONS</b>=0
+Define this to 1 if you want to compile without exceptions. If not defined, the header tries and detect if exceptions have been disabled (e.g. via `-fno-exceptions`). Default is undefined.
 
 ### Add or omit literal operators `sv` and `_sv`
 
