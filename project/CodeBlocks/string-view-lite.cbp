@@ -23,6 +23,7 @@
 		<Unit filename="../../example/01-basic.cpp" />
 		<Unit filename="../../example/02-no-exceptions.cpp" />
 		<Unit filename="../../include/nonstd/string_view.hpp" />
+		<Unit filename="../../script/create-cov-rpt.py" />
 		<Unit filename="../../script/create-vcpkg.py" />
 		<Unit filename="../../script/update-version.py" />
 		<Unit filename="../../script/upload-conan.py" />
