@@ -455,12 +455,12 @@ public:
     {}
 #endif
 
-    nssv_constexpr basic_string_view( CharT const * s, size_type count )
+    nssv_constexpr basic_string_view( CharT const * s, size_type count ) nssv_noexcept // non-standard noexcept
         : data_( s )
         , size_( count )
     {}
 
-    nssv_constexpr basic_string_view( CharT const * s)
+    nssv_constexpr basic_string_view( CharT const * s) nssv_noexcept // non-standard noexcept
         : data_( s )
         , size_( Traits::length(s) )
     {}
