@@ -218,7 +218,7 @@ using std::operator<<;
 # define nssv_COMPILER_MSVC_VERSION  0
 #endif
 
-#define nssv_COMPILER_VERSION( major, minor, patch )  (10 * ( 10 * major + minor) + patch)
+#define nssv_COMPILER_VERSION( major, minor, patch )  ( 10 * ( 10 * (major) + (minor) ) + (patch) )
 
 #if defined(__clang__)
 # define nssv_COMPILER_CLANG_VERSION  nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
@@ -588,7 +588,9 @@ public:
     nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
         if ( const int result = Traits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+        {
             return result;
+        }
 
         return size() == other.size() ? 0 : size() < other.size() ? -1 : 1;
     }
@@ -684,10 +686,14 @@ public:
     nssv_constexpr14 size_type rfind( basic_string_view v, size_type pos = npos ) const nssv_noexcept  // (1)
     {
         if ( size() < v.size() )
+        {
             return npos;
+        }
 
         if ( v.empty() )
+        {
             return (std::min)( size(), pos );
+        }
 
         const_iterator last   = cbegin() + (std::min)( size() - v.size(), pos ) + v.size();
         const_iterator result = std::find_end( cbegin(), last, v.cbegin(), v.cend(), Traits::eq );
@@ -825,7 +831,7 @@ private:
     {
         const basic_string_view v;
 
-        nssv_constexpr not_in_view( basic_string_view v ) : v( v ) {}
+        nssv_constexpr explicit not_in_view( basic_string_view v ) : v( v ) {}
 
         nssv_constexpr bool operator()( CharT c ) const
         {
