@@ -273,8 +273,10 @@ using std::operator<<;
 #define nssv_HAVE_WCHAR16_T             nssv_CPP11_100
 #define nssv_HAVE_WCHAR32_T             nssv_CPP11_100
 
-#if ! ( ( nssv_CPP11 && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
+#if ! ( ( nssv_CPP11_OR_GREATER && nssv_COMPILER_CLANG_VERSION ) || nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 300, 400 ) )
 # define nssv_HAVE_STD_DEFINED_LITERALS  nssv_CPP11_140
+#else
+# define nssv_HAVE_STD_DEFINED_LITERALS  0
 #endif
 
 // Presence of C++14 language features:
