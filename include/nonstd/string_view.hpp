@@ -520,7 +520,7 @@ public:
 #else
         if ( pos >= size() )
         {
-            throw std::out_of_range("nonst::string_view::at()");
+            throw std::out_of_range("nonstd::string_view::at()");
         }
 #endif
         return data_at( pos );
@@ -562,7 +562,7 @@ public:
 #else
         if ( pos > size() )
         {
-            throw std::out_of_range("nonst::string_view::copy()");
+            throw std::out_of_range("nonstd::string_view::copy()");
         }
 #endif
         const size_type rlen = (std::min)( n, size() - pos );
@@ -579,7 +579,7 @@ public:
 #else
         if ( pos > size() )
         {
-            throw std::out_of_range("nonst::string_view::substr()");
+            throw std::out_of_range("nonstd::string_view::substr()");
         }
 #endif
         return basic_string_view( data() + pos, (std::min)( n, size() - pos ) );
