@@ -404,6 +404,22 @@ nssv_DISABLE_MSVC_WARNINGS( 4455 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
 
+#if nssv_CPP11_OR_GREATER
+
+namespace detail {
+
+// Expect tail call optimization to make length() non-recursive:
+
+template< typename CharT >
+inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
+{
+    return *s == '\0' ? result : length( s + 1, result + 1 );
+}
+
+} // namespace detail
+
+#endif // nssv_CPP11_OR_GREATER
+
 template
 <
     class CharT,
@@ -464,7 +480,13 @@ public:
 
     nssv_constexpr basic_string_view( CharT const * s) nssv_noexcept // non-standard noexcept
         : data_( s )
+#if nssv_CPP17_OR_GREATER
         , size_( Traits::length(s) )
+#elif nssv_CPP11_OR_GREATER
+        , size_( detail::length(s) )
+#else
+        , size_( Traits::length(s) )
+#endif
     {}
 
     // Assignment:
