@@ -19,7 +19,7 @@
 Example usage
 -------------
 
-```C++
+```Cpp
 #include "nonstd/string_view.hpp"
 #include <iostream>
 
@@ -229,7 +229,7 @@ Here we use c:\string-view-lite\build-win-x86-vc10.
 
 2. Configure CMake to use the compiler of your choice (run `cmake --help` for a list).
 
-        cmake -G "Visual Studio 10 2010" -DSTRINGVIEW_LITE_OPT_BUILD_TESTS=ON ..
+        cmake -G "Visual Studio 10 2010" -DSTRING_VIEW_LITE_OPT_BUILD_TESTS=ON ..
 
 3. Build the test suite in the Debug configuration (alternatively use Release).    
 
