@@ -11,11 +11,11 @@ endif()
 
 project( test LANGUAGES CXX )
 
-set( unit_name "string_view" )
+set( unit_name "string-view" )
 set( PACKAGE   ${unit_name}-lite )
 set( PROGRAM   ${unit_name}-lite )
 set( SOURCES   ${unit_name}-main.t.cpp ${unit_name}.t.cpp )
-set( HEADER    "nonstd/${unit_name}.hpp" )
+set( HEADER    "nonstd/string_view.hpp" )
 
 message( STATUS "Subproject '${PROJECT_NAME}', programs '${PROGRAM}-*'")
 
@@ -29,8 +29,8 @@ macro( opt option_text var )
     endif()
 endmacro()
 
-opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  )
-opt( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS )
+opt( STRING_VIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS  )
+opt( STRING_VIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS )
 
 set( DEFCMN  -Dnssv_STRING_VIEW_HEADER=\"${HEADER}\"
              -Dnssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=${nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS}
@@ -196,9 +196,9 @@ endif()
 if( HAS_CPP17_FLAG )
     set( WHICH nssv_STRING_VIEW_DEFAULT )
 
-    if( STRINGVIEW_LITE_OPT_SELECT_STD )
+    if( STRING_VIEW_LITE_OPT_SELECT_STD )
         set( WHICH nssv_STRING_VIEW_STD )
-    elseif( STRINGVIEW_LITE_OPT_SELECT_NONSTD )
+    elseif( STRING_VIEW_LITE_OPT_SELECT_NONSTD )
         set( WHICH nssv_STRING_VIEW_NONSTD )
     endif()
 

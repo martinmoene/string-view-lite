@@ -4,7 +4,7 @@
 ::
 
 set      unit=string_view
-set unit_file=string_view
+set unit_file=string-view
 
 :: if no std is given, use c++11
 

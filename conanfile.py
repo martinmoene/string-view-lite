@@ -18,8 +18,8 @@ class StringViewLiteConan(ConanFile):
     def package(self):
         """Run CMake install"""
         cmake = CMake(self)
-        cmake.definitions["STRINGVIEW_LITE_OPT_BUILD_TESTS"] = "OFF"
-        cmake.definitions["STRINGVIEW_LITE_OPT_BUILD_EXAMPLES"] = "OFF"
+        cmake.definitions["STRING_VIEW_LITE_OPT_BUILD_TESTS"] = "OFF"
+        cmake.definitions["STRING_VIEW_LITE_OPT_BUILD_EXAMPLES"] = "OFF"
         cmake.configure()
         cmake.install()
 

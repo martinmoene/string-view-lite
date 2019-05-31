@@ -18,7 +18,7 @@ project(
 
 # Package information:
 
-set( unit_name       "string_view" )
+set( unit_name       "string-view" )
 set( package_nspace  "nonstd" )
 set( package_name    "${unit_name}-lite" )
 set( package_version "${${PROJECT_NAME}_VERSION}" )
@@ -35,23 +35,23 @@ endif()
 
 # If toplevel project, enable building and performing of tests, disable building of examples:
 
-option( STRINGVIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" ${string_view_IS_TOPLEVEL_PROJECT} )
-option( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
+option( STRING_VIEW_LITE_OPT_BUILD_TESTS     "Build and perform string-view-lite tests" ${string_view_IS_TOPLEVEL_PROJECT} )
+option( STRING_VIEW_LITE_OPT_BUILD_EXAMPLES  "Build string-view-lite examples" OFF )
 
-option( STRINGVIEW_LITE_OPT_SELECT_STD      "Select std::string_view"    OFF )
-option( STRINGVIEW_LITE_OPT_SELECT_NONSTD   "Select nonstd::string_view" OFF )
+option( STRING_VIEW_LITE_OPT_SELECT_STD      "Select std::string_view"    OFF )
+option( STRING_VIEW_LITE_OPT_SELECT_NONSTD   "Select nonstd::string_view" OFF )
 
-option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
-option( STRINGVIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )
+option( STRING_VIEW_LITE_OPT_CONV_STD_STRING_CLASS_METHODS  "Provide conversion to/from std::string (class methods)"  ON )
+option( STRING_VIEW_LITE_OPT_CONV_STD_STRING_FREE_FUNCTIONS "Provide conversion to/from std::string (free functions)" ON )
 
 # If requested, build and perform tests, build examples:
 
-if ( STRINGVIEW_LITE_OPT_BUILD_TESTS )
+if ( STRING_VIEW_LITE_OPT_BUILD_TESTS )
     enable_testing()
     add_subdirectory( test )
 endif()
 
-if ( STRINGVIEW_LITE_OPT_BUILD_EXAMPLES )
+if ( STRING_VIEW_LITE_OPT_BUILD_EXAMPLES )
     enable_testing()
     add_subdirectory( example )
 endif()

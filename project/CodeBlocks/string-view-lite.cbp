@@ -18,8 +18,8 @@
 		<Unit filename="../../LICENSE.txt" />
 		<Unit filename="../../README.md" />
 		<Unit filename="../../appveyor.yml" />
-		<Unit filename="../../cmake/string_view-lite-config-version.cmake.in" />
-		<Unit filename="../../cmake/string_view-lite-config.cmake.in" />
+		<Unit filename="../../cmake/string-view-lite-config-version.cmake.in" />
+		<Unit filename="../../cmake/string-view-lite-config.cmake.in" />
 		<Unit filename="../../conanfile.py" />
 		<Unit filename="../../example/01-basic.cpp" />
 		<Unit filename="../../example/02-no-exceptions.cpp" />
@@ -30,9 +30,9 @@
 		<Unit filename="../../script/upload-conan.py" />
 		<Unit filename="../../test/CMakeLists.txt" />
 		<Unit filename="../../test/lest_cpp03.hpp" />
-		<Unit filename="../../test/string_view-main.t.cpp" />
-		<Unit filename="../../test/string_view-main.t.hpp" />
-		<Unit filename="../../test/string_view.t.cpp" />
+		<Unit filename="../../test/string-view-main.t.cpp" />
+		<Unit filename="../../test/string-view-main.t.hpp" />
+		<Unit filename="../../test/string-view.t.cpp" />
 		<Unit filename="../../test/t-std.bat" />
 		<Unit filename="../../test/t.bat" />
 		<Unit filename="../../test/tc.bat" />
