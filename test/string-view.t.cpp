@@ -1011,8 +1011,6 @@ CASE( "string_view: Allows to compare a string_view with another string_view" )
 
 CASE( "string_view: Allows to compare a string_view with an object with implicit conversion to string_view" )
 {
-#if nssv_CPP11_OR_GREATER
-#if _MSC_VER != 1900
     char s[] = "hello";
     string_view sv( s );
 
@@ -1022,27 +1020,21 @@ CASE( "string_view: Allows to compare a string_view with an object with implicit
     EXPECT( sv != "world"       );
     EXPECT(       "world" != sv );
 
+    EXPECT( sv <  "world"       );
+    EXPECT(       "aloha" <  sv );
+
     EXPECT( sv <= "hello"       );
     EXPECT(       "hello" <= sv );
     EXPECT( sv <= "world"       );
     EXPECT(       "aloha" <= sv );
 
-    EXPECT( sv <  "world"       );
-    EXPECT(       "aloha" <  sv );
+    EXPECT( sv >  "aloha"       );
+    EXPECT(       "world"  >  sv );
 
     EXPECT( sv >= "hello"       );
     EXPECT(       "hello" >= sv );
     EXPECT( sv >= "aloha"       );
     EXPECT(       "world" >= sv );
-
-    EXPECT( sv >  "aloha"       );
-    EXPECT(       "world"  >  sv );
-#else
-    EXPECT( !!"Comparison for types with implicit conversion to string_view not available (insufficient C++11 support of MSVC)." );
-#endif
-#else
-    EXPECT( !!"Comparison for types with implicit conversion to string_view not available (no C++11)." );
-#endif
 }
 
 CASE( "string_view: Allows to compare empty string_view-s as equal" )

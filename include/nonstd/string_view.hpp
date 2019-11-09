@@ -982,7 +982,167 @@ nssv_constexpr bool operator>= (
 // constexpr and noexcept so that an object t with an implicit conversion
 // to S can be compared according to Table 67.
 
-#if nssv_CPP11_OR_GREATER && ! nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
+#if ! nssv_CPP11_OR_GREATER || nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
+
+// accomodate for older compilers:
+
+// ==
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator==(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) == 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator==(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) == 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator==(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.size() == rhs.size() && lhs.compare( rhs ) == 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator==(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return lhs.size() == rhs.size() && lhs.compare( rhs ) == 0; }
+
+// !=
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator!=(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) != 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator!=(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) != 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator!=(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.size() != rhs.size() && lhs.compare( rhs ) != 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator!=(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return lhs.size() != rhs.size() || rhs.compare( lhs ) != 0; }
+
+// <
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) < 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) > 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) < 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return rhs.compare( lhs ) > 0; }
+
+// <=
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<=(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) <= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<=(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) >= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<=(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) <= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator<=(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return rhs.compare( lhs ) >= 0; }
+
+// >
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) > 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) < 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) > 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return rhs.compare( lhs ) < 0; }
+
+// >=
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>=(
+    basic_string_view<CharT, Traits> lhs,
+    char const * rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) >= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>=(
+    char const * lhs,
+    basic_string_view<CharT, Traits> rhs ) nssv_noexcept
+{ return rhs.compare( lhs ) <= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>=(
+    basic_string_view<CharT, Traits> lhs,
+    std::basic_string<CharT, Traits> rhs ) nssv_noexcept
+{ return lhs.compare( rhs ) >= 0; }
+
+template< class CharT, class Traits>
+nssv_constexpr bool operator>=(
+    std::basic_string<CharT, Traits> rhs,
+    basic_string_view<CharT, Traits> lhs ) nssv_noexcept
+{ return rhs.compare( lhs ) <= 0; }
+
+#else // newer compilers:
 
 #define nssv_BASIC_STRING_VIEW_I(T,U)  typename std::decay< basic_string_view<T,U> >::type
 
@@ -1079,7 +1239,7 @@ nssv_constexpr bool operator>= (
 #undef nssv_MSVC_ORDER
 #undef nssv_BASIC_STRING_VIEW_I
 
-#endif // nssv_CPP11_OR_GREATER
+#endif // compiler-dependent approach to comparisons
 
 // 24.4.4 Inserters and extractors:
 
