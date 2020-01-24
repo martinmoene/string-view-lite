@@ -409,6 +409,22 @@ namespace nonstd { namespace sv_lite {
 
 namespace detail {
 
+#if nssv_CPP14_OR_GREATER
+
+template< typename CharT >
+inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
+{
+    CharT * v = s;
+    std::size_t r = result;
+    while ( *v != '\0' ) {
+       ++v;
+       ++r;
+    }
+    return r;
+}
+
+#else // nssv_CPP14_OR_GREATER
+
 // Expect tail call optimization to make length() non-recursive:
 
 template< typename CharT >
@@ -416,6 +432,8 @@ inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
 {
     return *s == '\0' ? result : length( s + 1, result + 1 );
 }
+
+#endif // nssv_CPP14_OR_GREATER
 
 } // namespace detail
 
