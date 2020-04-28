@@ -874,7 +874,7 @@ private:
     {
         const basic_string_view v;
 
-        nssv_constexpr explicit not_in_view( basic_string_view v ) : v( v ) {}
+        nssv_constexpr explicit not_in_view( basic_string_view v_ ) : v( v_ ) {}
 
         nssv_constexpr bool operator()( CharT c ) const
         {
