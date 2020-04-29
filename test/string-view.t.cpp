@@ -1,4 +1,4 @@
-// Copyright 2017-2019 Martin Moene
+// Copyright 2017-2020 Martin Moene
 //
 // https://github.com/martinmoene/string-view-lite
 //
