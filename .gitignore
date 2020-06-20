@@ -34,6 +34,9 @@
 # Editor files
 *.workspace.layout
 
+# Build folder
+/build/
+
 # CodeBlocks IDE files
 *.layout
 
