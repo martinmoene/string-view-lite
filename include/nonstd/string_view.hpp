@@ -412,25 +412,40 @@ namespace detail {
 #if nssv_CPP14_OR_GREATER
 
 template< typename CharT >
-inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
+inline constexpr std::size_t length( CharT * s )
 {
-    CharT * v = s;
-    std::size_t r = result;
-    while ( *v != '\0' ) {
-       ++v;
-       ++r;
+    std::size_t result = 0;
+    while ( *s++ != '\0' )
+    {
+       ++result;
     }
-    return r;
+    return result;
 }
 
-#else // nssv_CPP14_OR_GREATER
+#elif defined(__OPTIMIZE__) // nssv_CPP14_OR_GREATER
 
+// gcc, clang provide __OPTIMIZE__
 // Expect tail call optimization to make length() non-recursive:
 
 template< typename CharT >
 inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
 {
     return *s == '\0' ? result : length( s + 1, result + 1 );
+}
+
+#else // nssv_CPP14_OR_GREATER
+
+// non-constexpr, non-recursive:
+
+template< typename CharT >
+inline std::size_t length( CharT * s )
+{
+    std::size_t result = 0;
+    while ( *s++ != '\0' )
+    {
+       ++result;
+    }
+    return result;
 }
 
 #endif // nssv_CPP14_OR_GREATER
