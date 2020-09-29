@@ -471,8 +471,9 @@ template
     class Traits /* = std::char_traits<CharT> */
 >
 class basic_string_view
-    // support constexpr comparison in C++14 and later:
 {
+    // support constexpr comparison in C++14 and later:
+
     struct CTraits : public Traits
     {
         static nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
