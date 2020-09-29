@@ -471,7 +471,23 @@ template
     class Traits /* = std::char_traits<CharT> */
 >
 class basic_string_view
+    // support constexpr comparison in C++14 and later:
 {
+    struct CTraits : public Traits
+    {
+        static nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
+        {
+            // TODO: compiler specific implementations?
+            while ( count-- != 0 )
+            {
+                if ( *s1 < *s2 ) return -1;
+                if ( *s1 > *s2 ) return +1;
+                ++s1; ++s2;
+            }
+            return 0;
+        }
+    };
+
 public:
     // Member types:
 
@@ -645,7 +661,7 @@ public:
 
     nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
-        if ( const int result = Traits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+        if ( const int result = CTraits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
         {
             return result;
         }

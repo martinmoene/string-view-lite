@@ -375,6 +375,20 @@ CASE( "string_view: Allows to compare empty string_views as equal via compare(),
     EXPECT( string_view().compare( string_view() ) == 0 );
 }
 
+CASE( "string_view: Allows to constexpr-compare string_views via compare(), (1) (C++14)" )
+{
+#if nssv_HAVE_CONSTEXPR_14
+    constexpr char hello[] = "hello";
+    constexpr char world[] = "world";
+
+    static_assert( string_view( hello ).compare( string_view( hello ) ) == 0, "" );
+    static_assert( string_view( hello ).compare( string_view( world ) ) <  0, "" );
+    static_assert( string_view( world ).compare( string_view( hello ) ) >  0, "" );
+#else
+    EXPECT( !!"C++14 constexpr is not available (no C++14)" );
+#endif
+}
+
 CASE( "string_view: Allows to compare a sub string to another string_view via compare(), (2)" )
 {
     string_view sv1("hello world");

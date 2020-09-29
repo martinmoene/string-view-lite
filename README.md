@@ -314,6 +314,7 @@ string_view: Allow to obtain a sub string, starting at position pos (default: 0)
 string_view: Throws if requested position of substr() exceeds string_view's size()
 string_view: Allows to lexically compare to another string_view via compare(), (1)
 string_view: Allows to compare empty string_views as equal via compare(), (1)
+string_view: Allows to constexpr-compare string_views via compare(), (1) (C++14)
 string_view: Allows to compare a sub string to another string_view via compare(), (2)
 string_view: Allows to compare a sub string to another string_view sub string via compare(), (3)
 string_view: Allows to compare to a C-string via compare(), (4)
@@ -358,6 +359,7 @@ string_view: Allows to create a string_view via literal "_sv", using namespace n
 string_view: Allows to create a string_view via literal "_sv", using namespace nonstd::string_view_literals
 string_view: Allows to create a string_view via literal "_sv", using namespace nonstd::literals
 string_view: Allows to compare a string_view with another string_view
+string_view: Allows to compare a string_view with an object with implicit conversion to string_view
 string_view: Allows to compare empty string_view-s as equal
 operator<<: Allows printing a string_view to an output stream
 std::hash<>: Hash value of string_view equals hash value of corresponding string object
