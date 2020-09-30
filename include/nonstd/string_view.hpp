@@ -405,9 +405,31 @@ nssv_DISABLE_MSVC_WARNINGS( 4455 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
 
-#if nssv_CPP11_OR_GREATER
-
 namespace detail {
+
+// support constexpr comparison in C++14;
+// for C++17 and later, depend on provided traits
+
+template< typename CharT >
+inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
+{
+    while ( count-- != 0 )
+    {
+        if ( *s1 < *s2 ) return -1;
+        if ( *s1 > *s2 ) return +1;
+        ++s1; ++s2;
+    }
+    return 0;
+}
+
+#if nssv_COMPILER_CLANG_VERSION
+
+inline nssv_constexpr int compare( char const * s1, char const * s2, std::size_t count )
+{
+    return memcmp( s1, s2, count );
+}
+
+#endif
 
 #if nssv_CPP14_OR_GREATER
 
@@ -428,7 +450,7 @@ inline constexpr std::size_t length( CharT * s )
 // Expect tail call optimization to make length() non-recursive:
 
 template< typename CharT >
-inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
+inline nssv_constexpr std::size_t length( CharT * s, std::size_t result = 0 )
 {
     return *s == '\0' ? result : length( s + 1, result + 1 );
 }
@@ -452,8 +474,6 @@ inline std::size_t length( CharT * s )
 
 } // namespace detail
 
-#endif // nssv_CPP11_OR_GREATER
-
 template
 <
     class CharT,
@@ -472,23 +492,6 @@ template
 >
 class basic_string_view
 {
-    // support constexpr comparison in C++14 and later:
-
-    struct CTraits : public Traits
-    {
-        static nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
-        {
-            // TODO: compiler specific implementations?
-            while ( count-- != 0 )
-            {
-                if ( *s1 < *s2 ) return -1;
-                if ( *s1 > *s2 ) return +1;
-                ++s1; ++s2;
-            }
-            return 0;
-        }
-    };
-
 public:
     // Member types:
 
@@ -662,7 +665,11 @@ public:
 
     nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
-        if ( const int result = CTraits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+#if nssv_CPP17_OR_GREATER
+        if ( const int result = Traits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+#else
+        if ( const int result = detail::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+#endif
         {
             return result;
         }
