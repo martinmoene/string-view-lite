@@ -297,6 +297,11 @@ using std::operator<<;
 
 #define nssv_HAVE_STD_HASH              nssv_CPP11_120
 
+// Presence of compiler intrinsics:
+
+#define nssv_HAVE_BUILTIN_MEMCMP  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_STRLEN  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+
 // C++ feature usage:
 
 #if nssv_HAVE_CONSTEXPR_11
@@ -413,7 +418,7 @@ namespace nonstd { namespace sv_lite {
 namespace detail {
 
 // support constexpr comparison in C++14;
-// for C++17 and later, depend on provided traits
+// for C++17 and later, use provided traits:
 
 template< typename CharT >
 inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
@@ -427,12 +432,20 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
     return 0;
 }
 
-#if nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900
+#if nssv_HAVE_BUILTIN_MEMCMP
+
+// specialization of compare() for char, see also generic compare() above:
 
 inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size_t count )
 {
     return __builtin_memcmp( s1, s2, count );
 }
+
+#endif
+
+#if nssv_HAVE_BUILTIN_STRLEN
+
+// specialization of length() for char, see also generic length() further below:
 
 inline nssv_constexpr int length( char const * s )
 {
