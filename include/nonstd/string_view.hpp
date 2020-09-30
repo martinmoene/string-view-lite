@@ -425,7 +425,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
     return 0;
 }
 
-#if !nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 1, 400 ) && !nssv_BETWEEN( nssv_COMPILER_APPLECLANG_VERSION, 1, 900 )
+#if nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900
 
 inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size_t count )
 {
