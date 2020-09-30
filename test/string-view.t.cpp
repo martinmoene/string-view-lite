@@ -377,7 +377,7 @@ CASE( "string_view: Allows to compare empty string_views as equal via compare(),
 
 CASE( "string_view: Allows to constexpr-compare string_views via compare(), (1) (C++14)" )
 {
-#if nssv_HAVE_CONSTEXPR_14
+#if nssv_HAVE_CONSTEXPR_14 || (nssv_HAVE_CONSTEXPR_11 && nssv_COMPILER_CLANG_VERSION)
     constexpr char hello[] = "hello";
     constexpr char world[] = "world";
 

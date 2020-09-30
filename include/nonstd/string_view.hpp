@@ -426,7 +426,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
 
 inline nssv_constexpr int compare( char const * s1, char const * s2, std::size_t count )
 {
-    return memcmp( s1, s2, count );
+    return __builtin_memcmp( s1, s2, count );
 }
 
 #endif
