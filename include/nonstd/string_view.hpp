@@ -221,7 +221,10 @@ using std::operator<<;
 
 #define nssv_COMPILER_VERSION( major, minor, patch )  ( 10 * ( 10 * (major) + (minor) ) + (patch) )
 
-#if defined(__clang__)
+#if defined( __apple_build_version__ )
+# define nssv_COMPILER_APPLECLANG_VERSION nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
+# define nssv_COMPILER_CLANG_VERSION 0
+#elif defined( __clang__ )
 # define nssv_COMPILER_CLANG_VERSION  nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
 #else
 # define nssv_COMPILER_CLANG_VERSION    0
@@ -422,7 +425,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
     return 0;
 }
 
-#if nssv_COMPILER_CLANG_VERSION >= 400
+#if !nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 1, 400 ) && !nssv_BETWEEN( nssv_COMPILER_APPLECLANG_VERSION, 1, 900 )
 
 inline nssv_constexpr int compare( char const * s1, char const * s2, std::size_t count )
 {
