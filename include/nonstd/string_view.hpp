@@ -427,7 +427,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
 
 #if !nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION, 1, 400 ) && !nssv_BETWEEN( nssv_COMPILER_APPLECLANG_VERSION, 1, 900 )
 
-inline nssv_constexpr int compare( char const * s1, char const * s2, std::size_t count )
+inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size_t count )
 {
     return __builtin_memcmp( s1, s2, count );
 }
