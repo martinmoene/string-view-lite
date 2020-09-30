@@ -434,6 +434,11 @@ inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size
     return __builtin_memcmp( s1, s2, count );
 }
 
+inline nssv_constexpr int length( char const * s )
+{
+    return __builtin_strlen( s );
+}
+
 #endif
 
 #if nssv_CPP14_OR_GREATER
