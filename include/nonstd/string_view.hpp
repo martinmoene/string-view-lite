@@ -221,16 +221,21 @@ using std::operator<<;
 
 #define nssv_COMPILER_VERSION( major, minor, patch )  ( 10 * ( 10 * (major) + (minor) ) + (patch) )
 
-#if defined(__clang__)
-# define nssv_COMPILER_CLANG_VERSION  nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
+#if defined( __apple_build_version__ )
+# define nssv_COMPILER_APPLECLANG_VERSION  nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
+# define nssv_COMPILER_CLANG_VERSION       0
+#elif defined( __clang__ )
+# define nssv_COMPILER_APPLECLANG_VERSION  0
+# define nssv_COMPILER_CLANG_VERSION       nssv_COMPILER_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
 #else
-# define nssv_COMPILER_CLANG_VERSION    0
+# define nssv_COMPILER_APPLECLANG_VERSION  0
+# define nssv_COMPILER_CLANG_VERSION       0
 #endif
 
 #if defined(__GNUC__) && !defined(__clang__)
 # define nssv_COMPILER_GNUC_VERSION  nssv_COMPILER_VERSION(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
 #else
-# define nssv_COMPILER_GNUC_VERSION    0
+# define nssv_COMPILER_GNUC_VERSION  0
 #endif
 
 // half-open range [lo..hi):
@@ -291,6 +296,11 @@ using std::operator<<;
 // Presence of C++ library features:
 
 #define nssv_HAVE_STD_HASH              nssv_CPP11_120
+
+// Presence of compiler intrinsics:
+
+#define nssv_HAVE_BUILTIN_MEMCMP  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_STRLEN  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
 
 // C++ feature usage:
 
@@ -405,9 +415,44 @@ nssv_DISABLE_MSVC_WARNINGS( 4455 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
 
-#if nssv_CPP11_OR_GREATER
-
 namespace detail {
+
+// support constexpr comparison in C++14;
+// for C++17 and later, use provided traits:
+
+template< typename CharT >
+inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::size_t count )
+{
+    while ( count-- != 0 )
+    {
+        if ( *s1 < *s2 ) return -1;
+        if ( *s1 > *s2 ) return +1;
+        ++s1; ++s2;
+    }
+    return 0;
+}
+
+#if nssv_HAVE_BUILTIN_MEMCMP
+
+// specialization of compare() for char, see also generic compare() above:
+
+inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size_t count )
+{
+    return __builtin_memcmp( s1, s2, count );
+}
+
+#endif
+
+#if nssv_HAVE_BUILTIN_STRLEN
+
+// specialization of length() for char, see also generic length() further below:
+
+inline nssv_constexpr int length( char const * s )
+{
+    return __builtin_strlen( s );
+}
+
+#endif
 
 #if nssv_CPP14_OR_GREATER
 
@@ -428,7 +473,7 @@ inline constexpr std::size_t length( CharT * s )
 // Expect tail call optimization to make length() non-recursive:
 
 template< typename CharT >
-inline constexpr std::size_t length( CharT * s, std::size_t result = 0 )
+inline nssv_constexpr std::size_t length( CharT * s, std::size_t result = 0 )
 {
     return *s == '\0' ? result : length( s + 1, result + 1 );
 }
@@ -451,8 +496,6 @@ inline std::size_t length( CharT * s )
 #endif // nssv_CPP14_OR_GREATER
 
 } // namespace detail
-
-#endif // nssv_CPP11_OR_GREATER
 
 template
 <
@@ -645,7 +688,11 @@ public:
 
     nssv_constexpr14 int compare( basic_string_view other ) const nssv_noexcept // (1)
     {
+#if nssv_CPP17_OR_GREATER
         if ( const int result = Traits::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+#else
+        if ( const int result = detail::compare( data(), other.data(), (std::min)( size(), other.size() ) ) )
+#endif
         {
             return result;
         }
