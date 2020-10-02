@@ -454,20 +454,7 @@ inline nssv_constexpr int length( char const * s )
 
 #endif
 
-#if nssv_CPP14_OR_GREATER
-
-template< typename CharT >
-inline constexpr std::size_t length( CharT * s )
-{
-    std::size_t result = 0;
-    while ( *s++ != '\0' )
-    {
-       ++result;
-    }
-    return result;
-}
-
-#elif defined(__OPTIMIZE__) // nssv_CPP14_OR_GREATER
+#if defined(__OPTIMIZE__)
 
 // gcc, clang provide __OPTIMIZE__
 // Expect tail call optimization to make length() non-recursive:
@@ -478,12 +465,12 @@ inline nssv_constexpr std::size_t length( CharT * s, std::size_t result = 0 )
     return *s == '\0' ? result : length( s + 1, result + 1 );
 }
 
-#else // nssv_CPP14_OR_GREATER
+#else // OPTIMIZE
 
-// non-constexpr, non-recursive:
+// non-recursive:
 
 template< typename CharT >
-inline std::size_t length( CharT * s )
+inline nssv_constexpr14 std::size_t length( CharT * s )
 {
     std::size_t result = 0;
     while ( *s++ != '\0' )
@@ -493,7 +480,7 @@ inline std::size_t length( CharT * s )
     return result;
 }
 
-#endif // nssv_CPP14_OR_GREATER
+#endif // OPTIMIZE
 
 } // namespace detail
 
