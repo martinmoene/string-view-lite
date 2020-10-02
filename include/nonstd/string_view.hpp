@@ -299,8 +299,9 @@ using std::operator<<;
 
 // Presence of compiler intrinsics:
 
-#define nssv_HAVE_BUILTIN_MEMCMP  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
-#define nssv_HAVE_BUILTIN_STRLEN  ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_FN    ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_MEMCMP  nssv_HAVE_BUILTIN_FN
+#define nssv_HAVE_BUILTIN_STRLEN  nssv_HAVE_BUILTIN_FN
 
 // C++ feature usage:
 
