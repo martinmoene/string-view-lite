@@ -300,6 +300,7 @@ using std::operator<<;
 // Presence of compiler intrinsics:
 
 #define nssv_HAVE_BUILTIN_VER   ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+
 #ifdef __has_builtin
 #define nssv_HAVE_BUILTIN( x )  __has_builtin( x )
 #else
