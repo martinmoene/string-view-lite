@@ -1014,13 +1014,13 @@ template< class CharT, class Traits >
 nssv_constexpr bool operator== (
     basic_string_view <CharT, Traits> lhs,
     basic_string_view <CharT, Traits> rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) == 0 ; }
+{ return lhs.size() == rhs.size() && lhs.compare( rhs ) == 0 ; }
 
 template< class CharT, class Traits >
 nssv_constexpr bool operator!= (
     basic_string_view <CharT, Traits> lhs,
     basic_string_view <CharT, Traits> rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) != 0 ; }
+{ return lhs.size() != rhs.size() || lhs.compare( rhs ) != 0 ; }
 
 template< class CharT, class Traits >
 nssv_constexpr bool operator< (
@@ -1061,13 +1061,13 @@ template< class CharT, class Traits>
 nssv_constexpr bool operator==(
     basic_string_view<CharT, Traits> lhs,
     CharT const * rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) == 0; }
+{ return lhs.size() == detail::length( rhs ) && lhs.compare( rhs ) == 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator==(
     CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
-{ return rhs.compare( lhs ) == 0; }
+{ return detail::length( lhs ) == rhs.size() && rhs.compare( lhs ) == 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator==(
@@ -1087,19 +1087,19 @@ template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
     basic_string_view<CharT, Traits> lhs,
     char const * rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) != 0; }
+{ return lhs.size() != detail::length( rhs ) || lhs.compare( rhs ) != 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
     char const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
-{ return rhs.compare( lhs ) != 0; }
+{ return detail::length( lhs ) != rhs.size() || rhs.compare( lhs ) != 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
     basic_string_view<CharT, Traits> lhs,
     std::basic_string<CharT, Traits> rhs ) nssv_noexcept
-{ return lhs.size() != rhs.size() && lhs.compare( rhs ) != 0; }
+{ return lhs.size() != rhs.size() || lhs.compare( rhs ) != 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
@@ -1227,7 +1227,7 @@ template< class CharT, class Traits  nssv_MSVC_ORDER(1) >
 nssv_constexpr bool operator==(
          basic_string_view  <CharT, Traits> lhs,
     nssv_BASIC_STRING_VIEW_I(CharT, Traits) rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) == 0; }
+{ return lhs.size() == rhs.size() && lhs.compare( rhs ) == 0; }
 
 template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator==(
@@ -1247,7 +1247,7 @@ template< class CharT, class Traits  nssv_MSVC_ORDER(2) >
 nssv_constexpr bool operator!= (
     nssv_BASIC_STRING_VIEW_I( CharT, Traits ) lhs,
          basic_string_view  < CharT, Traits > rhs ) nssv_noexcept
-{ return lhs.compare( rhs ) != 0 ; }
+{ return lhs.size() != rhs.size() || lhs.compare( rhs ) != 0 ; }
 
 // <
 
