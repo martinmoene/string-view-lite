@@ -301,6 +301,9 @@ using std::operator<<;
 
 #define nssv_HAVE_BUILTIN_VER   ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
 
+# define nssv_HAVE_BUILTIN_MEMCMP  nssv_HAVE_BUILTIN_VER
+# define nssv_HAVE_BUILTIN_STRLEN  nssv_HAVE_BUILTIN_VER
+
 #ifdef __has_builtin
 # define nssv_HAVE_BUILTIN( x )  __has_builtin( x )
 #else
@@ -309,18 +312,14 @@ using std::operator<<;
 
 #if nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_MEMCMP  __builtin_memcmp
-# define nssv_HAVE_BUILTIN_MEMCMP  1
 #else
 //# define nssv_BUILTIN_MEMCMP  memcmp
-# define nssv_HAVE_BUILTIN_MEMCMP  0
 #endif
 
 #if nssv_HAVE_BUILTIN(__builtin_strlen) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_STRLEN  __builtin_strlen
-# define nssv_HAVE_BUILTIN_STRLEN  1
 #else
 //# define nssv_BUILTIN_STRLEN  strlen
-# define nssv_HAVE_BUILTIN_STRLEN  0
 #endif
 
 // C++ feature usage:
