@@ -299,7 +299,8 @@ using std::operator<<;
 
 // Presence of compiler intrinsics:
 
-#define nssv_HAVE_BUILTIN_FN    ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+//#define nssv_HAVE_BUILTIN_FN    ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_FN    ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_CLANG_VERSION > 0 || nssv_COMPILER_APPLECLANG_VERSION > 0 )
 #define nssv_HAVE_BUILTIN_MEMCMP  nssv_HAVE_BUILTIN_FN
 #define nssv_HAVE_BUILTIN_STRLEN  nssv_HAVE_BUILTIN_FN
 
@@ -448,7 +449,7 @@ inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size
 
 // specialization of length() for char, see also generic length() further below:
 
-inline nssv_constexpr int length( char const * s )
+inline nssv_constexpr std::size_t length( char const * s )
 {
     return __builtin_strlen( s );
 }
