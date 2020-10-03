@@ -300,16 +300,15 @@ using std::operator<<;
 // Presence of compiler intrinsics:
 
 #define nssv_HAVE_BUILTIN_VER   ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
-#define nssv_HAVE_BUILTIN_CE    ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 0 || nssv_COMPILER_APPLECLANG_VERSION >= 0 )
-
-#define nssv_HAVE_BUILTIN_MEMCMP_CE  nssv_HAVE_BUILTIN_CE
-#define nssv_HAVE_BUILTIN_STRLEN_CE  nssv_HAVE_BUILTIN_CE
 
 #ifdef __has_builtin
 # define nssv_HAVE_BUILTIN( x )  __has_builtin( x )
 #else
 # define nssv_HAVE_BUILTIN( x )  0
 #endif
+
+#define nssv_HAVE_BUILTIN_MEMCMP   nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
+#define nssv_HAVE_BUILTIN_STRLEN   nssv_HAVE_BUILTIN(__builtin_strlen) || nssv_HAVE_BUILTIN_VER
 
 #if nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_MEMCMP  __builtin_memcmp
@@ -453,7 +452,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
     return 0;
 }
 
-#if nssv_HAVE_BUILTIN_MEMCMP_CE
+#if nssv_HAVE_BUILTIN_MEMCMP
 
 // specialization of compare() for char, see also generic compare() above:
 
@@ -464,7 +463,7 @@ inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size
 
 #endif
 
-#if nssv_HAVE_BUILTIN_STRLEN_CE
+#if nssv_HAVE_BUILTIN_STRLEN
 
 // specialization of length() for char, see also generic length() further below:
 
