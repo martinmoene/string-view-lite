@@ -307,19 +307,16 @@ using std::operator<<;
 # define nssv_HAVE_BUILTIN( x )  0
 #endif
 
-#define nssv_HAVE_BUILTIN_MEMCMP   nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
-#define nssv_HAVE_BUILTIN_STRLEN   nssv_HAVE_BUILTIN(__builtin_strlen) || nssv_HAVE_BUILTIN_VER
-
 #if nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_MEMCMP  __builtin_memcmp
 #else
-# define nssv_BUILTIN_MEMCMP  memcmp
+//# define nssv_BUILTIN_MEMCMP  memcmp
 #endif
 
 #if nssv_HAVE_BUILTIN(__builtin_strlen) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_STRLEN  __builtin_strlen
 #else
-# define nssv_BUILTIN_STRLEN  strlen
+//# define nssv_BUILTIN_STRLEN  strlen
 #endif
 
 // C++ feature usage:
@@ -452,7 +449,7 @@ inline nssv_constexpr14 int compare( CharT const * s1, CharT const * s2, std::si
     return 0;
 }
 
-#if nssv_HAVE_BUILTIN_MEMCMP
+#if nssv_BUILTIN_MEMCMP
 
 // specialization of compare() for char, see also generic compare() above:
 
@@ -463,7 +460,7 @@ inline nssv_constexpr14 int compare( char const * s1, char const * s2, std::size
 
 #endif
 
-#if nssv_HAVE_BUILTIN_STRLEN
+#if nssv_BUILTIN_STRLEN
 
 // specialization of length() for char, see also generic length() further below:
 
