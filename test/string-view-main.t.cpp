@@ -101,6 +101,18 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
 #endif
 }
 
+CASE( "usage of compiler intrinsics" "[.intrinsics]" )
+{
+#if nssv_USES_STD_STRING_VIEW
+    std::cout << "(Compiler version not available: using std::string_view)\n";
+#else
+    nssv_PRESENT( nssv_HAVE_BUILTIN_VER    );
+    nssv_PRESENT( nssv_HAVE_BUILTIN_CE     );
+    nssv_PRESENT( nssv_HAVE_BUILTIN_MEMCMP );
+    nssv_PRESENT( nssv_HAVE_BUILTIN_STRLEN );
+#endif
+}
+
 int main( int argc, char * argv[] )
 {
     return lest::run( specification(), argc, argv );
