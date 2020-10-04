@@ -90,7 +90,7 @@ Or, if you use the [conan package manager](https://www.conan.io/), follow these 
 
 ## Documentation of `std::string_view`
 
-Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string_view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
+Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string-view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
 
 ## C++20 extensions
 
@@ -275,7 +275,7 @@ All tests should pass, indicating your platform is supported and you are ready t
 
 ### A.1 Compile-time information
 
-The version of *string-view lite* is available via tag `[.version]`. The following tags are available for information on the compiler and on the C++ standard library used: `[.compiler]`, `[.stdc++]`, `[.stdlanguage]` and `[.stdlibrary]`.
+The version of *string-view lite* is available via tag `[.version]`. The following tags are available for information on the compiler and on the C++ standard library used: `[.compiler]`, `[.builtins]`, `[.stdc++]`, `[.stdlanguage]` and `[.stdlibrary]`.
 
 ### A.2 string-view lite test specification
 
