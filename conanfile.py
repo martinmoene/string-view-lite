@@ -1,7 +1,7 @@
 from conans import ConanFile, CMake
 
 class StringViewLiteConan(ConanFile):
-    version = "1.5.0"
+    version = "1.5.1"
     name = "string-view-lite"
     description = "string-view"
     license = "Boost Software License - Version 1.0. http://www.boost.org/LICENSE_1_0.txt"
