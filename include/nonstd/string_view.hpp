@@ -299,10 +299,24 @@ using std::operator<<;
 
 // Presence of compiler intrinsics:
 
-#define nssv_HAVE_BUILTIN_VER   ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+// Providing char-type specializations for compare() and length() that
+// use compiler intrinsics can improve compile- and run-time performance.
+//
+// The challenge is in using the right combinations of builtin availablity
+// and its constexpr-ness.
+//
+// | compiler | __builtin_memcmp (constexpr) | memcmp  (constexpr) |
+// |----------|------------------------------|---------------------|
+// | clang    | 4.0              (>= x.y   ) | any     (>= x.y   ) |
+// | clang-a  | 9.0              (>= x.y   ) | any     (>= x.y   ) |
+// | gcc      | any              (>= x.y   ) | any     (>= x.y   ) |
+// | msvc     | >= 14.2          (>= 14.2  ) | any     ( -       ) |
 
-# define nssv_HAVE_BUILTIN_MEMCMP  nssv_HAVE_BUILTIN_VER
-# define nssv_HAVE_BUILTIN_STRLEN  nssv_HAVE_BUILTIN_VER
+#define nssv_HAVE_BUILTIN_VER     ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_CE      ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 ||  nssv_COMPILER_CLANG_VERSION >= 0   || nssv_COMPILER_APPLECLANG_VERSION >= 0 )
+
+#define nssv_HAVE_BUILTIN_MEMCMP  ( (nssv_HAVE_CONSTEXPR_14 && nssv_HAVE_BUILTIN_CE) || !nssv_HAVE_CONSTEXPR_14 )
+#define nssv_HAVE_BUILTIN_STRLEN  ( (nssv_HAVE_CONSTEXPR_11 && nssv_HAVE_BUILTIN_CE) || !nssv_HAVE_CONSTEXPR_11 )
 
 #ifdef __has_builtin
 # define nssv_HAVE_BUILTIN( x )  __has_builtin( x )
@@ -313,13 +327,13 @@ using std::operator<<;
 #if nssv_HAVE_BUILTIN(__builtin_memcmp) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_MEMCMP  __builtin_memcmp
 #else
-//# define nssv_BUILTIN_MEMCMP  memcmp
+# define nssv_BUILTIN_MEMCMP  memcmp
 #endif
 
 #if nssv_HAVE_BUILTIN(__builtin_strlen) || nssv_HAVE_BUILTIN_VER
 # define nssv_BUILTIN_STRLEN  __builtin_strlen
 #else
-//# define nssv_BUILTIN_STRLEN  strlen
+# define nssv_BUILTIN_STRLEN  strlen
 #endif
 
 // C++ feature usage:
