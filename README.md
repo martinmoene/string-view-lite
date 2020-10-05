@@ -353,9 +353,9 @@ string_view: Allows to create a string_view, wstring_view, u16string_view, u32st
 string_view: Allows to create a string_view via literal "_sv", using namespace nonstd::literals::string_view_literals
 string_view: Allows to create a string_view via literal "_sv", using namespace nonstd::string_view_literals
 string_view: Allows to create a string_view via literal "_sv", using namespace nonstd::literals
-string_view: Allows to compare a string_view with another string_view
-string_view: Allows to compare a string_view with an object with implicit conversion to string_view
-string_view: Allows to compare empty string_view-s as equal
+string_view: Allows to compare a string_view with another string_view via comparison operators
+string_view: Allows to compare a string_view with an object with implicit conversion to string_view via comparison operators
+string_view: Allows to compare empty string_view-s as equal via compare() and via operator==()
 operator<<: Allows printing a string_view to an output stream
 std::hash<>: Hash value of string_view equals hash value of corresponding string object
 std::hash<>: Hash value of wstring_view equals hash value of corresponding string object
