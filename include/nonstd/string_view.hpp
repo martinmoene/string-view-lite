@@ -310,10 +310,10 @@ using std::operator<<;
 // | clang    | 4.0              (>= 4.0   ) | any     (?        ) |
 // | clang-a  | 9.0              (>= 9.0   ) | any     (?        ) |
 // | gcc      | any              (constexpr) | any     (?        ) |
-// | msvc     | >= 14.2          (>= 14.2  ) | any     (?        ) |
+// | msvc     | >= 14.2 C++17    (>= 14.2  ) | any     (?        ) |
 
-#define nssv_HAVE_BUILTIN_VER     ( nssv_COMPILER_MSVC_VERSION >= 142 || nssv_COMPILER_GNUC_VERSION > 0 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
-#define nssv_HAVE_BUILTIN_CE        nssv_HAVE_BUILTIN_VER
+#define nssv_HAVE_BUILTIN_VER     ( (nssv_CPP17_000 && nssv_COMPILER_MSVC_VERSION >= 142) || nssv_COMPILER_GNUC_VERSION > 0 || nssv_COMPILER_CLANG_VERSION >= 400 || nssv_COMPILER_APPLECLANG_VERSION >= 900 )
+#define nssv_HAVE_BUILTIN_CE      (  nssv_HAVE_BUILTIN_VER )
 
 #define nssv_HAVE_BUILTIN_MEMCMP  ( (nssv_HAVE_CONSTEXPR_14 && nssv_HAVE_BUILTIN_CE) || !nssv_HAVE_CONSTEXPR_14 )
 #define nssv_HAVE_BUILTIN_STRLEN  ( (nssv_HAVE_CONSTEXPR_11 && nssv_HAVE_BUILTIN_CE) || !nssv_HAVE_CONSTEXPR_11 )
