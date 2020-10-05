@@ -1000,7 +1000,7 @@ CASE( "string_view: Allows to create a string_view via literal \"_sv\", using na
 
 // 24.4.3 Non-member comparison functions:
 
-CASE( "string_view: Allows to compare a string_view with another string_view" )
+CASE( "string_view: Allows to compare a string_view with another string_view via comparison operators" )
 {
     char s[] = "hello";
     char t[] = "world";
@@ -1020,7 +1020,7 @@ CASE( "string_view: Allows to compare a string_view with another string_view" )
     EXPECT( tv >  sv );
 }
 
-CASE( "string_view: Allows to compare a string_view with an object with implicit conversion to string_view" )
+CASE( "string_view: Allows to compare a string_view with an object with implicit conversion to string_view via comparison operators" )
 {
     char s[] = "hello";
     string_view sv( s );
@@ -1048,11 +1048,12 @@ CASE( "string_view: Allows to compare a string_view with an object with implicit
     EXPECT(       "world" >= sv );
 }
 
-CASE( "string_view: Allows to compare empty string_view-s as equal" )
+CASE( "string_view: Allows to compare empty string_view-s as equal via compare() and via operator==()" )
 {
     string_view a, b;
 
     EXPECT( a == b );
+    EXPECT( a.compare( b ) == 0 );
 }
 
 // 24.4.4 Inserters and extractors:
