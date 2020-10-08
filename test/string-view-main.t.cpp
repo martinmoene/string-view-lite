@@ -29,6 +29,7 @@ CASE( "string-view-lite version" "[.string-view][.version]" )
 
 CASE( "string-view-lite configuration" "[.string-view][.config]" )
 {
+    nssv_PRESENT( nssv_HAVE_TWEAK_HEADER );
     nssv_PRESENT( nssv_HAVE_STD_STRING_VIEW );
     nssv_PRESENT( nssv_USES_STD_STRING_VIEW );
     nssv_PRESENT( nssv_STRING_VIEW_DEFAULT );
