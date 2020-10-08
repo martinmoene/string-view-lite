@@ -152,6 +152,10 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 
 ## Configuration
 
+### Tweak header
+
+If the compiler supports [`__has_include()`](https://en.cppreference.com/w/cpp/preprocessor/include), *string-view lite* supports the [tweak header](https://vector-of-bool.github.io/2020/10/04/lib-configuration.html) mechanism. Provide your *tweak header* as `nonstd/string_view.tweak.hpp` in a folder in the include-search-path. In the tweak header, provide definitions as documented below, like `#define nssv_CONFIG_NO_EXCEPTIONS 1`.
+
 ### Standard selection macro
 
 \-D<b>nssv\_CPLUSPLUS</b>=199711L  
