@@ -26,6 +26,8 @@
 #define nssv_STRING_VIEW_NONSTD   1
 #define nssv_STRING_VIEW_STD      2
 
+// tweak header support:
+
 #ifdef __has_include
 # if __has_include("nonstd/string_view.tweak.hpp")
 #  include "nonstd/string_view.tweak.hpp"
@@ -35,6 +37,8 @@
 #define nssv_HAVE_TWEAK_HEADER  0
 //# pragma message("string_view.hpp: Note: Tweak header not supported.")
 #endif
+
+// string_view selection and configuration:
 
 #if !defined( nssv_CONFIG_SELECT_STRING_VIEW )
 # define nssv_CONFIG_SELECT_STRING_VIEW  ( nssv_HAVE_STD_STRING_VIEW ? nssv_STRING_VIEW_STD : nssv_STRING_VIEW_NONSTD )
