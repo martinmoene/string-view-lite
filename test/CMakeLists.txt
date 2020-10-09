@@ -16,6 +16,7 @@ set( PACKAGE   ${unit_name}-lite )
 set( PROGRAM   ${unit_name}-lite )
 set( SOURCES   ${unit_name}-main.t.cpp ${unit_name}.t.cpp )
 set( HEADER    "nonstd/string_view.hpp" )
+set( TWEAKD    "." )
 
 message( STATUS "Subproject '${PROJECT_NAME}', programs '${PROGRAM}-*'")
 
@@ -139,6 +140,7 @@ function( make_target target std )
     message( STATUS "Make target: '${std}'" )
 
     add_executable            ( ${target} ${SOURCES} )
+    target_include_directories( ${target} PRIVATE ${TWEAKD} )
     target_link_libraries     ( ${target} PRIVATE ${PACKAGE} )
     target_compile_options    ( ${target} PRIVATE ${OPTIONS} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )

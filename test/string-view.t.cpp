@@ -1225,4 +1225,13 @@ CASE( "to_string_view(): convert from std::string via to_string_view() " "[exten
 #endif
 }
 
+CASE( "tweak header: reads tweak header if supported " "[tweak]" )
+{
+#if nssv_HAVE_TWEAK_HEADER
+    EXPECT( STRING_VIEW_TWEAK_VALUE == 42 );
+#else
+    EXPECT( !!"Tweak header is not available (nssv_HAVE_TWEAK_HEADER: 0)." );
+#endif
+}
+
 } // anonymous namespace
