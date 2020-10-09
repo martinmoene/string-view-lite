@@ -29,8 +29,8 @@
 // tweak header support:
 
 #ifdef __has_include
-# if __has_include("nonstd/string_view.tweak.hpp")
-#  include "nonstd/string_view.tweak.hpp"
+# if __has_include(<nonstd/string_view.tweak.hpp>)
+#  include <nonstd/string_view.tweak.hpp>
 # endif
 #define nssv_HAVE_TWEAK_HEADER  1
 #else
