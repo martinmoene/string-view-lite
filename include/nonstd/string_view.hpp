@@ -1265,7 +1265,8 @@ nssv_constexpr bool operator>=(
 
 #define nssv_BASIC_STRING_VIEW_I(T,U)  typename std::decay< basic_string_view<T,U> >::type
 
-#if nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 140, 150 )
+#if nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 140,  150 ) || \
+  ( nssv_BETWEEN( nssv_COMPILER_CLANG_VERSION,  1, 1200 ) && _MSC_VER ) // issue 40
 # define nssv_MSVC_ORDER(x)  , int=x
 #else
 # define nssv_MSVC_ORDER(x)  /*, int=x*/
