@@ -685,9 +685,9 @@ public:
 
     nssv_constexpr14 void swap( basic_string_view & other ) nssv_noexcept
     {
-        using std::swap;
-        swap( data_, other.data_ );
-        swap( size_, other.size_ );
+        const basic_string_view tmp(other);
+        other = *this;
+        *this = tmp;
     }
 
     // 24.4.2.6 String operations:
