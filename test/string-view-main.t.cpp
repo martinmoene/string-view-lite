@@ -70,7 +70,7 @@ CASE( "Compiler version" "[.compiler]" )
 CASE( "presence of C++ language features" "[.stdlanguage]" )
 {
 #if nssv_USES_STD_STRING_VIEW
-    std::cout << "(Compiler version not available: using std::string_view)\n";
+    std::cout << "( C++ language features not available: using std::string_view)\n";
 #else
     nssv_PRESENT( nssv_HAVE_CONSTEXPR_11 );
     nssv_PRESENT( nssv_HAVE_CONSTEXPR_14 );
@@ -90,7 +90,7 @@ CASE( "presence of C++ language features" "[.stdlanguage]" )
 CASE( "presence of C++ library features" "[.stdlibrary]" )
 {
 #if nssv_USES_STD_STRING_VIEW
-    std::cout << "(Compiler version not available: using std::string_view)\n";
+    std::cout << "(C++ library features not available: using std::string_view)\n";
 #else
     nssv_PRESENT( nssv_HAVE_STD_HASH );
 #endif
@@ -105,7 +105,7 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
 CASE( "usage of compiler intrinsics" "[.intrinsics]" )
 {
 #if nssv_USES_STD_STRING_VIEW
-    std::cout << "(Compiler version not available: using std::string_view)\n";
+    std::cout << "(Compiler intrinsics not available: using std::string_view)\n";
 #else
     nssv_PRESENT( nssv_HAVE_BUILTIN_VER    );
     nssv_PRESENT( nssv_HAVE_BUILTIN_CE     );
