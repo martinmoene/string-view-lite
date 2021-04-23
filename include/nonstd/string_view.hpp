@@ -408,7 +408,9 @@ using std::operator<<;
 #include <cassert>
 #include <iterator>
 #include <limits>
-#include <ostream>
+#if !defined(nssv_NO_STREAM)
+#include<ostream>
+#endif //nssv_NO_STREAM
 #include <string>   // std::char_traits<>
 
 #if ! nssv_CONFIG_NO_EXCEPTIONS
@@ -1357,6 +1359,7 @@ nssv_constexpr bool operator>= (
 
 #endif // compiler-dependent approach to comparisons
 
+#if !defined(nssv_NO_STREAM)
 // 24.4.4 Inserters and extractors:
 
 namespace detail {
@@ -1407,7 +1410,7 @@ operator<<(
 {
     return detail::write_to_stream( os, sv );
 }
-
+#endif // nssv_NO_STREAM
 // Several typedefs for common character types are provided:
 
 typedef basic_string_view<char>      string_view;
@@ -1556,7 +1559,9 @@ using sv_lite::operator<=;
 using sv_lite::operator>;
 using sv_lite::operator>=;
 
+#if !defined(nssv_NO_STREAM)
 using sv_lite::operator<<;
+#endif // nssv_NO_STREAM
 
 #if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 using sv_lite::to_string;
