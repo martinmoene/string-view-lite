@@ -1060,6 +1060,7 @@ CASE( "string_view: Allows to compare empty string_view-s as equal via compare()
 
 CASE ( "operator<<: Allows printing a string_view to an output stream" )
 {
+#if !defined(nssv_CONFIG_NO_STREAM_INSERTION)
     std::ostringstream oss;
     char s[] = "hello";
     string_view sv( s );
@@ -1070,6 +1071,9 @@ CASE ( "operator<<: Allows printing a string_view to an output stream" )
         << std::setfill('.') << std::left << std::setw(10) << sv;
 
     EXPECT( oss.str() == "hello\n     hello\nhello\nhello....." );
+#else
+    EXPECT( !!"standard streams are not available (nssv_CONFIG_NO_STREAM_INSERTION is defined)" );
+#endif
 }
 
 // 24.4.5 Hash support (C++11):

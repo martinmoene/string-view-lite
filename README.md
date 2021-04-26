@@ -196,6 +196,16 @@ Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoper
 -D<b>nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS</b>=1  
 Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via free functions, define it to 0 to omit all said functions. This also controls the presence of these function if `std::string_view` is used. Default is undefined.
 
+### Omit use of streams
+
+At defaults, *string-view lite* provides operations to overload the
+`operator<<`.
+If you want to use the library without the use of standard streams,
+you can control this withtThe following macro:
+
+-D<b>nssv_CONFIG_NO_STREAM_INSERTION</b>=1
+Define this to 1 to omit the use of standard streams. Default is undefined
+
 ## Reported to work with
 
 The table below mentions the compiler versions *string-view lite* is reported to work with.
