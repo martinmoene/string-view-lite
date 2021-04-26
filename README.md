@@ -118,37 +118,37 @@ The literal operators are declared in the namespace `nonstd::literals::string_vi
 
 *string-view lite* can provide several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` that exists in C++17. See the table below. Several macros allow you to control the presence of these functions, see section [Configuration](#configuration).
 
-| Kind                                           | Std     | Function or method                                                                                                                                                                                                                       |
-| ---------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Free functions**                             | &nbsp;  | macro `nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS`                                                                                                                                                                                 |
-| **`std::string_view`**                         | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| to_string()                                    | >=C++17 | template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() ); |
-| to_string_view()                               | >=C++17 | template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );                                                 |
-| **`nonstd::string_view`**                      | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| to_string()<br>&nbsp;<br>*non-msvc14 (vs2015)* | >=C++11 | template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );     |
-| to_string()<br>&nbsp;<br>*msvc14 (vs2015)*     | <C++11  | template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );                                                                                               |
-| to_string()<br>&nbsp;<br>*msvc14 (vs2015)*     | <C++11  | template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a );                                              |
-| to_string_view()                               | >=C++98 | template&lt; class CharT, class Traits, class Allocator ><br>basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );                                                      |
-| &nbsp;                                         | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| **Class methods**                              | &nbsp;  | macro `nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS`                                                                                                                                                                                  |
-| **`nonstd::basic_string_view`**                | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| Constructor                                    | >=C++98 | template&lt; class Allocator ><br>**basic_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s ) nssv_noexcept;                                                                                                       |
-| Converting operator                            | >=C++11 | template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;                                                                                                                          |
-| to_string()                                    | >=C++11 | template&lt; class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a = Allocator() ) const;                                                                 |
-| to_string()                                    | <C++11  | std::basic_string&lt;CharT, Traits><br>**to_string**() const;                                                                                                                                                                            |
-| to_string()                                    | <C++11  | template&lt; class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a ) const;                                                                                                          |
-| &nbsp;                                         | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| **Literal operator `sv`**                      | >=C++11 | macro `nssv_CONFIG_STD_SV_OPERATOR`                                                                                                                                                                                                      |
-| &nbsp;                                         | &nbsp;  | constexpr string_view operator "" **sv**( const char* str, size_t len ) noexcept;                                                                                                                                                        |
-| &nbsp;                                         | &nbsp;  | constexpr u16string_view operator "" **sv**( const char16_t* str, size_t len ) noexcept;                                                                                                                                                 |
-| &nbsp;                                         | &nbsp;  | constexpr u32string_view operator "" **sv**( const char32_t* str, size_t len ) noexcept;                                                                                                                                                 |
-| &nbsp;                                         | &nbsp;  | constexpr wstring_view operator "" **sv**( const wchar_t* str, size_t len ) noexcept;                                                                                                                                                    |
-| &nbsp;                                         | &nbsp;  | &nbsp;                                                                                                                                                                                                                                   |
-| **Literal operator `_sv`**                     | >=C++11 | macro `nssv_CONFIG_USR_SV_OPERATOR`                                                                                                                                                                                                      |
-| &nbsp;                                         | &nbsp;  | constexpr string_view operator "" **_sv**( const char* str, size_t len ) noexcept;                                                                                                                                                       |
-| &nbsp;                                         | &nbsp;  | constexpr u16string_view operator "" **_sv**( const char16_t* str, size_t len ) noexcept;                                                                                                                                                |
-| &nbsp;                                         | &nbsp;  | constexpr u32string_view operator "" **_sv**( const char32_t* str, size_t len ) noexcept;                                                                                                                                                |
-| &nbsp;                                         | &nbsp;  | constexpr wstring_view operator "" **_sv**( const wchar_t* str, size_t len ) noexcept;                                                                                                                                                   |
+| Kind                  | Std   | Function or method |
+|-----------------------|-------|--------------------|
+| **Free functions**    |&nbsp; | macro `nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS`|
+| **`std::string_view`**|&nbsp; | &nbsp; |
+| to_string()           |>=C++17| template&lt; class CharT, class Traits, class Allocator=std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator&gt;<br>**to_string**( std::basic_string_view&lt;CharT, Traits> v, Allocator const & a=Allocator() );|
+| to_string_view()      |>=C++17| template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
+| **`nonstd::string_view`**|&nbsp; | &nbsp;  |
+| to_string()<br>&nbsp;<br>*non-msvc14 (vs2015)* |>=C++11| template&lt; class CharT, class Traits, class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a = Allocator() );|
+| to_string()<br>&nbsp;<br>*msvc14 (vs2015)* |<C++11|template&lt; class CharT, class Traits ><br>std::basic_string&lt;CharT, Traits><br>**to_string**( basic_string_view&lt;CharT, Traits> v );|
+| to_string()<br>&nbsp;<br>*msvc14 (vs2015)* |<C++11|template&lt; class CharT, class Traits, class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( basic_string_view&lt;CharT, Traits> v, Allocator const & a );|
+| to_string_view()      |>=C++98| template&lt; class CharT, class Traits, class Allocator ><br>basic_string_view&lt;CharT, Traits><br>**to_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s );|
+| &nbsp;                |&nbsp; | &nbsp; |
+| **Class methods**     |&nbsp; | macro `nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS` |
+| **`nonstd::basic_string_view`**|&nbsp; |&nbsp; |
+| Constructor           |>=C++98| template&lt; class Allocator ><br>**basic_string_view**( std::basic_string&lt;CharT, Traits, Allocator> const & s ) nssv_noexcept;|
+| Converting operator   |>=C++11| template&lt; class Allocator ><br>explicit **operator std::basic_string**&lt;CharT, Traits, Allocator>() const;|
+| to_string()           |>=C++11| template&lt; class Allocator = std::allocator&lt;CharT> ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a = Allocator() ) const;|
+| to_string()           |<C++11 | std::basic_string&lt;CharT, Traits><br>**to_string**() const;|
+| to_string()           |<C++11 | template&lt; class Allocator ><br>std::basic_string&lt;CharT, Traits, Allocator><br>**to_string**( Allocator const & a ) const;|
+| &nbsp;                |&nbsp; | &nbsp; |
+| **Literal operator `sv`**|>=C++11| macro `nssv_CONFIG_STD_SV_OPERATOR` |
+| &nbsp;                |&nbsp; | constexpr string_view operator "" **sv**( const char* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr u16string_view operator "" **sv**( const char16_t* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr u32string_view operator "" **sv**( const char32_t* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr wstring_view operator "" **sv**( const wchar_t* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | &nbsp; |
+| **Literal operator `_sv`**|>=C++11| macro `nssv_CONFIG_USR_SV_OPERATOR` |
+| &nbsp;                |&nbsp; | constexpr string_view operator "" **_sv**( const char* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr u16string_view operator "" **_sv**( const char16_t* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr u32string_view operator "" **_sv**( const char32_t* str, size_t len ) noexcept; |
+| &nbsp;                |&nbsp; | constexpr wstring_view operator "" **_sv**( const wchar_t* str, size_t len ) noexcept; |
 
 ## Configuration
 
@@ -210,14 +210,14 @@ Define this to 1 to omit the use of standard streams. Default is undefined
 
 The table below mentions the compiler versions *string-view lite* is reported to work with.
 
-|        OS | Compiler                      | Versions                                                                     |
-| --------: | :---------------------------- | :--------------------------------------------------------------------------- |
-|   Windows | Clang/LLVM                    | ?                                                                            |
-|    &nbsp; | GCC                           | 7.2.0                                                                        |
-|    &nbsp; | Visual C++<br>(Visual Studio) | 8 (2005), 9 (2008), 10 (2010), 11 (2012),<br>12 (2013), 14 (2015), 15 (2017) |
-| GNU/Linux | Clang/LLVM                    | 3.5 - 6.0                                                                    |
-|    &nbsp; | GCC                           | 4.8 - 8                                                                      |
-|      OS X | Clang/LLVM                    | Xcode 6, Xcode 7, Xcode 8, Xcode 9                                           |
+OS        | Compiler   | Versions |
+---------:|:-----------|:---------|
+Windows   | Clang/LLVM | ?        |
+&nbsp;    | GCC        | 7.2.0    |
+&nbsp;    | Visual C++<br>(Visual Studio)| 8 (2005), 9 (2008), 10 (2010), 11 (2012),<br>12 (2013), 14 (2015), 15 (2017) |
+GNU/Linux | Clang/LLVM | 3.5 - 6.0  |
+&nbsp;    | GCC        | 4.8 - 8 |
+OS X      | Clang/LLVM | Xcode 6, Xcode 7, Xcode 8, Xcode 9 |
 
 ## Building the tests
 
