@@ -31,6 +31,13 @@ set msvc_defines=^
     -D_CRT_SECURE_NO_WARNINGS ^
     -D_SCL_SECURE_NO_WARNINGS
 
+::    -Dnssv_CONFIG_NO_EXCEPTIONS=1
+::    -Dnssv_CONFIG_STD_SV_OPERATOR=1
+::    -Dnssv_CONFIG_CONVERSION_STD_STRING=1
+::    -Dnssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS=1
+::    -Dnssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS=1
+::    -Dnssv_CONFIG_NO_STREAM_INSERTION=1
+
 set CppCoreCheckInclude=%VCINSTALLDIR%\Auxiliary\VS\include
 
 cl -W3 -EHsc %std% %unit_select% %unit_config% %msvc_defines% -I"%CppCoreCheckInclude%" -I../include -I. %unit_file%-main.t.cpp %unit_file%.t.cpp && %unit_file%-main.t.exe
