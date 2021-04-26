@@ -41,6 +41,7 @@ CASE( "string-view-lite configuration" "[.string-view][.config]" )
 //  nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING );
     nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS );
     nssv_PRESENT( nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS );
+    nssv_PRESENT( nssv_CONFIG_NO_STREAM_INSERTION );
     nssv_PRESENT( nssv_CONFIG_NO_EXCEPTIONS );
     nssv_PRESENT( nssv_CPLUSPLUS );
 }
