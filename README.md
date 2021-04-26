@@ -2,7 +2,7 @@
 
 [![Language](https://img.shields.io/badge/C%2B%2B-98/11/14/17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![License](https://img.shields.io/badge/license-BSL-blue.svg)](https://opensource.org/licenses/BSL-1.0) [![Build Status](https://travis-ci.org/martinmoene/string-view-lite.svg?branch=master)](https://travis-ci.org/martinmoene/string-view-lite) [![Build status](https://ci.appveyor.com/api/projects/status/1ha3wnxtam547m8p?svg=true)](https://ci.appveyor.com/project/martinmoene/string-view-lite) [![Version](https://badge.fury.io/gh/martinmoene%2Fstring-view-lite.svg)](https://github.com/martinmoene/string-view-lite/releases) [![download](https://img.shields.io/badge/latest-download-blue.svg)](https://github.com/martinmoene/string-view-lite/blob/master/include/nonstd/string_view.hpp) [![Conan](https://img.shields.io/badge/on-conan-blue.svg)](https://bintray.com/conan/conan-center/string-view-lite%3A_) [![Try it on wandbox](https://img.shields.io/badge/on-wandbox-blue.svg)](https://wandbox.org/permlink/ZfX49QqynfuQikTX) [![Try it on godbolt online](https://img.shields.io/badge/on-godbolt-blue.svg)](https://godbolt.org/z/YtxnAn)
 
-**Contents**
+**Contents**  
 
 - [Example usage](#example-usage)
 - [In a nutshell](#in-a-nutshell)
@@ -82,15 +82,15 @@ Or, if you use the [conan package manager](https://www.conan.io/), follow these 
 
 ## Synopsis
 
-**Contents**
-[Documentation of `std::string_view`](#stdstring_view)
-[C++20 extensions](#c20-extensions)
-[Non-standard extensions](#non-standard-extensions)
-[Configuration](#configuration)
+**Contents**  
+[Documentation of `std::string_view`](#stdstring_view)  
+[C++20 extensions](#c20-extensions)  
+[Non-standard extensions](#non-standard-extensions)  
+[Configuration](#configuration)    
 
 ## Documentation of `std::string_view`
 
-Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string-view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).
+Depending on the compiler and C++-standard used, `nonstd::string_view` behaves less or more like `std::string_view`. To get an idea of the capabilities of `nonstd::string_view` with your configuration, look at the output of the [tests](test/string-view.t.cpp), issuing `string-view-lite.t --pass @`. For `std::string_view`, see its [documentation at cppreference](http://en.cppreference.com/w/cpp/string/basic_string_view).  
 
 ## C++20 extensions
 
@@ -158,14 +158,14 @@ If the compiler supports [`__has_include()`](https://en.cppreference.com/w/cpp/p
 
 ### Standard selection macro
 
-\-D<b>nssv\_CPLUSPLUS</b>=199711L
+\-D<b>nssv\_CPLUSPLUS</b>=199711L  
 Define this macro to override the auto-detection of the supported C++ standard, if your compiler does not set the `__cpluplus` macro correctly.
 
 ### Select `std::string_view` or `nonstd::string_view`
 
 At default, *string-view lite* uses `std::string_view` if it is available and lets you use it via namespace `nonstd`. You can however override this default and explicitly request to use `std::string_view` as `nonstd::string_view` or use string-view lite's `nonstd::string_view` via the following macros.
 
--D<b>nssv\_CONFIG\_SELECT\_STRING_VIEW</b>=nssv_STRING_VIEW_DEFAULT
+-D<b>nssv\_CONFIG\_SELECT\_STRING_VIEW</b>=nssv_STRING_VIEW_DEFAULT  
 Define this to `nssv_STRING_VIEW_STD` to select `std::string_view` as `nonstd::string_view`. Define this to `nssv_STRING_VIEW_NONSTD` to select `nonstd::string_view` as `nonstd::string_view`. Default is undefined, which has the same effect as defining to `nssv_STRING_VIEW_DEFAULT`.
 
 Note: <b>nssv_CONFIG_SELECT_STD_STRING_VIEW</b> and <b>nssv_CONFIG_SELECT_NONSTD_STRING_VIEW</b> are deprecated and have been removed.
@@ -177,23 +177,23 @@ Define this to 1 if you want to compile without exceptions. If not defined, the 
 
 ### Add or omit literal operators `sv` and `_sv`
 
--D<b>nssv_CONFIG_STD_SV_OPERATOR</b>=1
+-D<b>nssv_CONFIG_STD_SV_OPERATOR</b>=1  
 Define this to 1 to provide literal operator `sv` to create a `string_view` from a literal string. Default is 0. Note that literal operators without leading underscore are reserved for the C++ standard.
 
--D<b>nssv_CONFIG_USR_SV_OPERATOR</b>=0
+-D<b>nssv_CONFIG_USR_SV_OPERATOR</b>=0  
 Define this to 0 to omit literal operator `_sv` to create a `string_view` from a literal string. Default is 1.
 
 ### Omit cooperation between `std::string`&ndash;`nonstd::string_view`
 
 At default, *string-view lite* provides several methods and free functions to mimic the cooperation between `std::string` and  `nonstd::string_view` (or `std::string_view`) that exists in C++17. See section [Non-standard extensions](#non-standard-extensions). The following macros allow you to control the presence of these functions.
-
--D<b>nssv_CONFIG_CONVERSION_STD_STRING</b>=1
+ 
+-D<b>nssv_CONFIG_CONVERSION_STD_STRING</b>=1  
 Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via methods of `nonstd::basic_string_view` and free functions, define it to 0 to omit all said methods and functions. Default is undefined.
 
--D<b>nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS</b>=1
+-D<b>nssv_CONFIG_CONVERSION_STD_STRING_CLASS_METHODS</b>=1  
 Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via methods of `nonstd::basic_string_view`, define it to 0 to omit all said methods. Default is undefined.
 
--D<b>nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS</b>=1
+-D<b>nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS</b>=1  
 Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoperability via free functions, define it to 0 to omit all said functions. This also controls the presence of these function if `std::string_view` is used. Default is undefined.
 
 ### Omit use of streams
@@ -241,11 +241,11 @@ Here we use c:\string-view-lite\build-win-x86-vc10.
 
         cmake -G "Visual Studio 10 2010" -DSTRING_VIEW_LITE_OPT_BUILD_TESTS=ON ..
 
-3. Build the test suite in the Debug configuration (alternatively use Release).
+3. Build the test suite in the Debug configuration (alternatively use Release).    
 
         cmake --build . --config Debug
 
-4. Run the test suite.
+4. Run the test suite.    
 
         ctest -V -C Debug
 
