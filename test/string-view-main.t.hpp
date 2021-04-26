@@ -42,7 +42,9 @@
 
 namespace lest {
 
+#if ! nssv_CONFIG_NO_STREAM_INSERTION
 using ::nonstd::operator<<;
+#endif
 
 } // namespace lest
 

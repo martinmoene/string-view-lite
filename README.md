@@ -198,12 +198,9 @@ Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoper
 
 ### Omit use of streams
 
-At defaults, *string-view lite* provides operations to overload the
-`operator<<`.
-If you want to use the library without the use of standard streams,
-you can control this withtThe following macro:
+At default, *string-view lite* provides operations to overload the `operator<<`. If you want to use the library without the use of standard streams,you can control this with the following macro:
 
--D<b>nssv_CONFIG_NO_STREAM_INSERTION</b>=1
+-D<b>nssv_CONFIG_NO_STREAM_INSERTION</b>=1  
 Define this to 1 to omit the use of standard streams. Default is undefined
 
 ## Reported to work with

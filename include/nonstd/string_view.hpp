@@ -69,6 +69,10 @@
 # define nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS  1
 #endif
 
+#ifndef  nssv_CONFIG_NO_STREAM_INSERTION
+# define nssv_CONFIG_NO_STREAM_INSERTION  0
+#endif
+
 // Control presence of exception handling (try and auto discover):
 
 #ifndef nssv_CONFIG_NO_EXCEPTIONS
@@ -411,10 +415,11 @@ using std::operator<<;
 #include <cassert>
 #include <iterator>
 #include <limits>
-#if !defined(nssv_CONFIG_NO_STREAM_INSERTION)
-#include<ostream>
-#endif //nssv_CONFIG_NO_STREAM_INSERTION
 #include <string>   // std::char_traits<>
+
+#if ! nssv_CONFIG_NO_STREAM_INSERTION
+# include <ostream>
+#endif
 
 #if ! nssv_CONFIG_NO_EXCEPTIONS
 # include <stdexcept>
@@ -1362,8 +1367,9 @@ nssv_constexpr bool operator>= (
 
 #endif // compiler-dependent approach to comparisons
 
-#if !defined(nssv_CONFIG_NO_STREAM_INSERTION)
 // 24.4.4 Inserters and extractors:
+
+#if ! nssv_CONFIG_NO_STREAM_INSERTION
 
 namespace detail {
 
@@ -1413,7 +1419,9 @@ operator<<(
 {
     return detail::write_to_stream( os, sv );
 }
+
 #endif // nssv_CONFIG_NO_STREAM_INSERTION
+
 // Several typedefs for common character types are provided:
 
 typedef basic_string_view<char>      string_view;
@@ -1562,9 +1570,9 @@ using sv_lite::operator<=;
 using sv_lite::operator>;
 using sv_lite::operator>=;
 
-#if !defined(nssv_CONFIG_NO_STREAM_INSERTION)
+#if ! nssv_CONFIG_NO_STREAM_INSERTION
 using sv_lite::operator<<;
-#endif // nssv_CONFIG_NO_STREAM_INSERTION
+#endif
 
 #if nssv_CONFIG_CONVERSION_STD_STRING_FREE_FUNCTIONS
 using sv_lite::to_string;

@@ -1060,7 +1060,7 @@ CASE( "string_view: Allows to compare empty string_view-s as equal via compare()
 
 CASE ( "operator<<: Allows printing a string_view to an output stream" )
 {
-#if !defined(nssv_CONFIG_NO_STREAM_INSERTION)
+#if ! nssv_CONFIG_NO_STREAM_INSERTION
     std::ostringstream oss;
     char s[] = "hello";
     string_view sv( s );
