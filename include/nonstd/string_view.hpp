@@ -319,7 +319,7 @@ using std::operator<<;
 // Providing char-type specializations for compare() and length() that
 // use compiler intrinsics can improve compile- and run-time performance.
 //
-// The challenge is in using the right combinations of builtin availablity
+// The challenge is in using the right combinations of builtin availability
 // and its constexpr-ness.
 //
 // | compiler | __builtin_memcmp (constexpr) | memcmp  (constexpr) |
@@ -1106,7 +1106,7 @@ nssv_constexpr bool operator>= (
 
 #if ! nssv_CPP11_OR_GREATER || nssv_BETWEEN( nssv_COMPILER_MSVC_VERSION, 100, 141 )
 
-// accomodate for older compilers:
+// accommodate for older compilers:
 
 // ==
 
