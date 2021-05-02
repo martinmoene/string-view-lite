@@ -251,7 +251,7 @@ All tests should pass, indicating your platform is supported and you are ready t
 ## Other implementations of string_view
 
 - Marshall Clow. [string_view implementation for libc++](https://github.com/mclow/string_view). GitHub.
-- LLVM libc++. [string_view](https://llvm.org/svn/llvm-project/libcxx/trunk/include/string_view). GitHub.
+- LLVM libc++. [string_view](https://github.com/llvm/llvm-project/blob/main/libcxx/include/string_view). GitHub.
 - Matthew Rodusek's, @bitwizeshift. [string_view Standalone](https://github.com/bitwizeshift/string_view-standalone). GitHub.
 - @satoren. [string_view for C++03 C++11 C++14](https://github.com/satoren/string_view). GitHub.
 - Google Abseil [string_view](https://github.com/abseil/abseil-cpp/tree/master/absl/strings) (non-templated).
