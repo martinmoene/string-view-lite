@@ -1139,12 +1139,12 @@ nssv_constexpr bool operator==(
 template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
     basic_string_view<CharT, Traits> lhs,
-    char const * rhs ) nssv_noexcept
+    CharT const * rhs ) nssv_noexcept
 { return !( lhs == rhs ); }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator!=(
-    char const * lhs,
+    CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
 { return !( lhs == rhs ); }
 
@@ -1165,12 +1165,12 @@ nssv_constexpr bool operator!=(
 template< class CharT, class Traits>
 nssv_constexpr bool operator<(
     basic_string_view<CharT, Traits> lhs,
-    char const * rhs ) nssv_noexcept
+    CharT const * rhs ) nssv_noexcept
 { return lhs.compare( rhs ) < 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator<(
-    char const * lhs,
+    CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
 { return rhs.compare( lhs ) > 0; }
 
@@ -1191,12 +1191,12 @@ nssv_constexpr bool operator<(
 template< class CharT, class Traits>
 nssv_constexpr bool operator<=(
     basic_string_view<CharT, Traits> lhs,
-    char const * rhs ) nssv_noexcept
+    CharT const * rhs ) nssv_noexcept
 { return lhs.compare( rhs ) <= 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator<=(
-    char const * lhs,
+    CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
 { return rhs.compare( lhs ) >= 0; }
 
@@ -1217,12 +1217,12 @@ nssv_constexpr bool operator<=(
 template< class CharT, class Traits>
 nssv_constexpr bool operator>(
     basic_string_view<CharT, Traits> lhs,
-    char const * rhs ) nssv_noexcept
+    CharT const * rhs ) nssv_noexcept
 { return lhs.compare( rhs ) > 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator>(
-    char const * lhs,
+    CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
 { return rhs.compare( lhs ) < 0; }
 
@@ -1243,12 +1243,12 @@ nssv_constexpr bool operator>(
 template< class CharT, class Traits>
 nssv_constexpr bool operator>=(
     basic_string_view<CharT, Traits> lhs,
-    char const * rhs ) nssv_noexcept
+    CharT const * rhs ) nssv_noexcept
 { return lhs.compare( rhs ) >= 0; }
 
 template< class CharT, class Traits>
 nssv_constexpr bool operator>=(
-    char const * lhs,
+    CharT const * lhs,
     basic_string_view<CharT, Traits> rhs ) nssv_noexcept
 { return rhs.compare( lhs ) <= 0; }
 
