@@ -96,7 +96,7 @@ CASE( "presence of C++ library features" "[.stdlibrary]" )
     nssv_PRESENT( nssv_HAVE_STD_HASH );
 #endif
 
-#if _HAS_CPP0X
+#ifdef _HAS_CPP0X
     nssv_PRESENT( _HAS_CPP0X );
 #else
     nssv_ABSENT(  _HAS_CPP0X );
