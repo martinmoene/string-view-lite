@@ -3,8 +3,9 @@
 :: tc-cl.bat - compile & run tests (clang-cl).
 ::
 
-set      unit=string-view
-set unit_file=%unit%
+set      unit=string_view
+set unit_file=string-view
+set unit_prfx=nssv
 
 :: if no std is given, use c++14
 
@@ -14,8 +15,8 @@ if NOT "%1" == "" set std=%1 & shift
 set UCAP=%unit%
 call :toupper UCAP
 
-set unit_select=%unit%_%UCAP%_NONSTD
-::set unit_select=%unit%_CONFIG_SELECT_%UCAP%_NONSTD
+set unit_select=%unit_prfx%_%UCAP%_NONSTD
+::set unit_select=%unit_prfx%_CONFIG_SELECT_%UCAP%_NONSTD
 if NOT "%1" == "" set unit_select=%1 & shift
 
 set args=%1 %2 %3 %4 %5 %6 %7 %8 %9
@@ -26,7 +27,7 @@ call :CompilerVersion version
 echo %clang% %version%: %std% %unit_select% %args%
 
 set unit_config=^
-    -D%unit%_%UCAP%_HEADER=\"nonstd/%unit%.hpp\" ^
+    -D%unit_prfx%_%UCAP%_HEADER=\"nonstd/%unit%.hpp\" ^
     -D%unit%_TEST_NODISCARD=0 ^
     -D%unit%_CONFIG_SELECT_%UCAP%=%unit_select%
 
