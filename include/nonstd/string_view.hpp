@@ -1381,7 +1381,7 @@ Stream & write_to_stream( Stream & os, View const & sv )
 {
     typename Stream::sentry sentry( os );
 
-    if ( !os )
+    if ( !sentry )
         return os;
 
     const std::streamsize length = static_cast<std::streamsize>( sv.length() );
