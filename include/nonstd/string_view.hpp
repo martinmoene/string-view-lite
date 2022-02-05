@@ -607,7 +607,7 @@ public:
 #endif
     {}
 
-#if nssv_CPP11_OR_GREATER
+#if nssv_HAVE_NULLPTR
     nssv_constexpr basic_string_view( std::nullptr_t ) nssv_noexcept = delete;
 #endif
 

@@ -85,7 +85,7 @@ CASE( "string_view: Allows to copy-construct from non-empty string_view" )
 CASE( "string_view: Disallows to copy-construct from nullptr (C++11)" )
 {
 #if nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS
-#if nssv_CPP11_OR_GREATER
+#if nssv_HAVE_NULLPTR
     string_view sv( nullptr );
 
     EXPECT( true );
@@ -102,7 +102,7 @@ CASE( "string_view: Disallows to copy-construct from nullptr (C++11)" )
 CASE( "string_view: Disallows to copy-assign from nullptr (C++11)" )
 {
 #if nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS
-#if nssv_CPP11_OR_GREATER
+#if nssv_HAVE_NULLPTR
     string_view sv;
 
     sv = nullptr;
