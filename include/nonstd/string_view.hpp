@@ -607,6 +607,10 @@ public:
 #endif
     {}
 
+#if nssv_CPP11_OR_GREATER
+    nssv_constexpr basic_string_view( std::nullptr_t ) nssv_noexcept = delete;
+#endif
+
     // Assignment:
 
 #if nssv_CPP11_OR_GREATER

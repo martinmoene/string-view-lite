@@ -8,6 +8,10 @@
 #include "string-view-main.t.hpp"
 #include <vector>
 
+#ifndef  nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS
+# define nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS  0
+#endif
+
 namespace {
 
 using namespace nonstd;
@@ -78,7 +82,39 @@ CASE( "string_view: Allows to copy-construct from non-empty string_view" )
     EXPECT( *(sv2.data() + 4) == 'o'         );
 }
 
+CASE( "string_view: Disallows to copy-construct from nullptr (C++11)" )
+{
+#if nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS
+#if nssv_CPP11_OR_GREATER
+    string_view sv( nullptr );
+
+    EXPECT( true );
+#else
+    EXPECT( !!"nullptr not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"Compile-time verification not enabled (nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS: 0)." );
+#endif
+}
+
 // Assignment:
+
+CASE( "string_view: Disallows to copy-assign from nullptr (C++11)" )
+{
+#if nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS
+#if nssv_CPP11_OR_GREATER
+    string_view sv;
+
+    sv = nullptr;
+
+    EXPECT( true );
+#else
+    EXPECT( !!"nullptr not available (no C++11)." );
+#endif
+#else
+    EXPECT( !!"Compile-time verification not enabled (nssv_CONFIG_CONFIRMS_COMPILATION_ERRORS: 0)." );
+#endif
+}
 
 CASE( "string_view: Allows to copy-assign from empty string_view" )
 {

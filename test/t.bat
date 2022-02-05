@@ -25,6 +25,7 @@ set unit_select=-D%unit_prfx%_CONFIG_SELECT_%UCAP%=%unit_prfx%_%UCAP%_DEFAULT
 set unit_config=^
     -Dnssv_CONFIG_STD_SV_OPERATOR=1 ^
     -Dnssv_CONFIG_USR_SV_OPERATOR=1 ^
+    -Dnssv_CONFIG_CONFIRMS_COMPILATION_ERRORS=0 ^
     -Dnssv_STRING_VIEW_HEADER=\"nonstd/string_view.hpp\"
 
 set msvc_defines=^

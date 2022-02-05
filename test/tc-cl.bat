@@ -29,7 +29,8 @@ echo %clang% %version%: %std% %unit_select% %args%
 set unit_config=^
     -D%unit_prfx%_%UCAP%_HEADER=\"nonstd/%unit%.hpp\" ^
     -D%unit%_TEST_NODISCARD=0 ^
-    -D%unit%_CONFIG_SELECT_%UCAP%=%unit_select%
+    -D%unit%_CONFIG_SELECT_%UCAP%=%unit_select% ^
+    -Dnssv_CONFIG_CONFIRMS_COMPILATION_ERRORS=0
 
 rem -flto / -fwhole-program
 set  optflags=-O2

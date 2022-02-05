@@ -203,6 +203,11 @@ At default, *string-view lite* provides operations to overload the `operator<<`.
 -D<b>nssv_CONFIG_NO_STREAM_INSERTION</b>=1  
 Define this to 1 to omit the use of standard streams. Default is undefined
 
+### Enable compilation errors
+
+\-D<b>nssv\_CONFIG\_CONFIRMS\_COMPILATION\_ERRORS</b>=0  
+Define this macro to 1 to experience the by-design compile-time errors of the library in the test suite. Default is 0.
+
 ## Reported to work with
 
 The table below mentions the compiler versions *string-view lite* is reported to work with.
@@ -291,12 +296,18 @@ The version of *string-view lite* is available via tag `[.version]`. The followi
 
 ### A.2 string-view lite test specification
 
+<details>
+<summary>click to expand</summary>
+<p>
+
 ```Text
 string_view: Allows to default construct an empty string_view
 string_view: Allows to construct from pointer and size
 string_view: Allows to construct from C-string
 string_view: Allows to copy-construct from empty string_view
 string_view: Allows to copy-construct from non-empty string_view
+string_view: Disallows to copy-construct from nullptr (C++11)
+string_view: Disallows to copy-assign from nullptr (C++11)
 string_view: Allows to copy-assign from empty string_view
 string_view: Allows to copy-assign from non-empty string_view
 string_view: Allows forward iteration
@@ -380,3 +391,6 @@ to_string(): convert to std::string via to_string() [extension]
 to_string_view(): convert from std::string via to_string_view() [extension]
 tweak header: reads tweak header if supported [tweak]
 ```
+
+</p>
+</details>
