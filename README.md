@@ -281,6 +281,7 @@ All tests should pass, indicating your platform is supported and you are ready t
 - Marshall Clow. [p0403 - Literal suffixes for basic_string_view](http://wg21.link/p0403). 2016.
 - Peter Sommerlad. [p0506 - use string_view for library function parameters instead of const string &/const char *](http://wg21.link/p0506). 2017.
 - Daniel Krugler. [wg2946 - LWG 2758's resolution missed further corrections](https://wg21.link/lwg2946). 2017.
+- Yuriy Chernyshov. [p2166 - A Proposal to Prohibit std::basic_string and std::basic_string_view construction from nullptr](https://wg21.link/p2166). 2020.
 
 ## Appendix
 
