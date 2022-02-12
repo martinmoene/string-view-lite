@@ -288,6 +288,8 @@ using std::operator<<;
 #define nssv_HAVE_CONSTEXPR_11          nssv_CPP11_140
 #define nssv_HAVE_EXPLICIT_CONVERSION   nssv_CPP11_140
 #define nssv_HAVE_INLINE_NAMESPACE      nssv_CPP11_140
+#define nssv_HAVE_IS_DEFAULT            nssv_CPP11_140
+#define nssv_HAVE_IS_DELETE             nssv_CPP11_140
 #define nssv_HAVE_NOEXCEPT              nssv_CPP11_140
 #define nssv_HAVE_NULLPTR               nssv_CPP11_100
 #define nssv_HAVE_REF_QUALIFIER         nssv_CPP11_140
@@ -607,8 +609,12 @@ public:
 #endif
     {}
 
-#if nssv_HAVE_NULLPTR
+#if  nssv_HAVE_NULLPTR
+# if nssv_HAVE_IS_DELETE
     nssv_constexpr basic_string_view( std::nullptr_t ) nssv_noexcept = delete;
+# else
+    private: nssv_constexpr basic_string_view( std::nullptr_t ) nssv_noexcept; public:
+# endif
 #endif
 
     // Assignment:
