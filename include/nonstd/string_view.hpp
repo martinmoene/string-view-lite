@@ -545,6 +545,20 @@ template
 >
 class basic_string_view;
 
+#if nssv_CPP11_OR_GREATER && ! nssv_CPP17_OR_GREATER
+namespace detail {
+
+template <class CharT, class Traits = std::char_traits<CharT> >
+constexpr const CharT* search(basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle)
+{
+    return haystack.starts_with(needle) ? haystack.begin() :
+        haystack.empty() ? haystack.end() :
+        search(haystack.substr(1), needle);
+}
+
+} // namespace detail
+#endif
+
 //
 // basic_string_view:
 //
@@ -570,7 +584,7 @@ public:
     typedef const_pointer iterator;
     typedef const_pointer const_iterator;
     typedef std::reverse_iterator< const_iterator > reverse_iterator;
-    typedef	std::reverse_iterator< const_iterator > const_reverse_iterator;
+    typedef std::reverse_iterator< const_iterator > const_reverse_iterator;
 
     typedef std::size_t     size_type;
     typedef std::ptrdiff_t  difference_type;
@@ -808,25 +822,30 @@ public:
 
     // find(), 4x:
 
-    nssv_constexpr14 size_type find( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
+    nssv_constexpr size_type find( basic_string_view v, size_type pos = 0 ) const nssv_noexcept  // (1)
     {
         return assert( v.size() == 0 || v.data() != nssv_nullptr )
             , pos >= size()
-            ? npos
-            : to_pos( std::search( cbegin() + pos, cend(), v.cbegin(), v.cend(), Traits::eq ) );
+            ? npos : to_pos(
+#if nssv_CPP11_OR_GREATER && ! nssv_CPP17_OR_GREATER
+                detail::search( substr(pos), v )
+#else
+                std::search( cbegin() + pos, cend(), v.cbegin(), v.cend(), Traits::eq )
+#endif
+            );
     }
 
-    nssv_constexpr14 size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
+    nssv_constexpr size_type find( CharT c, size_type pos = 0 ) const nssv_noexcept  // (2)
     {
         return find( basic_string_view( &c, 1 ), pos );
     }
 
-    nssv_constexpr14 size_type find( CharT const * s, size_type pos, size_type n ) const  // (3)
+    nssv_constexpr size_type find( CharT const * s, size_type pos, size_type n ) const  // (3)
     {
         return find( basic_string_view( s, n ), pos );
     }
 
-    nssv_constexpr14 size_type find( CharT const * s, size_type pos = 0 ) const  // (4)
+    nssv_constexpr size_type find( CharT const * s, size_type pos = 0 ) const  // (4)
     {
         return find( basic_string_view( s ), pos );
     }
