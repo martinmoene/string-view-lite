@@ -471,6 +471,17 @@ nssv_DISABLE_MSVC_WARNINGS( 4455 26481 26472 )
 
 namespace nonstd { namespace sv_lite {
 
+//
+// basic_string_view declaration:
+//
+
+template
+<
+    class CharT,
+    class Traits = std::char_traits<CharT>
+>
+class basic_string_view;
+
 namespace detail {
 
 // support constexpr comparison in C++14;
@@ -538,28 +549,33 @@ inline nssv_constexpr14 std::size_t length( CharT * s )
 
 #endif // OPTIMIZE
 
-} // namespace detail
-
-template
-<
-    class CharT,
-    class Traits = std::char_traits<CharT>
->
-class basic_string_view;
-
 #if nssv_CPP11_OR_GREATER && ! nssv_CPP17_OR_GREATER
-namespace detail {
+#if defined(__OPTIMIZE__)
 
-template <class CharT, class Traits = std::char_traits<CharT> >
-constexpr const CharT* search(basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle)
+// gcc, clang provide __OPTIMIZE__
+// Expect tail call optimization to make search() non-recursive:
+
+template< class CharT, class Traits = std::char_traits<CharT> >
+constexpr const CharT* search( basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle )
 {
-    return haystack.starts_with(needle) ? haystack.begin() :
-        haystack.empty() ? haystack.end() :
-        search(haystack.substr(1), needle);
+    return haystack.starts_with( needle ) ? haystack.begin() :
+        haystack.empty() ? haystack.end() : search( haystack.substr(1), needle );
 }
 
+#else // OPTIMIZE
+
+// non-recursive:
+
+template< class CharT, class Traits = std::char_traits<CharT> >
+constexpr const CharT* search( basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle )
+{
+    return std::search( haystack.begin(), haystack.end(), needle.begin(), needle.end() );
+}
+
+#endif // OPTIMIZE
+#endif // nssv_CPP11_OR_GREATER && ! nssv_CPP17_OR_GREATER
+
 } // namespace detail
-#endif
 
 //
 // basic_string_view:
