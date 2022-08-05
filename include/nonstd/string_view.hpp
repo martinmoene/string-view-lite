@@ -82,7 +82,7 @@
 # endif
 #endif
 
-// C++ language version detection (C++20 is speculative):
+// C++ language version detection (C++23 is speculative):
 // Note: VC14.0/1900 (VS2015) lacks too much from C++14.
 
 #ifndef   nssv_CPLUSPLUS
@@ -98,7 +98,8 @@
 #define nssv_CPP11_OR_GREATER_ ( nssv_CPLUSPLUS >= 201103L )
 #define nssv_CPP14_OR_GREATER  ( nssv_CPLUSPLUS >= 201402L )
 #define nssv_CPP17_OR_GREATER  ( nssv_CPLUSPLUS >= 201703L )
-#define nssv_CPP20_OR_GREATER  ( nssv_CPLUSPLUS >= 202000L )
+#define nssv_CPP20_OR_GREATER  ( nssv_CPLUSPLUS >= 202002L )
+#define nssv_CPP23_OR_GREATER  ( nssv_CPLUSPLUS >= 202300L )
 
 // use C++17 std::string_view if available and requested:
 
