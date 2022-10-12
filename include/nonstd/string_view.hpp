@@ -434,11 +434,9 @@ using std::operator<<;
 # pragma clang diagnostic ignored "-Wreserved-user-defined-literal"
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wuser-defined-literals"
-#elif defined(__GNUC__)
-# if (__GNUC__ * 100 + __GNUC_MINOR__) >= 408
+#elif nssv_COMPILER_GNUC_VERSION >= 480
 #  pragma  GCC  diagnostic push
 #  pragma  GCC  diagnostic ignored "-Wliteral-suffix"
-# endif
 #endif // __clang__
 
 #if nssv_COMPILER_MSVC_VERSION >= 140
@@ -453,12 +451,8 @@ using std::operator<<;
 
 #if defined(__clang__)
 # define nssv_RESTORE_WARNINGS()  _Pragma("clang diagnostic pop")
-#elif defined(__GNUC__)
-# if (__GNUC__ * 100 + __GNUC_MINOR__) >= 408
+#elif nssv_COMPILER_GNUC_VERSION >= 480
 #  define nssv_RESTORE_WARNINGS()  _Pragma("GCC diagnostic pop")
-# else
-#  define nssv_RESTORE_WARNINGS()
-# endif
 #elif nssv_COMPILER_MSVC_VERSION >= 140
 # define nssv_RESTORE_WARNINGS()  __pragma(warning(pop ))
 #else
