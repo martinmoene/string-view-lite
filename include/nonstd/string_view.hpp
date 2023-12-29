@@ -69,6 +69,10 @@
 # define nssv_CONFIG_NO_STREAM_INSERTION  0
 #endif
 
+#ifndef  nssv_CONFIG_CONSTEXPR11_STD_SEARCH
+# define nssv_CONFIG_CONSTEXPR11_STD_SEARCH  1
+#endif
+
 // Control presence of exception handling (try and auto discover):
 
 #ifndef nssv_CONFIG_NO_EXCEPTIONS
@@ -567,11 +571,30 @@ constexpr const CharT* search( basic_string_view<CharT, Traits> haystack, basic_
 
 // non-recursive:
 
+#if nssv_CONFIG_CONSTEXPR11_STD_SEARCH
+
 template< class CharT, class Traits = std::char_traits<CharT> >
 constexpr const CharT* search( basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle )
 {
     return std::search( haystack.begin(), haystack.end(), needle.begin(), needle.end() );
 }
+
+#else // nssv_CONFIG_CONSTEXPR11_STD_SEARCH
+
+template< class CharT, class Traits = std::char_traits<CharT> >
+nssv_constexpr14 const CharT* search( basic_string_view<CharT, Traits> haystack, basic_string_view<CharT, Traits> needle )
+{
+    while ( needle.size() <= haystack.size() )
+    {
+        if  ( haystack.starts_with(needle) )
+        {
+            return haystack.cbegin();
+        }
+        haystack = basic_string_view<CharT, Traits>{ haystack.begin() + 1, haystack.size() - 1U };
+    }
+    return haystack.cend();
+}
+#endif // nssv_CONFIG_CONSTEXPR11_STD_SEARCH
 
 #endif // OPTIMIZE
 #endif // nssv_CPP11_OR_GREATER && ! nssv_CPP17_OR_GREATER

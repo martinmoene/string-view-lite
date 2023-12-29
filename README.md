@@ -201,7 +201,16 @@ Define this to 1 to provide `std::string`&ndash; `nonstd::string_view` interoper
 At default, *string-view lite* provides operations to overload the `operator<<`. If you want to use the library without the use of standard streams, you can control this with the following macro:
 
 -D<b>nssv_CONFIG_NO_STREAM_INSERTION</b>=1  
-Define this to 1 to omit the use of standard streams. Default is undefined
+Define this to 1 to omit the use of standard streams. Default is undefined.
+
+### Avoid `constexpr` with `std::search()`
+
+At default, *string-view lite* may use constexpr with `std::search()` for `string_view::find()` when compiling for C++11 or C++14, whereas `std::search()` is only constexpr since C++20. This may occur when macro `__OPTIMIZE__` is not defined and a non-recursive implementation for search is selected. Macro `__OPTIMIZE__` is used with GCC and clang.
+
+If you encounter an error related to this, you can control this behaviour with the following macro:
+
+-D<b>nssv_CONFIG_CONSTEXPR11_STD_SEARCH</b>=0  
+Define this to 0 to omit the use constexpr with `std::search()` and substitute a local implementation using `nssv_constexpr14`. Default is 1.
 
 ### Enable compilation errors
 
