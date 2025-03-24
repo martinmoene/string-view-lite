@@ -80,6 +80,43 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure -j 4
 
+  clang_in_container:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: 20
+            image: 'ubuntu:25.04'
+
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Clang ${{ matrix.version }}
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update && apt-get upgrade -y
+          apt-get install -y clang-${{ matrix.version }} cmake
+
+      - name: Configure tests
+        env:
+          CXX: clang++-${{ matrix.version }}
+        run: cmake -S . -B build
+          -D CMAKE_CXX_COMPILER=clang++-${{ matrix.version }}
+          -D CMAKE_BUILD_TYPE:STRING=Release
+          -D ${{ env.PROJECT }}_OPT_SELECT_NONSTD=ON
+          -D ${{ env.PROJECT }}_OPT_BUILD_TESTS=ON
+          -D ${{ env.PROJECT }}_OPT_BUILD_EXAMPLES=OFF
+
+      - name: Build tests
+        run: cmake --build build -j 4
+
+      - name: Run tests
+        working-directory: build
+        run: ctest --output-on-failure -j 4
+
   msvc:
     strategy:
       fail-fast: false
